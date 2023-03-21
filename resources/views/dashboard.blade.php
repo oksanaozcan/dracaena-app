@@ -6,7 +6,11 @@
     </x-slot>
 
     <div class="flex flex-row">
-      <div class="basis-1/6 p-6 text-white bg-cyan-900">sidebar here</div>
+      <div class="basis-1/6 p-6 text-white bg-cyan-900">  
+        <nav>
+          <livewire:ui.dropdown faIcon="fa-solid fa-users" title="Users" :links="['one', 'two']">
+        </nav>              
+      </div>
       <div class="basis-5/6 overflow-hidden shadow-sm">
         <div class="p-6 text-gray-900">
           {{ __("You're logged in!") }}
