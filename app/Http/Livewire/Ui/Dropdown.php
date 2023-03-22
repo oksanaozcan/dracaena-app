@@ -6,6 +6,8 @@ use Livewire\Component;
 
 class Dropdown extends Component
 {
+  // public $showedLinks = false;
+
   public $faIcon = '';
   public $title = '';
   public $links = [];  
@@ -21,4 +23,9 @@ class Dropdown extends Component
   {
     return view('livewire.ui.dropdown');
   }
+
+  // public function showLinks()
+  // {
+  //   $this->showedLinks = true;
+  // }
 }
