@@ -1,17 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+      <h2 class="text-xl font-semibold leading-tight text-gray-800">
         {{ __('Dashboard') }}
       </h2>
     </x-slot>
 
     <div class="flex flex-row">
-      <div class="basis-1/6 p-6 text-white bg-cyan-900">  
-        <nav>
-          <livewire:ui.dropdown faIcon="fa-solid fa-users" title="Users" :links="['one', 'two']">
-        </nav>              
+      <div class="p-6 text-white basis-1/6 bg-cyan-900">  
+        @include('includes.sidebar')          
       </div>
-      <div class="basis-5/6 overflow-hidden shadow-sm">
+      <div class="overflow-hidden shadow-sm basis-5/6">
         <div class="p-6 text-gray-900">
           {{ __("You're logged in!") }}
         </div>

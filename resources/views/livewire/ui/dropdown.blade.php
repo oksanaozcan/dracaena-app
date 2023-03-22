@@ -35,11 +35,11 @@
     :id="$id('dropdown-button')"
     style="display:none;"
   >
-    @foreach ($links as $link)
-      <li class="nav-item">
-        <a href="#" class="#" role="button" type="button">
+    @foreach ($links as $key => $val)
+      <li class="#">
+        <a href="{{$val}}" class="#" role="button" type="button">
           <i class="far fa-circle"></i>
-          <p>{{$link}}</p>
+          <p class="capitalize">{{$key}}</p>
         </a>
       </li>
     @endforeach   
