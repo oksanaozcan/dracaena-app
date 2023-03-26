@@ -10,7 +10,7 @@ class Dropdown extends Component
 
   public $faIcon = '';
   public $title = '';
-  public $links = [];  
+  public $links = [];
 
   public function mount($faIcon, $title, $links)
   {
@@ -23,9 +23,4 @@ class Dropdown extends Component
   {
     return view('livewire.ui.dropdown');
   }
-
-  // public function showLinks()
-  // {
-  //   $this->showedLinks = true;
-  // }
 }

@@ -2,13 +2,13 @@
   x-data="{
     open: false,
     toggle() {
-      this.open = this.open ? this.close() : true
+      this.open = !this.open
     },
     close(focusAfter) {
       this.open = false
       focusAfter && focusAfter.focus()
     }
-  }"  
+  }"
   @keydown.escape.prevent.stop="close($refs.button)"
   @focusin.window="!$refs.panel.contains($event.target) && close()"
   x-id="['dropdown-buttton']"
@@ -42,6 +42,6 @@
           <p class="capitalize">{{$key}}</p>
         </a>
       </li>
-    @endforeach   
-  </ul> 
+    @endforeach
+  </ul>
 </div>
