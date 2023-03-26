@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TagController;
 
 Route::redirect('/', '/login');
 
@@ -19,6 +20,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resources([
         'users' => UserController::class,
+        'tags' => TagController::class,
     ]);
 });
 

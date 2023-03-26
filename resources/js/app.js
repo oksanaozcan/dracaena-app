@@ -18,11 +18,11 @@ document.addEventListener('alpine:init', () => {
             },
             {
                 id: uuidv4(),
-                faIcon: 'fa-solid fa-list',
-                title: 'Test',
+                faIcon: 'fa-solid fa-tag',
+                title: 'Tags',
                 links: [
-                    {title: 'list', url: '/users'},
-                    {title: 'create', url: '/users/create'},
+                    {title: 'list', url: '/tags'},
+                    {title: 'create', url: '/tags/create'},
                 ],
             },
         ],
