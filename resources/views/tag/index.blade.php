@@ -11,11 +11,7 @@
     </div>
     <div class="overflow-hidden shadow-sm basis-5/6">
       <div class="p-6 text-gray-900">
-        <ul>
-            @foreach ($tags as $item)
-            <li>{{$item->title}}</li>
-            @endforeach
-        </ul>
+        <livewire:tag.table>
       </div>
     </div>
   </div>

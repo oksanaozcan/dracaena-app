@@ -1,0 +1,53 @@
+<?php
+/** @see App\Http\Livewire\Tag\CreateForm */
+?>
+<form wire:submit.prevent="submitForm">
+    <div class="relative h-10">
+        @if (session()->has('success_message'))
+        <div
+            x-data="{show: true}"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)"
+            class="relative px-4 py-3 text-green-700 bg-green-100 border border-green-400 rounded" role="alert"
+        >
+            <strong class="font-bold">Success!</strong>
+            <span class="block sm:inline">{{ session('success_message') }}</span>
+            <span
+                type="button"
+                role="button"
+                @click="show=false"
+                class="absolute top-0 bottom-0 right-0 px-4 py-3"
+            >
+              <svg class="w-6 h-6 text-green-500 fill-current" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+            </span>
+          </div>
+        @endif
+    </div>
+    <div class="mt-4 mb-6">
+        <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+        <input
+            wire:model='title'
+            type="text"
+            id="title"
+            name="title"
+            value="{{old('title')}}"
+            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter Tag"
+            required
+        >
+        <div class="h-4">
+            @error('title') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
+        </div>
+
+    </div>
+
+    <button
+        type="submit"
+        class="inline-flex items-center px-4 py-2 text-sm font-semibold leading-6 text-white transition duration-150 ease-in-out rounded-md shadow cursor-not-allowed bg-cyan-700 hover:bg-cyan-900">
+        <svg wire:loading wire:target='submitForm' class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Submit
+    </button>
+</form>

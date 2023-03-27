@@ -9,9 +9,7 @@ class TagController extends Controller
 {
     public function index()
     {
-        return view('tag.index', [
-            'tags' => Tag::all(),
-        ]);
+        return view('tag.index');
     }
 
     public function create()
