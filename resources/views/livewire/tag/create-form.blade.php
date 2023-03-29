@@ -10,7 +10,6 @@
             x-init="setTimeout(() => show = false, 3000)"
             class="relative px-4 py-3 text-green-700 bg-green-100 border border-green-400 rounded" role="alert"
         >
-            <strong class="font-bold">Success!</strong>
             <span class="block sm:inline">{{ session('success_message') }}</span>
             <span
                 type="button"
@@ -35,7 +34,7 @@
             placeholder="Enter Tag"
             required
         >
-        <div class="h-4">
+        <div class="h-2">
             @error('title') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
         </div>
 
@@ -43,7 +42,7 @@
 
     <button
         type="submit"
-        class="inline-flex items-center px-4 py-2 text-sm font-semibold leading-6 text-white transition duration-150 ease-in-out rounded-md shadow cursor-not-allowed bg-cyan-700 hover:bg-cyan-900">
+        class="absolute inline-flex items-center px-4 py-2 font-semibold leading-6 text-white transition duration-150 ease-in-out rounded-md shadow cursor-not-allowed right-6 sm bg-cyan-700 hover:bg-cyan-900">
         <svg wire:loading wire:target='submitForm' class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

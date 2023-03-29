@@ -12,19 +12,22 @@ class Table extends Component
 {
     use WithPagination;
 
-    public Collection $tags;
-
     //** @var int */
     public $selectedTag;
 
-    public function render()
+    protected $listeners = ['tagAdded' => 'render'];
+
+    public function showTag($id)
     {
-        return view('livewire.tag.table');
+        return redirect()->route('tags.show', $id);
     }
 
-    public function mount()
+    public function render()
     {
-        $this->tags = Tag::all();
+        return view('livewire.tag.table', [
+            'tags' => Tag::paginate(15),
+            'count' => Tag::count()
+        ]);
     }
 
     public function selectTag(int $tagId)

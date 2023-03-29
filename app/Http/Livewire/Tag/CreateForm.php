@@ -10,7 +10,7 @@ class CreateForm extends Component
     public $title;
 
     protected $rules = [
-        'title' => 'required|min:3',
+        'title' => 'required|unique:tags|min:3',
     ];
 
     public function updated($propertyName)
@@ -22,9 +22,11 @@ class CreateForm extends Component
     {
         $this->validate();
 
-        Tag::create([
+        $newTag = Tag::create([
             'title' => $this->title,
         ]);
+
+        $this->emit('tagAdded');
 
         $this->resetForm();
 

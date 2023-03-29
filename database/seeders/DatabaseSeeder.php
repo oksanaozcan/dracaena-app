@@ -16,6 +16,6 @@ class DatabaseSeeder extends Seeder
       $this->call(RoleSeeder::class);
       $this->call(AdminSeeder::class);
 
-      Tag::factory(10)->create();
+      Tag::factory(100)->create();
     }
 }

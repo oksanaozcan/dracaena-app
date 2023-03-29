@@ -17,15 +17,15 @@ class TagController extends Controller
         return view('tag.create');
     }
 
-
     public function store(Request $request)
     {
-        //
+        /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
     public function show(Tag $tag)
     {
-        //
+        $id = $tag->id;
+        return view('tag.show', compact('id'));
     }
 
     public function edit(Tag $tag)
