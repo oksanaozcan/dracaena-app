@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Tag;
 
 use Livewire\Component;
 use App\Models\Tag;
+use App\Services\TagService;
 
 class CreateForm extends Component
 {
@@ -30,28 +31,20 @@ class CreateForm extends Component
         $this->validateOnly($propertyName);
     }
 
-    public function submitForm()
+    public function submitForm(TagService $tagService)
     {
         $this->validate();
 
         if ($this->tag === null) {
-            Tag::create([
-                'title' => $this->title,
-            ]);
+            $tagService->storeTag($this->title);
+
             $this->emit('tagAdded');
-            $this->resetForm();
+            $this->reset();
             session()->flash('success_message', 'Tag successfully added.');
         } else {
-            Tag::find($this->tag->id)->update([
-                'title' => $this->title,
-            ]);
+            $tagService->updateTag($this->title, $this->tag);
             return redirect()->route('tags.index');
         }
-    }
-
-    private function resetForm()
-    {
-        $this->title = '';
     }
 
     public function render()
