@@ -30,12 +30,13 @@ class TagController extends Controller
 
     public function edit(Tag $tag)
     {
-        //
+        $id = $tag->id;
+        return view('tag.edit', compact('id'));
     }
 
     public function update(Request $request, Tag $tag)
     {
-        //
+         /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
     public function destroy(Tag $tag)

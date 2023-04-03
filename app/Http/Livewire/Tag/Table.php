@@ -22,6 +22,11 @@ class Table extends Component
         return redirect()->route('tags.show', $id);
     }
 
+    public function editTag($id)
+    {
+        return redirect()->route('tags.edit', $id);
+    }
+
     public function render()
     {
         return view('livewire.tag.table', [

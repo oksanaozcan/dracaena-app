@@ -52,7 +52,7 @@
                         <a wire:click='showTag({{$item->id}})' class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Show</a>
                     </td>
                     <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
+                        <a wire:click='editTag({{$item->id}})' class="font-medium text-green-600 dark:text-green-500 hover:underline">Edit</a>
                     </td>
                     <td class="px-6 py-4">
                         <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>

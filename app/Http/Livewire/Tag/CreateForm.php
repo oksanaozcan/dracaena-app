@@ -7,11 +7,23 @@ use App\Models\Tag;
 
 class CreateForm extends Component
 {
+    public $tag;
     public $title;
 
     protected $rules = [
         'title' => 'required|unique:tags|min:3',
     ];
+
+    public function mount($id = null)
+    {
+        if($id) {
+            $t = Tag::find($id);
+            $this->tag = $t;
+            $this->title = $t->title;
+        } else {
+            $this->tag = null;
+        }
+    }
 
     public function updated($propertyName)
     {
@@ -22,15 +34,19 @@ class CreateForm extends Component
     {
         $this->validate();
 
-        $newTag = Tag::create([
-            'title' => $this->title,
-        ]);
-
-        $this->emit('tagAdded');
-
-        $this->resetForm();
-
-        session()->flash('success_message', 'Tag successfully added.');
+        if ($this->tag === null) {
+            Tag::create([
+                'title' => $this->title,
+            ]);
+            $this->emit('tagAdded');
+            $this->resetForm();
+            session()->flash('success_message', 'Tag successfully added.');
+        } else {
+            Tag::find($this->tag->id)->update([
+                'title' => $this->title,
+            ]);
+            return redirect()->route('tags.index');
+        }
     }
 
     private function resetForm()

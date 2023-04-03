@@ -1,5 +1,5 @@
 <?php
-/** @see App\Http\Livewire\Tag\CreateForm */
+/** @see App\Http\Livewire\Tag\CreateEditForm */
 ?>
 <form wire:submit.prevent="submitForm">
     <div class="relative h-10">
@@ -29,7 +29,7 @@
             type="text"
             id="title"
             name="title"
-            value="{{old('title')}}"
+            value="{{$this->title}}"
             class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Enter Tag"
             required
