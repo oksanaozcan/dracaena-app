@@ -12,10 +12,19 @@ class Table extends Component
 {
     use WithPagination;
 
-    //** @var int */
+    public $search = '';
+
     public $selectedTag;
 
+    public $sortedColumnHeader = 'created_at';
+    public $sortDirection = 'desc';
+
     protected $listeners = ['tagAdded' => 'render'];
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function showTag($id)
     {
@@ -27,10 +36,25 @@ class Table extends Component
         return redirect()->route('tags.edit', $id);
     }
 
+    public function sortBy($columnHeader)
+    {
+        if ($this->sortedColumnHeader === $columnHeader) {
+            $this->sortDirection = $this->swapSortDirection();
+        } else {
+            $this->sortDirection = 'asc';
+        }
+        $this->sortedColumnHeader = $columnHeader;
+    }
+
+    public function swapSortDirection()
+    {
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
+
     public function render()
     {
         return view('livewire.tag.table', [
-            'tags' => Tag::paginate(15),
+            'tags' => Tag::where('title', 'like', '%'.$this->search.'%')->orderBy($this->sortedColumnHeader, $this->sortDirection)->paginate(15),
             'count' => Tag::count()
         ]);
     }
