@@ -16,8 +16,10 @@ class Table extends Component
 
     public $selectedTag;
 
-    public $sortedColumnHeader = 'created_at';
+    public $sortField = 'created_at';
     public $sortDirection = 'desc';
+
+    protected $queryString = ['search', 'sortField', 'sortDirection'];
 
     protected $listeners = ['tagAdded' => 'render'];
 
@@ -38,12 +40,12 @@ class Table extends Component
 
     public function sortBy($columnHeader)
     {
-        if ($this->sortedColumnHeader === $columnHeader) {
+        if ($this->sortField === $columnHeader) {
             $this->sortDirection = $this->swapSortDirection();
         } else {
             $this->sortDirection = 'asc';
         }
-        $this->sortedColumnHeader = $columnHeader;
+        $this->sortField = $columnHeader;
     }
 
     public function swapSortDirection()
@@ -54,7 +56,7 @@ class Table extends Component
     public function render()
     {
         return view('livewire.tag.table', [
-            'tags' => Tag::where('title', 'like', '%'.$this->search.'%')->orderBy($this->sortedColumnHeader, $this->sortDirection)->paginate(15),
+            'tags' => Tag::search('title', $this->search)->orderBy($this->sortField, $this->sortDirection)->paginate(15),
             'count' => Tag::count()
         ]);
     }
