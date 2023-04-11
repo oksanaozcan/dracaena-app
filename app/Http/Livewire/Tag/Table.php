@@ -7,6 +7,7 @@ use App\Models\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use App\Services\TagService;
 
 class Table extends Component
 {
@@ -21,21 +22,25 @@ class Table extends Component
 
     protected $queryString = ['search', 'sortField', 'sortDirection'];
 
-    protected $listeners = ['tagAdded' => 'render'];
+    protected $listeners = [
+        'tagAdded' => 'render',
+    ];
+
+
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function showTag($id)
-    {
-        return redirect()->route('tags.show', $id);
-    }
-
     public function editTag($id)
     {
         return redirect()->route('tags.edit', $id);
+    }
+
+    public function destroyTag($id, TagService $tagService)
+    {
+        $tagService->destroyTag($id);
     }
 
     public function sortBy($columnHeader)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Services\TagService;
 
 class TagController extends Controller
 {
@@ -22,10 +23,10 @@ class TagController extends Controller
         /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
-    public function show(Tag $tag)
+    public function show($id)
     {
-        $id = $tag->id;
-        return view('tag.show', compact('id'));
+        $tag = Tag::find($id);
+        return view('tag.show', compact('tag'));
     }
 
     public function edit(Tag $tag)
@@ -39,8 +40,13 @@ class TagController extends Controller
          /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
-    public function destroy(Tag $tag)
+    public function destroy($id, TagService $tagService)
     {
-        //
+        $tagService->destroyTag($id);
+        return redirect()->route('tags.index');
+        /**
+         * destroy from page tag.index
+         * @see App\Http\Livewire\Tag\Table
+        * */
     }
 }

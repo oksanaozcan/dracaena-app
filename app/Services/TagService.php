@@ -19,4 +19,9 @@ class TagService {
             'title' => $title,
         ]);
     }
+
+    public function destroyTag($id)
+    {
+        Tag::find($id)->delete();
+    }
 }
