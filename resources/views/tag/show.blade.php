@@ -22,13 +22,7 @@
             </div>
             <div class="flex justify-between px-6 pt-4 pb-2">
                 <a class="btn-common btn-primary" href="{{route('tags.edit', $tag->id)}}">Edit</a>
-                <form action="{{ route('tags.destroy', $tag->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn-common btn-danger"
-                    {{ $disabled ?? false ? ' disabled' :'' }}
-                    >Delete</button>
-                </form>
+                <x-form.destroy path="tags.destroy" deletingId="{{$tag->id}}" />
             </div>
         </div>
 
