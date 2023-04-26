@@ -5,15 +5,24 @@
     <div class="absolute top-16 right-10"><h1 class="py-6 text-xl font-semibold leading-tight text-gray-800">Amount: {{$count}}</h1></div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div class="flex justify-between">
-            <button type="button" class="btn-common btn-danger">Bulk delete</button>
+            <button wire:click='destroyCheckedTags()' type="button" class="btn-common btn-danger">Bulk delete</button>
             <div class="w-1/4">
                 <x-text-input wire:model='search' class="w-full px-4 py-2" placeholder="Search..."/>
             </div>
         </div>
 
+        <div>Checked values: {{var_export($checkedIds)}}</div>
+
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead>
                 <tr>
+                    <th scope="col">
+                        Check
+                        {{-- <span wire:click="sortBy('id')" class="pl-4">
+                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
+                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
+                        </span> --}}
+                    </th>
                     <th scope="col">
                         Id
                         <span wire:click="sortBy('id')" class="pl-4">
@@ -56,6 +65,9 @@
                 wire:click="selectTag({{$item->id}})"
                 style="background-color: {{$item->id === $selectedTag ? 'slite' : 'white'}}"
                 >
+                <td>
+                    <input wire:model='checkedIds' type="checkbox" value="{{$item->id}}"/>
+                </td>
                 <td scope="row">
                     {{$item->id}}
                 </td>

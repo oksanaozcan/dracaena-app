@@ -20,13 +20,13 @@ class Table extends Component
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 
+    public $checkedIds = [];
+
     protected $queryString = ['search', 'sortField', 'sortDirection'];
 
     protected $listeners = [
         'tagAdded' => 'render',
     ];
-
-
 
     public function updatingSearch()
     {
@@ -41,6 +41,17 @@ class Table extends Component
     public function destroyTag($id, TagService $tagService)
     {
         $tagService->destroyTag($id);
+    }
+
+    public function destroyCheckedTags(TagService $tagService)
+    {
+        try {
+            foreach($this->checkedIds as $key=>$value) {
+                $tagService->destroyTag($value);
+            }
+        } catch (e) {
+            dd('catch some error');
+        }
     }
 
     public function sortBy($columnHeader)
