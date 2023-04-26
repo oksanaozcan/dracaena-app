@@ -26,7 +26,13 @@ class Table extends Component
 
     protected $listeners = [
         'tagAdded' => 'render',
+        'deletedTags' => 'render'
     ];
+
+    public function updated()
+    {
+        $this->emit('checkedTitlesUpdated', $this->checkedTitles);
+    }
 
     public function updatingSearch()
     {
@@ -41,17 +47,6 @@ class Table extends Component
     public function destroyTag($id, TagService $tagService)
     {
         $tagService->destroyTag($id);
-    }
-
-    public function destroyCheckedTags(TagService $tagService)
-    {
-        try {
-            foreach($this->checkedTitles as $key=>$value) {
-                $tagService->destroyTagByTitle($value);
-            }
-        } catch (e) {
-            //
-        }
     }
 
     public function sortBy($columnHeader)
