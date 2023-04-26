@@ -24,4 +24,9 @@ class TagService {
     {
         Tag::find($id)->delete();
     }
+
+    public function destroyTagByTitle($title)
+    {
+        Tag::where('title', $title)->delete();
+    }
 }

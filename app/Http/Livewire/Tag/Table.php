@@ -20,7 +20,7 @@ class Table extends Component
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 
-    public $checkedIds = [];
+    public $checkedTitles = [];
 
     protected $queryString = ['search', 'sortField', 'sortDirection'];
 
@@ -46,11 +46,11 @@ class Table extends Component
     public function destroyCheckedTags(TagService $tagService)
     {
         try {
-            foreach($this->checkedIds as $key=>$value) {
-                $tagService->destroyTag($value);
+            foreach($this->checkedTitles as $key=>$value) {
+                $tagService->destroyTagByTitle($value);
             }
         } catch (e) {
-            dd('catch some error');
+            //
         }
     }
 
