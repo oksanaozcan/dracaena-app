@@ -25,6 +25,15 @@ document.addEventListener('alpine:init', () => {
                     {title: 'create', url: '/tags/create'},
                 ],
             },
+            {
+                id: uuidv4(),
+                faIcon: 'fa-solid fa-bars-staggered',
+                title: 'Categories',
+                links: [
+                    {title: 'list', url: '/categories'},
+                    {title: 'create', url: '/categories/create'},
+                ],
+            },
         ],
     }))
 })
