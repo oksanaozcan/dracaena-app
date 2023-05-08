@@ -5,14 +5,19 @@ namespace App\Http\Livewire\Category;
 use Livewire\Component;
 use App\Models\Category;
 use App\Services\CategoryService;
+use Livewire\WithFileUploads;
 
 class CreateForm extends Component
 {
+    use WithFileUploads;
+
     public $category;
     public $title;
+    public $preview;
 
     protected $rules = [
         'title' => 'required|unique:categories|min:3',
+        'preview' => 'required|image|max:1024', // 1MB Max
     ];
 
     public function mount($id = null)
@@ -36,7 +41,7 @@ class CreateForm extends Component
         $this->validate();
 
         if ($this->category === null) {
-            $categoryService->storeCategory($this->title);
+            $categoryService->storeCategory($this->title, $this->preview);
 
             $this->emit('categoryAdded');
             $this->reset();

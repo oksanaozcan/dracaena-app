@@ -3,14 +3,29 @@
 namespace App\Services;
 
 use App\Models\Category;
+use Exception;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class CategoryService {
 
-    public function storeCategory($title)
+    public function storeCategory($title, $preview)
     {
-        Category::create([
-            'title' => $title,
-        ]);
+        try {
+            DB::beginTransaction();
+            $pathPreview = Storage::disk('public')->put('category_previews', $preview);
+
+            Category::create([
+                'title' => $title,
+                'preview' => url('/storage/' . $pathPreview),
+            ]);
+
+            DB::commit();
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            abort(500, $exception);
+        }
     }
 
     public function updateCategory($title, Category $category)
