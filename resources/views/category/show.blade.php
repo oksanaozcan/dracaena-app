@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
     <h2 class="text-xl font-semibold leading-tight text-gray-800">
-      {{ __('Tags') }}
+      {{ __('Categories') }}
     </h2>
   </x-slot>
 
@@ -14,15 +14,16 @@
 
         <div class="max-w-sm overflow-hidden rounded shadow-lg">
             <div class="px-6 py-4">
-                <div class="mb-2 text-xl font-bold">{{$tag->title}}</div>
-                <p class="text-base text-gray-700">Id: {{$tag->id}}</p>
-                <p class="text-base text-gray-700">Created at: {{$tag->created_at}}</p>
-                <p class="text-base text-gray-700">Updated at: {{$tag->updated_at}}</p>
-                <p class="text-base text-gray-700">Deleted at: {{$tag->deleted_at}}</p>
+                <img src="{{url($category->preview)}}" alt="preview" class="mb-2">
+                <div class="mb-2 text-xl font-bold">{{$category->title}}</div>
+                <p class="text-base text-gray-700">Id: {{$category->id}}</p>
+                <p class="text-base text-gray-700">Created at: {{$category->created_at}}</p>
+                <p class="text-base text-gray-700">Updated at: {{$category->updated_at}}</p>
+                <p class="text-base text-gray-700">Deleted at: {{$category->deleted_at}}</p>
             </div>
             <div class="flex justify-between px-6 pt-4 pb-2">
-                <a class="btn-common btn-primary" href="{{route('tags.edit', $tag->id)}}">Edit</a>
-                <x-form.destroy path="tags.destroy" deletingId="{{$tag->id}}" />
+                <a class="btn-common btn-primary" href="{{route('categories.edit', $category->id)}}">Edit</a>
+                <x-form.destroy path="categories.destroy" deletingId="{{$category->id}}" />
             </div>
         </div>
 

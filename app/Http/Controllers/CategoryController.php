@@ -19,12 +19,13 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        //
+        /** @see App\Http\Livewire\Category\CreateForm */
     }
 
-    public function show(Category $category)
+    public function show($id)
     {
-        //
+        $category = Category::find($id);
+        return view('category.show', compact('category'));
     }
 
     public function edit(Category $category)
