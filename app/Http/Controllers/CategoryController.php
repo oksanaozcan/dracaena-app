@@ -30,7 +30,8 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        //
+        $id = $category->id;
+        return view('category.edit', compact('id'));
     }
 
     public function update(Request $request, Category $category)

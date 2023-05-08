@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
     <h2 class="text-xl font-semibold leading-tight text-gray-800">
-      {{ __('Tags') }}
+      {{ __('Categories') }}
     </h2>
   </x-slot>
 
@@ -11,7 +11,7 @@
     </div>
     <div class="overflow-hidden shadow-sm basis-5/6">
       <div class="p-6 text-gray-900">
-        <livewire:tag.create-form :id="$id">
+        <livewire:category.create-form :id="$id">
       </div>
     </div>
   </div>

@@ -24,6 +24,17 @@
     @endif
 </div>
 <div>
+    @if ($this->category)
+        @if ($this->preview)
+            <img class="mb-4 w-36 filter grayscale blur-sm" src="{{url($this->category->preview)}}" alt="">
+        @else
+            <img class="mb-4 w-36" src="{{url($this->category->preview)}}" alt="">
+        @endif
+
+    @endif
+    @if ($this->preview)
+        <img class="mb-4 w-36" src="{{$this->preview->temporaryUrl()}}" alt="">
+    @endif
     <input type="file" wire:model="preview">
     @error('preview') <span class="error">{{ $message }}</span> @enderror
 </div>
