@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        //
+        /** @see App\Http\Livewire\Category\CreateForm */
     }
 
     public function destroy(Category $category)

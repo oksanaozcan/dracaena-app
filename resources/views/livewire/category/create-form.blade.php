@@ -35,7 +35,7 @@
     @if ($this->preview)
         <img class="mb-4 w-36" src="{{$this->preview->temporaryUrl()}}" alt="">
     @endif
-    <input type="file" wire:model="preview">
+    <input type="file" wire:model="preview" value="{{$this->preview}}">
     @error('preview') <span class="error">{{ $message }}</span> @enderror
 </div>
 <div class="mt-4 mb-6">

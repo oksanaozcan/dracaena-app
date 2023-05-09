@@ -16,7 +16,7 @@ class CreateForm extends Component
     public $preview;
 
     protected $rules = [
-        'title' => 'required|unique:categories|min:3',
+        'title' => 'required|string|unique:categories|min:3',
         'preview' => 'required|image|max:1024', // 1MB Max
     ];
 
@@ -38,16 +38,19 @@ class CreateForm extends Component
 
     public function submitForm(CategoryService $categoryService)
     {
-        $this->validate();
-
         if ($this->category === null) {
+            $this->validate();
             $categoryService->storeCategory($this->title, $this->preview);
 
             $this->emit('categoryAdded');
             $this->reset();
             session()->flash('success_message', 'Category successfully added.');
         } else {
-            $categoryService->updateCategory($this->title, $this->category);
+            $this->validate([
+                'title' => 'required|string|min:3|unique:categories,title,'.$this->category->id,
+                'preview' => 'nullable|image|max:1024', // 1MB Max
+            ]);
+            $categoryService->updateCategory($this->title, $this->category, $this->preview);
             return redirect()->route('categories.index');
         }
     }
