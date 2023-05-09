@@ -118,6 +118,6 @@
     <div
         x-show="openModal"
     >
-        <livewire:confirm-modal :checkedTitles='$checkedTitles'/>
+        <livewire:confirm-modal :checkedTitles='$checkedTitles' currentModel='Tag'/>
     </div>
 </div>

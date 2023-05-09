@@ -4,10 +4,14 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Services\TagService;
+use App\Services\CategoryService;
+use Exception;
+use Illuminate\Support\Facades\Route;
 
 class ConfirmModal extends Component
 {
     public $checkedTitles;
+    public string $currentModel;
 
     protected $listeners = [
         'checkedTitlesUpdated' => 'mount',
@@ -25,8 +29,20 @@ class ConfirmModal extends Component
                 $tagService->destroyTagByTitle($value);
             }
             $this->emit('deletedTags');
-        } catch (e) {
-            //
+        } catch (Exception $exception) {
+            abort(500, $exception);
+        }
+    }
+
+    public function destroyCheckedCategories(CategoryService $categoryService)
+    {
+        try {
+            foreach($this->checkedTitles as $key=>$value) {
+                $categoryService->destroyCategoryByTitle($value);
+            }
+            $this->emit('deletedCategories');
+        } catch (Exception $exception) {
+            abort(500, $exception);
         }
     }
 

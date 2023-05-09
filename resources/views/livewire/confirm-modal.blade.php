@@ -1,4 +1,4 @@
- <div class="fixed inset-0 z-10 overflow-y-auto">
+<div class="fixed inset-0 z-10 overflow-y-auto">
     <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
     <div class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
         <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
@@ -9,7 +9,7 @@
             </svg>
             </div>
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Delete Tags</h3>
+            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Delete: {{$this->currentModel}}</h3>
             @if ($checkedTitles)
                 <div>Checked values:
                     @foreach ($checkedTitles as $checkedItem)
@@ -17,21 +17,37 @@
                     @endforeach
                 </div>
                 <div class="mt-2">
-                    <p class="text-sm text-gray-500">Are you sure you want to destroy selected tags? All of data will be permanently removed. This action cannot be undone.</p>
+                    <p class="text-sm text-gray-500">Are you sure you want to destroy selected elements? All of data will be permanently removed. This action cannot be undone.</p>
                 </div>
             @else
-            <div>You didn't check any tag!</div>
+            <div>You didn't check any elements!</div>
             @endif
             </div>
         </div>
         </div>
         <div class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6">
-        <button
-            wire:click='destroyCheckedTags()'
-            @click="openModal=false"
-            @disabled($checkedTitles ? false : true)
-        type="button" class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-        >Destroy</button>
+            @switch($this->currentModel)
+                @case('Tag')
+                <button
+                    wire:click='destroyCheckedTags()'
+                    @click="openModal=false"
+                    @disabled($checkedTitles ? false : true)
+                    type="button"
+                    class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                >Destroy</button>
+                    @break
+                @case('Category')
+                <button
+                    wire:click='destroyCheckedCategories()'
+                    @click="openModal=false"
+                    @disabled($checkedTitles ? false : true)
+                    type="button"
+                    class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                >Destroy</button>
+                    @break
+                @default
+
+            @endswitch
         <button
         @click="openModal=false"
         type="button" class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>

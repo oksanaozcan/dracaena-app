@@ -60,11 +60,40 @@ class CategoryService {
 
     public function destroyCategory($id)
     {
-        Category::find($id)->delete();
+        try {
+            DB::beginTransaction();
+
+            $deletingCat = Category::find($id);
+            $deletingPreview = substr($deletingCat->preview, strlen(url('/storage/')) + 1);
+
+            $deletingCat->delete();
+            Storage::disk('public')->delete($deletingPreview);
+
+            DB::commit();
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            abort(500, $exception);
+        }
     }
 
     public function destroyCategoryByTitle($title)
     {
-        Category::where('title', $title)->delete();
+        try {
+            DB::beginTransaction();
+
+            $deletingPreview = DB::table('categories')->where('title', $title)->pluck('preview')->first();
+            $deletingPreview = substr($deletingPreview, strlen(url('/storage/')) + 1);
+
+            Category::where('title', $title)->delete();
+
+            Storage::disk('public')->delete($deletingPreview);
+
+            DB::commit();
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            abort(500, $exception);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
@@ -39,8 +40,13 @@ class CategoryController extends Controller
         /** @see App\Http\Livewire\Category\CreateForm */
     }
 
-    public function destroy(Category $category)
+    public function destroy($id, CategoryService $categoryService)
     {
-        //
+        $categoryService->destroyCategory($id);
+        return redirect()->route('categories.index');
+        /**
+         * destroy from page category.index
+         * @see App\Http\Livewire\Category\Table
+        * */
     }
 }
