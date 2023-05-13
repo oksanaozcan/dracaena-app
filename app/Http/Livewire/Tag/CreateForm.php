@@ -5,6 +5,10 @@ namespace App\Http\Livewire\Tag;
 use Livewire\Component;
 use App\Models\Tag;
 use App\Services\TagService;
+use App\Jobs\StoreTagJob;
+use Illuminate\Support\Facades\Log;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Throwable;
 
 class CreateForm extends Component
 {
@@ -36,7 +40,7 @@ class CreateForm extends Component
         $this->validate();
 
         if ($this->tag === null) {
-            $tagService->storeTag($this->title);
+            StoreTagJob::dispatch($this->title);
 
             $this->emit('tagAdded');
             $this->reset();

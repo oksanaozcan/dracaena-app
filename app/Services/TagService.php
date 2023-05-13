@@ -11,6 +11,7 @@ class TagService {
         Tag::create([
             'title' => $title,
         ]);
+
     }
 
     public function updateTag($title, Tag $tag)
