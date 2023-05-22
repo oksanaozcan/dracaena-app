@@ -3,10 +3,10 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Services\TagService;
 use App\Services\CategoryService;
 use Exception;
 use Illuminate\Support\Facades\Route;
+use App\Jobs\Tag\BulkDeleteTagJob;
 
 class ConfirmModal extends Component
 {
@@ -22,16 +22,17 @@ class ConfirmModal extends Component
         $this->checkedTitles = $checkedTitles;
     }
 
-    public function destroyCheckedTags(TagService $tagService)
+    public function destroyCheckedTags()
     {
         try {
             foreach($this->checkedTitles as $key=>$value) {
-                $tagService->destroyTagByTitle($value);
+                BulkDeleteTagJob::dispatch($value)->onQueue('default');
             }
             $this->emit('deletedTags');
         } catch (Exception $exception) {
             abort(500, $exception);
         }
+
     }
 
     public function destroyCheckedCategories(CategoryService $categoryService)

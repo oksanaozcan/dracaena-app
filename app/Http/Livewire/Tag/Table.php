@@ -26,7 +26,7 @@ class Table extends Component
 
     protected $listeners = [
         'tagAdded' => 'render',
-        'deletedTags' => 'render'
+        'deletedTags' => 'render',
     ];
 
     public function updated()

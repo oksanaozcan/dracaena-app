@@ -25,7 +25,9 @@
         @else
         @endif
 
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+        wire:poll.visible
+        >
             <thead>
                 <tr>
                     <th scope="col">
