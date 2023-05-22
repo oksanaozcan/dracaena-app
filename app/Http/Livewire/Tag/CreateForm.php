@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Tag;
 use Livewire\Component;
 use App\Models\Tag;
 use App\Services\TagService;
-use App\Jobs\StoreTagJob;
+use App\Jobs\Tag\StoreTagJob;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Throwable;
