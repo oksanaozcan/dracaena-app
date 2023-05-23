@@ -12,6 +12,9 @@ use App\Services\TagService;
 use Throwable;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use App\Notifications\StoreTagJobFailedNotification;
+use Illuminate\Notifications\Notification;
+use App\Models\User;
 
 class StoreTagJob implements ShouldQueue
 {
@@ -23,14 +26,15 @@ class StoreTagJob implements ShouldQueue
 
     public function handle(TagService $tagService): void
     {
-        $tag = $tagService->storeTag($this->title);
+        $tagService->storeTag111($this->title);
     }
 
+    /**
+     * Handle a job failure.
+    */
     public function failed(Throwable $exception): void
     {
-        Log::info("failed from failed func job");
-        // Debugbar::info("failed from failed func job");
-        // Send user notification of failure, etc...
-
+        $admin = User::find(1);
+        $admin->notify(new StoreTagJobFailedNotification($admin, $this->title));
     }
 }

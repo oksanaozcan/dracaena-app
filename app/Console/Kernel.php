@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:clear-livewire-tmp-dir')->daily()->at('07:00');
+        $schedule->command('app:remove-marked-as-read-database-notifications')->everyMinute();
     }
 
     /**
