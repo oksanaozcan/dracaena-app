@@ -14,7 +14,7 @@
             <ul>
                 @foreach (auth()->user()->notifications as $notification)
                 <li>
-                    <span>{{$notification->data['user_id']}}</span>
+                    <span>{{$notification->data['message']}}</span>
                     <a href="{{route('markasread', $notification->id)}}">Mark as read</a>
                 </li>
                 @endforeach

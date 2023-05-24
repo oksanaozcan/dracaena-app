@@ -24,8 +24,7 @@ class StoreTagJobFailedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'user_id' => $this->user->id,
-            'tag_title' => $this->title,
+            'message' => "Storing by ".$this->user->name." tag with title ".$this->title." failed. Check logs to define error.",
         ];
     }
 }
