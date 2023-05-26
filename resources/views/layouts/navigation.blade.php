@@ -19,7 +19,18 @@
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('notifications')" :active="request()->routeIs('notifications')">
-                        {{ __('Notifications') }}
+                        <div class="relative w-8 text-center">
+                            <i class="fa-solid fa-bell fa-2xl"></i>
+                            @if (auth()->user()->unreadnotifications()->count() != 0)
+                                <div class="absolute top-0 w-6 h-6 pt-1 text-center text-white align-middle bg-red-700 rounded-full inset-5">
+                                    {{auth()->user()->unreadnotifications()->count()}}
+                                </div>
+                            @else
+                                <div class="absolute top-0 w-4 h-4 pt-1 text-center text-white align-middle rounded-full inset-5 bg-slate-300">
+                                </div>
+                            @endif
+
+                        </div>
                     </x-nav-link>
                 </div>
 

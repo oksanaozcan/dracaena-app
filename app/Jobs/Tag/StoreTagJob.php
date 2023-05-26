@@ -13,7 +13,6 @@ use Throwable;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Notifications\StoreTagJobFailedNotification;
-use Illuminate\Notifications\Notification;
 use App\Models\User;
 
 class StoreTagJob implements ShouldQueue
@@ -26,7 +25,7 @@ class StoreTagJob implements ShouldQueue
 
     public function handle(TagService $tagService): void
     {
-        $tagService->storeTag111($this->title);
+        $tagService->storeTag($this->title);
     }
 
     /**

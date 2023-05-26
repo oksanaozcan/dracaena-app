@@ -9,8 +9,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Services\TagService;
-use App\Notifications\JobFailedNotification;
-use Illuminate\Notifications\Notification;
+use App\Notifications\BulkDeleteTagJobFailedNotification;
+use App\Models\User;
+use Throwable;
+use Illuminate\Support\Facades\Log;
 
 class BulkDeleteTagJob implements ShouldQueue
 {
@@ -23,12 +25,12 @@ class BulkDeleteTagJob implements ShouldQueue
         $tagService->destroyTagByTitle($this->title);
     }
 
+     /**
+     * Handle a job failure.
+    */
     public function failed(Throwable $exception): void
     {
-        $admins = User::whereHas('roles', function ($query) {
-            $query->where('id', 1);
-        })->get();
-
-        Notification::send($admins, new JobFailedNotification($exception));
+        $admin = User::find(1);
+        $admin->notify(new BulkDeleteTagJobFailedNotification($admin, $this->title));
     }
 }
