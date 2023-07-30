@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
 Route::redirect('/', '/login');
 
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'users' => UserController::class,
         'tags' => TagController::class,
         'categories' => CategoryController::class,
+        'products' => ProductController::class,
     ]);
 });
 

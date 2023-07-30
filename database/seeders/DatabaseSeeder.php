@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Tag;
 use App\Models\Category;
+use App\Models\Product;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +18,8 @@ class DatabaseSeeder extends Seeder
       $this->call(RoleSeeder::class);
       $this->call(AdminSeeder::class);
 
-      Tag::factory(40)->create();
-      Category::factory(20)->create();
+      Tag::factory(10)->create();
+      Category::factory(10)->create();
+      Product::factory(10)->create();
     }
 }
