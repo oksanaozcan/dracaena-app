@@ -1,5 +1,5 @@
 <?php
-/** @see App\Http\Livewire\Category\Table */
+/** @see App\Http\Livewire\Product\Table */
 ?>
 <div
     x-data="{openModal: false}"
@@ -67,11 +67,11 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($categories as $item)
+                @forelse ($products as $item)
                 <tr
                 wire:loading.class.delay="opacity-50"
-                wire:click="selectCategory({{$item->id}})"
-                style="background-color: {{$item->id === $selectedCategory ? 'slite' : 'white'}}"
+                wire:click="selectProduct({{$item->id}})"
+                style="background-color: {{$item->id === $selectedProduct ? 'slite' : 'white'}}"
                 >
                 <td>
                     <input wire:model='checkedTitles' type="checkbox" value="{{$item->title}}"/>
@@ -89,13 +89,13 @@
                     #####
                 </td>
                 <td >
-                    <a href="{{route('categories.show', $item->id)}}" class="link-blue">Show</a>
+                    <a href="{{route('products.show', $item->id)}}" class="link-blue">Show</a>
                 </td>
                 <td>
-                    <a wire:click='editCategory({{$item->id}})' class="link-green">Edit</a>
+                    <a wire:click='editProduct({{$item->id}})' class="link-green">Edit</a>
                 </td>
                 <td>
-                    <a wire:click='destroyCategory({{$item->id}})' class="link-red">Delete</a>
+                    <a wire:click='destroyProduct({{$item->id}})' class="link-red">Delete</a>
                 </td>
                 </tr>
                 @empty
@@ -112,12 +112,12 @@
             </tbody>
         </table>
         <div class="px-2 py-4">
-            {{ $categories->links() }}
+            {{ $products->links() }}
         </div>
     </div>
     <div
         x-show="openModal"
     >
-        <livewire:confirm-modal :checkedTitles='$checkedTitles' currentModel='Category'/>
+        <livewire:confirm-modal :checkedTitles='$checkedTitles' currentModel='Product'/>
     </div>
 </div>
