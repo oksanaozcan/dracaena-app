@@ -34,6 +34,15 @@ document.addEventListener('alpine:init', () => {
                     {title: 'create', url: '/categories/create'},
                 ],
             },
+            {
+                id: uuidv4(),
+                faIcon: 'fa-solid fa-plant-wilt',
+                title: 'Products',
+                links: [
+                    {title: 'list', url: '/products'},
+                    {title: 'create', url: '/products/create'},
+                ],
+            },
         ],
     }))
 })
