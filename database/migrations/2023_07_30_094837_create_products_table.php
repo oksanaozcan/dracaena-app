@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('description');
             $table->text('content')->nullable();
             $table->string('preview')->nullable();
-            $table->decimal('price', 8, 2);
-            $table->unsignedInteger('amount');
-            $table->unsignedBigInteger('category_id');
+            $table->decimal('price', 8, 2)->nullable();
+            $table->unsignedInteger('amount')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->boolean('is_published')->default(false);
             $table->timestamps();
 

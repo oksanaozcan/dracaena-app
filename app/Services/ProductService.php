@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductService {
 
-    public function storeProduct($title, $preview)
+    public function storeProduct($title, $preview, $description, $content=null, $price, $amount)
     {
         try {
             DB::beginTransaction();
@@ -18,6 +18,10 @@ class ProductService {
             Product::create([
                 'title' => $title,
                 'preview' => url('/storage/' . $pathPreview),
+                'description' => $description,
+                'content' => $content,
+                'price' => $price,
+                'amount' => $amount,
             ]);
 
             DB::commit();
@@ -28,7 +32,7 @@ class ProductService {
         }
     }
 
-    public function updateProduct($title, Product $product, $preview=null)
+    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount)
     {
         try {
             DB::beginTransaction();
@@ -40,6 +44,10 @@ class ProductService {
                 $product->update([
                     'title' => $title,
                     'preview' => url('/storage/' . $pathNewPreview),
+                    'description' => $description,
+                    'content' => $content,
+                    'price' => $price,
+                    'amount' => $amount,
                 ]);
 
                 Storage::disk('public')->delete($oldPreview);
@@ -47,6 +55,10 @@ class ProductService {
             } else {
                 $product->update([
                     'title' => $title,
+                    'description' => $description,
+                    'content' => $content,
+                    'price' => $price,
+                    'amount' => $amount,
                 ]);
             }
 
@@ -85,7 +97,7 @@ class ProductService {
             $deletingPreview = DB::table('products')->where('title', $title)->pluck('preview')->first();
             $deletingPreview = substr($deletingPreview, strlen(url('/storage/')) + 1);
 
-            Category::where('title', $title)->delete();
+            Product::where('title', $title)->delete();
 
             Storage::disk('public')->delete($deletingPreview);
 
