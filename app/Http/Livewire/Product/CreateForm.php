@@ -4,7 +4,9 @@ namespace App\Http\Livewire\Product;
 
 use Livewire\Component;
 use App\Models\Product;
+use App\Models\Category;
 use App\Services\ProductService;
+use App\Http\Resources\CategoryResource;
 use Livewire\WithFileUploads;
 
 class CreateForm extends Component
@@ -18,6 +20,7 @@ class CreateForm extends Component
     public $content = '';
     public $price;
     public $amount;
+    public $category_id;
 
     protected $rules = [
         'title' => 'required|string|unique:products|min:3',
@@ -38,6 +41,7 @@ class CreateForm extends Component
             $this->content = $p->content;
             $this->price = $p->price;
             $this->amount = $p->amount;
+            $this->category_id = $p->category_id;
         } else {
             $this->product = null;
         }
@@ -52,7 +56,7 @@ class CreateForm extends Component
     {
         if ($this->product === null) {
             $this->validate();
-            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount);
+            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id);
 
             $this->emit('productAdded');
             $this->reset();
@@ -66,13 +70,15 @@ class CreateForm extends Component
                 'price' => 'nullable|numeric',
                 'amount' => 'nullable|numeric',
             ]);
-            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount);
+            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id);
             return redirect()->route('products.index');
         }
     }
 
     public function render()
     {
-        return view('livewire.product.create-form');
+        return view('livewire.product.create-form', [
+            'categories' => CategoryResource::collection(Category::all()),
+        ]);
     }
 }

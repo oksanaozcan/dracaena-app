@@ -119,5 +119,23 @@
         @error('amount') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
     </div>
 </div>
+<div class="mt-4 mb-6">
+    <label for="category_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+    <select
+        wire:model='category_id'
+        name="category_id"
+        value="{{$this->category_id}}"
+        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        required
+    >
+    <option value="">Select category</option>
+    @foreach($categories as $category)
+        <option value="{{$category->id}}">{{$category->title}}</option>
+    @endforeach
+    </select>
+    <div class="h-2">
+        @error('category_id') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
+    </div>
+</div>
 <x-form.submit-btn/>
 </form>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductService {
 
-    public function storeProduct($title, $preview, $description, $content=null, $price, $amount)
+    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id)
     {
         try {
             DB::beginTransaction();
@@ -22,6 +22,7 @@ class ProductService {
                 'content' => $content,
                 'price' => $price,
                 'amount' => $amount,
+                'category_id' => $category_id,
             ]);
 
             DB::commit();
@@ -32,7 +33,7 @@ class ProductService {
         }
     }
 
-    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount)
+    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id)
     {
         try {
             DB::beginTransaction();
@@ -48,6 +49,7 @@ class ProductService {
                     'content' => $content,
                     'price' => $price,
                     'amount' => $amount,
+                    'category_id' => $category_id,
                 ]);
 
                 Storage::disk('public')->delete($oldPreview);
@@ -59,6 +61,7 @@ class ProductService {
                     'content' => $content,
                     'price' => $price,
                     'amount' => $amount,
+                    'category_id' => $category_id,
                 ]);
             }
 
