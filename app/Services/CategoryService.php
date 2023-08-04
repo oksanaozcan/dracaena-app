@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryService {
 
+    public function searchForTable($search, $sortField, $sortDirection)
+    {
+        $categories = Category::search('title', $search)
+        ->withCount('products')
+        ->orderBy($sortField, $sortDirection)
+        ->paginate(15);
+
+        return $categories;
+    }
+
+    public function findById($id)
+    {
+        return Category::with('products')->findOrFail($id);
+    }
+
     public function storeCategory($title, $preview)
     {
         try {

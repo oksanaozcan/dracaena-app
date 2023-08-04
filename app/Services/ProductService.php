@@ -9,6 +9,23 @@ use Illuminate\Support\Facades\DB;
 
 class ProductService {
 
+    public function searchForTable($search, $sortField, $sortDirection)
+    {
+        $products = Product::with(['category' => function ($query) {
+            $query->select('id','title');
+        },
+        'tags' => function ($query) {
+            $query->select('tag_id','title');
+        }])->search('title', $search)->orderBy($sortField, $sortDirection)->paginate(15);
+
+        return $products;
+    }
+
+    public function findById($id)
+    {
+        return Product::with('category', 'tags')->findOrFail($id);
+    }
+
     public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id)
     {
         try {

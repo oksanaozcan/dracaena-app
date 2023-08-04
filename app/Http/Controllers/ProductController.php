@@ -23,9 +23,9 @@ class ProductController extends Controller
          /** @see App\Http\Livewire\Product\CreateForm */
     }
 
-    public function show(string $id)
+    public function show(string $id, ProductService $productService)
     {
-        $product = Product::with('category', 'tags')->findOrFail($id);
+        $product = $productService->findById($id);
         return view('product.show', compact('product'));
     }
 

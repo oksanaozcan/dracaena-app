@@ -23,9 +23,9 @@ class CategoryController extends Controller
         /** @see App\Http\Livewire\Category\CreateForm */
     }
 
-    public function show($id)
+    public function show($id, CategoryService $categoryService)
     {
-        $category = Category::find($id);
+        $category = $categoryService->findById($id);
         return view('category.show', compact('category'));
     }
 

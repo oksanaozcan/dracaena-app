@@ -23,9 +23,9 @@ class TagController extends Controller
         /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
-    public function show($id)
+    public function show($id, TagService $tagService)
     {
-        $tag = Tag::find($id);
+        $tag = $tagService->findById($id);
         return view('tag.show', compact('tag'));
     }
 

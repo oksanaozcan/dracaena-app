@@ -86,7 +86,7 @@
                     {{$item->created_at->format('j F, Y')}}
                 </td>
                 <td>
-                    #####
+                    {{$item->products_count}}
                 </td>
                 <td >
                     <a href="{{route('categories.show', $item->id)}}" class="link-blue">Show</a>

@@ -64,10 +64,11 @@ class Table extends Component
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
 
-    public function render()
+    public function render(CategoryService $categoryService)
     {
+        $categories = $categoryService->searchForTable($this->search, $this->sortField, $this->sortDirection);
         return view('livewire.category.table', [
-            'categories' => Category::search('title', $this->search)->orderBy($this->sortField, $this->sortDirection)->paginate(15),
+            'categories' => $categories,
             'count' => Category::count()
         ]);
     }

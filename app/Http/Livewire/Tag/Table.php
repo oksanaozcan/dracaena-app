@@ -64,11 +64,12 @@ class Table extends Component
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
 
-    public function render()
+    public function render(TagService $tagService)
     {
+        $tags = $tagService->searchForTable($this->search, $this->sortField, $this->sortDirection);
         return view('livewire.tag.table', [
-            'tags' => Tag::search('title', $this->search)->orderBy($this->sortField, $this->sortDirection)->paginate(15),
-            'count' => Tag::count()
+            'tags' => $tags,
+            'count' => Tag::count(),
         ]);
     }
 
