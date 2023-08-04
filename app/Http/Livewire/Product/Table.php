@@ -67,7 +67,12 @@ class Table extends Component
     public function render()
     {
         return view('livewire.product.table', [
-            'products' => Product::search('title', $this->search)->orderBy($this->sortField, $this->sortDirection)->paginate(15),
+            'products' => Product::with(['category' => function ($query) {
+                $query->select('id','title');
+            },
+            'tags' => function ($query) {
+                $query->select('tag_id','title');
+            }])->search('title', $this->search)->orderBy($this->sortField, $this->sortDirection)->paginate(15),
             'count' => Product::count()
         ]);
     }

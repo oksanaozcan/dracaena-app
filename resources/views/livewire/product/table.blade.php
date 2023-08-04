@@ -53,7 +53,13 @@
                         </span>
                     </th>
                     <th scope="col">
-                        Products
+                        Category
+                    </th>
+                    <th scope="col">
+                        Tags
+                    </th>
+                    <th scope="col">
+                        Is selling
                     </th>
                     <th scope="col">
                         Action
@@ -86,7 +92,15 @@
                     {{$item->created_at->format('j F, Y')}}
                 </td>
                 <td>
-                    #####
+                    {{$item->category->title ?? "None"}}
+                </td>
+                <td>
+                    @foreach ($item->tags as $t)
+                        <span>{{$t->title}}, </span>
+                    @endforeach
+                </td>
+                <td>
+                    {{$item->is_selling ? 'On' : 'None'}}
                 </td>
                 <td >
                     <a href="{{route('products.show', $item->id)}}" class="link-blue">Show</a>

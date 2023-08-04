@@ -18,8 +18,11 @@ class DatabaseSeeder extends Seeder
       $this->call(RoleSeeder::class);
       $this->call(AdminSeeder::class);
 
-      Tag::factory(10)->create();
+    //   Tag::factory(10)->create();
       Category::factory(10)->create();
-      Product::factory(10)->create();
+
+      for ($i=0; $i < 10; $i++) {
+        Product::factory()->hasTags(2)->create();
+      }
     }
 }

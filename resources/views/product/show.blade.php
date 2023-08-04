@@ -17,6 +17,16 @@
                 <img src="{{url($product->preview)}}" alt="preview" class="mb-2">
                 <div class="mb-2 text-xl font-bold">{{$product->title}}</div>
                 <p class="text-base text-gray-700">Id: {{$product->id}}</p>
+                <p class="text-base text-gray-700">Description: {{$product->description}}</p>
+                <p class="text-base text-gray-700">Content: {{$product->content}}</p>
+                <p class="text-base text-gray-700">Price: {{$product->price}}</p>
+                <p class="text-base text-gray-700">Amount: {{$product->amount}}</p>
+                <p class="text-base text-gray-700">Category: {{$product->category?->title}}</p>
+                <ul class="text-base text-gray-700">Tags:
+                    @foreach ($product->tags as $t)
+                        <li>{{$t->title}}</li>
+                    @endforeach
+                </ul>
                 <p class="text-base text-gray-700">Created at: {{$product->created_at}}</p>
                 <p class="text-base text-gray-700">Updated at: {{$product->updated_at}}</p>
                 <p class="text-base text-gray-700">Deleted at: {{$product->deleted_at}}</p>

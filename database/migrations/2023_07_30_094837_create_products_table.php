@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->nullable();
             $table->unsignedInteger('amount')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
-            $table->boolean('is_published')->default(false);
+            $table->boolean('is_selling')->default(false);
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories');
