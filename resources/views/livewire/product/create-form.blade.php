@@ -137,5 +137,145 @@
         @error('category_id') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
     </div>
 </div>
+
+{{-- <div class="mt-4 mb-6">
+    <label for="tags" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
+    <select
+        wire:model='tags'
+        value={{implode($this->tags)}}
+        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        multiple
+    >
+    @foreach($tags_fore_select as $t)
+        <option value="{{$t->id}}">{{$t->title}}</option>
+    @endforeach
+    </select>
+</div>
+
+<div>
+    Selected tags: @json($this->tags)
+</div> --}}
+
+<div>
+    Selcted tags in array: @json($this->tags)
+</div>
+
+<select id="select" class="hidden">
+    @foreach($tags_fore_select as $t)
+        <option value="{{$t->id}}">{{$t->title}}</option>
+    @endforeach
+</select>
+
+<div x-data="dropdown()" x-init="loadOptions()" class="mt-4 mb-6">
+    <input
+        name="values" type="hidden" x-bind:value="selectedValues()"
+    >
+        <div class="relative inline-block w-full">
+            <div class="relative flex flex-col items-center">
+              <div x-on:click="open" class="w-full">
+                  <div class="flex p-1 my-2 bg-white border border-gray-200 rounded">
+                      <div class="flex flex-wrap flex-auto">
+                          <template x-for="(option,index) in selected"
+                          :key="options[option].value"
+                          >
+                              <div class="flex items-center justify-center px-4 py-1 m-2 text-white rounded-full bg-cyan-900 ">
+                                  <div class="pr-4" x-model="options[option]" x-text="options[option].text"></div>
+                                  <div class="flex flex-row-reverse flex-auto">
+                                      <div x-on:click="remove(index,option)">
+                                        <i class="fa-solid fa-xmark"></i>
+                                      </div>
+                                  </div>
+                              </div>
+                          </template>
+                          <div x-show="selected.length == 0" class="flex-1">
+                              <input placeholder="Select a tags" class="w-full h-full p-1 px-2 text-gray-800 bg-transparent outline-none appearance-none"
+                                x-bind:value="selectedValues()"
+                              >
+                          </div>
+                      </div>
+                      <div class="flex items-center w-8 py-1 pl-2 pr-1 text-gray-300 border-l border-gray-200">
+                          <button type="button" x-show="isOpen() === true" x-on:click="open" class="w-6 h-6 text-gray-600 outline-none cursor-pointer focus:outline-none">
+                            <i class="fa-solid fa-chevron-up"></i>
+                          </button>
+                          <button type="button" x-show="isOpen() === false" @click="close" class="w-6 h-6 text-gray-600 outline-none cursor-pointer focus:outline-none">                            >
+                          </button>
+                      </div>
+                  </div>
+              </div>
+              <div class="w-full px-4">
+                  <div x-show.transition.origin.top="isOpen()" class="absolute z-40 w-full overflow-y-auto bg-white rounded shadow top-100 lef-0 max-h-select"
+                      x-on:click.away="close">
+                      <div class="flex flex-col w-full">
+                          <template x-for="(option,index) in options" :key="index">
+                              <div>
+                                  <div class="w-full border-b border-gray-100 rounded-t cursor-pointer hover:bg-cyan-100"
+                                      @click="select(index,$event)">
+                                      <div x-bind:class="option.selected ? 'border-cyan-800' : ''"
+                                          class="relative flex items-center w-full p-2 pl-2 border-l-2 border-transparent">
+                                          <div class="flex items-center w-full">
+                                              <div class="mx-2 leading-6" x-model="option" x-text="option.text"></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </template>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+      <script>
+          function dropdown() {
+              return {
+                  options: [],
+                  selected: [],
+                  show: false,
+                  open() { this.show = true },
+                  close() { this.show = false },
+                  isOpen() { return this.show === true },
+                  select(index, event) {
+
+                      if (!this.options[index].selected) {
+
+                          this.options[index].selected = true;
+                          this.options[index].element = event.target;
+                          this.selected.push(index);
+
+                      } else {
+                          this.selected.splice(this.selected.lastIndexOf(index), 1);
+                          this.options[index].selected = false
+                      }
+                  },
+                  remove(index, option) {
+                      this.options[option].selected = false;
+                      this.selected.splice(index, 1);
+
+
+                  },
+                  loadOptions() {
+                      const options = document.getElementById('select').options;
+                      for (let i = 0; i < options.length; i++) {
+                          this.options.push({
+                              value: options[i].value,
+                              text: options[i].innerText,
+                              selected: options[i].getAttribute('selected') != null ? options[i].getAttribute('selected') : false
+                          });
+                      }
+
+
+                  },
+                  selectedValues(){
+                      return this.selected.map((option)=>{
+                          return this.options[option].value;
+                      })
+                  }
+              }
+          }
+      </script>
+</div>
+
+
 <x-form.submit-btn/>
 </form>

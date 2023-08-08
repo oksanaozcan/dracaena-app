@@ -56,6 +56,10 @@
                     </th>
                     <th scope="col">
                         Products
+                        <span wire:click="sortBy('products_count')" class="pl-4">
+                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
+                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
+                        </span>
                     </th>
                     <th scope="col">
                         Action

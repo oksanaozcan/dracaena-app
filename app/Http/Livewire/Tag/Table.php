@@ -17,7 +17,7 @@ class Table extends Component
 
     public $selectedTag;
 
-    public $sortField = 'created_at';
+    public $sortField = 'products_count';
     public $sortDirection = 'desc';
 
     public $checkedTitles = [];

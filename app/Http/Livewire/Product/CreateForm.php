@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Product;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Tag;
 use App\Services\ProductService;
 use App\Http\Resources\CategoryResource;
 use Livewire\WithFileUploads;
@@ -21,6 +22,7 @@ class CreateForm extends Component
     public $price;
     public $amount;
     public $category_id;
+    public $tags = [];
 
     protected $rules = [
         'title' => 'required|string|unique:products|min:3',
@@ -42,6 +44,7 @@ class CreateForm extends Component
             $this->price = $p->price;
             $this->amount = $p->amount;
             $this->category_id = $p->category_id;
+            $this->tags = $p->tags;
         } else {
             $this->product = null;
         }
@@ -79,6 +82,7 @@ class CreateForm extends Component
     {
         return view('livewire.product.create-form', [
             'categories' => CategoryResource::collection(Category::all()),
+            'tags_fore_select' => Tag::all(),
         ]);
     }
 }
