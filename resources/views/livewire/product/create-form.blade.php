@@ -138,11 +138,14 @@
     </div>
 </div>
 
-{{-- <div class="mt-4 mb-6">
+<div class="w-full mt-4 mb-6">
+    Selected tags from livewire model: @json($this->tags)
+</div>
+
+{{-- <div class="w-full mt-4 mb-6">
     <label for="tags" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tags</label>
     <select
         wire:model='tags'
-        value={{implode($this->tags)}}
         class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         multiple
     >
@@ -150,17 +153,144 @@
         <option value="{{$t->id}}">{{$t->title}}</option>
     @endforeach
     </select>
-</div>
-
-<div>
-    Selected tags: @json($this->tags)
 </div> --}}
 
-<div>
-    Selcted tags in array: @json($this->tags)
+{{-- begin test functional--------------------------------------------- --}}
+
+<div class="w-full">
+    {{-- Start Components --}}
+    <div class="relative"
+        x-data="multiselect({
+            items: {{ json_encode($tags_fore_select) }}
+        })"
+        x-init='onInit()'
+        @focusout='handleBlure'
+    >
+        {{-- Start Item Tgas And Input Fields  --}}
+        <div class="relative flex items-center justify-between px-1 border-2 rounded-md">
+            <ul class="flex flex-wrap items-center w-full">
+                {{-- Tags (Selected) --}}
+                <template x-for='(selectedItem,idx) in selectedItems'>
+                    <li
+                        @click='removeElByInd(idx)'
+                        @keyup.delete="removeElByInd(idx)"
+                        @keyup.backspace="removeElByInd(idx)"
+                        tabindex="0"
+                        x-text="selectedItem.title + ' X'"
+                        class="relative px-2 py-2 m-1 border rounded-md cursor-pointer hover:bg-gray-100"
+                    ></li>
+                </template>
+
+                {{-- Search Input --}}
+                <input
+                    x-model='search'
+                    @click='expanded = true'
+                    @focusin='expanded = true'
+                    @input='expanded = true'
+                    @keyup.arrow-down='expanded = true; selectNextItem'
+                    @keyup.arrow-up='expanded = true; selectPrevItem'
+                    @keyup.esc='reset'
+                    type="text"
+                    class="flex-grow py-2 px-2 mx-1 my-1.5"
+                    placeholder="Type here..."
+                />
+                {{-- Arrow Icon  --}}
+                <i @click='expanded = true' class="fa-solid fa-chevron-down"></i>
+            </ul>
+        </div>
+        {{-- End Item Tags and Input Field --}}
+
+        {{-- Start items list --}}
+        <template
+            x-if='expanded'
+        >
+            <ul class="w-full list-none border-2 border-t-0 rounded-md" tabindex="0">
+                <template x-for='filteredItem in filteredItems'>
+                    {{-- Item element --}}
+                    <li
+                        @click='handleItemClick(filteredItem)'
+                        x-text='filteredItem.title'
+                        class="px-2 py-2 cursor-pointer hover:bg-amber-200"
+                    ></li>
+                </template>
+
+                <template x-if='!filteredItems.length'>
+                    {{-- Empty text --}}
+                    <li class="px-2 py-2 text-gray-400 cursor-pointer">
+                        No items found...
+                    </li>
+                </template>
+
+            </ul>
+        </template>
+
+        {{-- End Items List --}}
+    </div>
+    {{-- end Component --}}
 </div>
 
-<select id="select" class="hidden">
+<script>
+    function multiselect (config) {
+        return {
+            items: config.items ?? [],
+            allItems: null,
+            selectedItems: null,
+            search: '',
+            searchPlaceholder: config.searchPlaceholder ?? 'Type here...',
+            expanded: false,
+            emptyText: config.emptyText ?? 'No items found',
+            allowDuplicates: config.allowDuplicates ?? false,
+            size: config.size ?? 6,
+            itemHeight: config.itemHeight ?? 40,
+            maxTagChars: config.maxTagChars ?? 25,
+            activeIndex: -1,
+            onInit() {
+                this.allItems = [...this.items];
+                this.$watch('selectedItems', (newValue, oldValue) => {
+                    this.allItems = this.items.filter((item,idx,all) => {
+                        return newValue.every(n => n.title !==item.title);
+                    }
+                    );
+                })
+                this.selectedItems = this.allItems.filter(i => i.selected)
+            },
+            reset() {
+                this.expanded = false;
+            },
+            handleBlure(e) {
+                if (this.$el.contains(e.relatedTarget)) return;
+                this.expanded = false;
+            },
+            get filteredItems() {
+                return this.allItems.filter(item =>
+                item.title.toLowerCase().includes(this.search.toLowerCase())
+                )
+            },
+            handleItemClick(selectedItem) {
+                this.selectedItems.push(selectedItem);
+            },
+            removeElByInd(idx) {
+                this.selectedItems.splice(idx, 1);
+            },
+            selectPrevItem() {
+                if (!filteredItems.length) return;
+                this.activeIndex--;
+            },
+            selectNextItem() {
+                if (!filteredItems.length) return;
+                if (this.filteredItems.length - 1 == this.activeIndex) return (this.activeIndex = 0);
+                this.activeIndex++;
+            }
+        }
+    }
+</script>
+
+{{-- end test functional----------------------------------------------- --}}
+
+<x-form.submit-btn/>
+</form>
+
+{{-- <select id="select" class="hidden">
     @foreach($tags_fore_select as $t)
         <option value="{{$t->id}}">{{$t->title}}</option>
     @endforeach
@@ -274,8 +404,4 @@
               }
           }
       </script>
-</div>
-
-
-<x-form.submit-btn/>
-</form>
+</div> --}}

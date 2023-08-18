@@ -26,13 +26,13 @@ class ProductService {
         return Product::with('category', 'tags')->findOrFail($id);
     }
 
-    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id)
+    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id, $tags=[])
     {
         try {
             DB::beginTransaction();
             $pathPreview = Storage::disk('public')->put('product_previews', $preview);
 
-            Product::create([
+            $p = Product::create([
                 'title' => $title,
                 'preview' => url('/storage/' . $pathPreview),
                 'description' => $description,
@@ -42,6 +42,10 @@ class ProductService {
                 'category_id' => $category_id,
             ]);
 
+            if (isset($tags)) {
+                $p->tags()->attach($tags);
+            }
+
             DB::commit();
 
         } catch (Exception $exception) {
@@ -50,7 +54,7 @@ class ProductService {
         }
     }
 
-    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id)
+    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id, $tags=[])
     {
         try {
             DB::beginTransaction();
@@ -80,6 +84,13 @@ class ProductService {
                     'amount' => $amount,
                     'category_id' => $category_id,
                 ]);
+            }
+
+            if (isset($tags) && $product->tags->isEmpty()) {
+                $product->tags()->attach($tags);
+            }
+            if (isset($tags) && $product->tags->isNotEmpty()) {
+                $product->tags()->sync($tags);
             }
 
             DB::commit();

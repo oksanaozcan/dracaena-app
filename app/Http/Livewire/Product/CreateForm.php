@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Services\ProductService;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\TagResource;
 use Livewire\WithFileUploads;
 
 class CreateForm extends Component
@@ -22,7 +23,7 @@ class CreateForm extends Component
     public $price;
     public $amount;
     public $category_id;
-    public $tags = [];
+    public $tags = ['my', 'tags'];
 
     protected $rules = [
         'title' => 'required|string|unique:products|min:3',
@@ -59,7 +60,7 @@ class CreateForm extends Component
     {
         if ($this->product === null) {
             $this->validate();
-            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id);
+            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $this->tags);
 
             $this->emit('productAdded');
             $this->reset();
@@ -73,7 +74,7 @@ class CreateForm extends Component
                 'price' => 'nullable|numeric',
                 'amount' => 'nullable|numeric',
             ]);
-            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id);
+            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $this->tags);
             return redirect()->route('products.index');
         }
     }
@@ -82,7 +83,7 @@ class CreateForm extends Component
     {
         return view('livewire.product.create-form', [
             'categories' => CategoryResource::collection(Category::all()),
-            'tags_fore_select' => Tag::all(),
+            'tags_fore_select' => TagResource::collection(Tag::all()),
         ]);
     }
 }
