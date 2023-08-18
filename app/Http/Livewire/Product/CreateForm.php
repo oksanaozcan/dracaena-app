@@ -23,7 +23,7 @@ class CreateForm extends Component
     public $price;
     public $amount;
     public $category_id;
-    public $tags = ['my', 'tags'];
+    public $tags = [];
 
     protected $rules = [
         'title' => 'required|string|unique:products|min:3',

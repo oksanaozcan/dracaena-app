@@ -161,7 +161,7 @@
     {{-- Start Components --}}
     <div class="relative"
         x-data="multiselect({
-            items: {{ json_encode($tags_fore_select) }}
+            items: {{ json_encode($tags_fore_select) }},
         })"
         x-init='onInit()'
         @focusout='handleBlure'
@@ -183,7 +183,9 @@
 
                 {{-- Search Input --}}
                 <input
+                    x-ref="searchInput"
                     x-model='search'
+                    @keyup.enter="addActiveItem"
                     @click='expanded = true'
                     @focusin='expanded = true'
                     @input='expanded = true'
@@ -192,10 +194,14 @@
                     @keyup.esc='reset'
                     type="text"
                     class="flex-grow py-2 px-2 mx-1 my-1.5"
-                    placeholder="Type here..."
+                    :placeholder="searchPlaceholder"
                 />
                 {{-- Arrow Icon  --}}
-                <i @click='expanded = true' class="fa-solid fa-chevron-down"></i>
+                <i
+                    @click='expanded = true'
+                    :class="expanded && 'rotate-180'"
+                    class="fa-solid fa-chevron-down"
+                ></i>
             </ul>
         </div>
         {{-- End Item Tags and Input Field --}}
@@ -204,23 +210,27 @@
         <template
             x-if='expanded'
         >
-            <ul class="w-full list-none border-2 border-t-0 rounded-md" tabindex="0">
-                <template x-for='filteredItem in filteredItems'>
+            <ul
+                class="w-full list-none border-2 border-t-0 rounded-md"
+                tabindex="0"
+                :style="listBoxStyle"
+                x-ref="listBox"
+            >
+            <template x-if="filteredItems.length">
+                <template x-for='(filteredItem, idx) in filteredItems'>
                     {{-- Item element --}}
                     <li
                         @click='handleItemClick(filteredItem)'
+                        :class="idx == activeIndex && 'bg-amber-200'"
                         x-text='filteredItem.title'
                         class="px-2 py-2 cursor-pointer hover:bg-amber-200"
                     ></li>
                 </template>
-
+            </template>
                 <template x-if='!filteredItems.length'>
                     {{-- Empty text --}}
-                    <li class="px-2 py-2 text-gray-400 cursor-pointer">
-                        No items found...
-                    </li>
+                    <li x-text="emptyText" class="px-2 py-2 text-gray-400 cursor-pointer"></li>
                 </template>
-
             </ul>
         </template>
 
@@ -234,7 +244,7 @@
         return {
             items: config.items ?? [],
             allItems: null,
-            selectedItems: null,
+            selectedItems: @entangle('tags'),
             search: '',
             searchPlaceholder: config.searchPlaceholder ?? 'Type here...',
             expanded: false,
@@ -246,12 +256,30 @@
             activeIndex: -1,
             onInit() {
                 this.allItems = [...this.items];
+
+                this.$watch("filteredItems", (newValues, oldValues) => {
+                    // Reset the activeIndex whenever the filteredItems array changes
+                    if (newValues.length !== oldValues.length) this.activeIndex = -1;
+                });
+
                 this.$watch('selectedItems', (newValue, oldValue) => {
+                    if (this.allowDuplicates) return;
+
                     this.allItems = this.items.filter((item,idx,all) => {
                         return newValue.every(n => n.title !==item.title);
                     }
                     );
                 })
+
+                this.$watch("activeIndex", (newValue, oldValue) => {
+                    if (
+                        this.activeIndex == -1 ||
+                        !this.filteredItems[this.activeIndex] ||
+                        !this.expanded
+                    ) return;
+                    this.scrollToActiveElement();
+                });
+
                 this.selectedItems = this.allItems.filter(i => i.selected)
             },
             reset() {
@@ -261,26 +289,52 @@
                 if (this.$el.contains(e.relatedTarget)) return;
                 this.expanded = false;
             },
-            get filteredItems() {
-                return this.allItems.filter(item =>
-                item.title.toLowerCase().includes(this.search.toLowerCase())
-                )
-            },
             handleItemClick(selectedItem) {
                 this.selectedItems.push(selectedItem);
+
+                this.search = "";
+                this.$refs.searchInput.focus();
             },
             removeElByInd(idx) {
                 this.selectedItems.splice(idx, 1);
             },
             selectPrevItem() {
                 if (!filteredItems.length) return;
+                if (this.activeIndex == 0 || this.activeIndex == -1) {
+                    this.activeIndex = this.filteredItems.length - 1;
+                }
                 this.activeIndex--;
             },
             selectNextItem() {
                 if (!filteredItems.length) return;
                 if (this.filteredItems.length - 1 == this.activeIndex) return (this.activeIndex = 0);
                 this.activeIndex++;
-            }
+            },
+            addActiveItem() {
+                if (!this.filteredItems[this.activeIndex]) return;
+                this.selectedItems.push(this.filteredItems[this.activeIndex]);
+            },
+            scrollToActiveElement() {
+                const avaliableListElements = [...this.$refs.listBox.children].slice(2, -1);
+                avaliableListElements[this.activeIndex].scrollIntoView({
+                    block: "end",
+                })
+            },
+            shortenedTitle (title, maxChar) {
+                return !maxChars || title.length <= maxChars
+                    ? title
+                    : `${title.substr(0, maxChars)}...`;
+            },
+            get listBoxStyle() {
+                return {
+                    maxHeight: `${this.size * this.itemHeight + 2}px`,
+                };
+            },
+            get filteredItems() {
+                return this.allItems.filter(item =>
+                item.title.toLowerCase().includes(this.search.toLowerCase())
+                )
+            },
         }
     }
 </script>
