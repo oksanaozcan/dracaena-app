@@ -59,8 +59,14 @@ class CreateForm extends Component
     public function submitForm(ProductService $productService)
     {
         if ($this->product === null) {
+            $newTags = [];
+            foreach ($this->tags as $item) {
+                if (isset($item["id"])) {
+                    array_push($newTags, $item["id"]);
+                }
+            }
             $this->validate();
-            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $this->tags);
+            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags);
 
             $this->emit('productAdded');
             $this->reset();
@@ -74,7 +80,13 @@ class CreateForm extends Component
                 'price' => 'nullable|numeric',
                 'amount' => 'nullable|numeric',
             ]);
-            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $this->tags);
+            $newTags = [];
+            foreach ($this->tags as $item) {
+                if (isset($item["id"])) {
+                    array_push($newTags, $item["id"]);
+                }
+            }
+            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags);
             return redirect()->route('products.index');
         }
     }
