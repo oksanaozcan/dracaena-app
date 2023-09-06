@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
     //   Tag::factory(10)->create();
       Category::factory(10)->create();
 
-      for ($i=0; $i < 10; $i++) {
+      for ($i=0; $i < 40; $i++) {
         Product::factory()->hasTags(2)->create();
       }
     }
