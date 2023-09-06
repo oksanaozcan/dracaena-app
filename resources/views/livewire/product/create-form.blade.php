@@ -138,10 +138,6 @@
     </div>
 </div>
 
-<div class="w-full mt-4 mb-6">
-    Selected tags from livewire model: @json($this->tags)
-</div>
-
 {{-- begin test functional--------------------------------------------- --}}
 
 <div class="w-full">
@@ -244,6 +240,16 @@
             onInit() {
                 this.allItems = [...this.items];
 
+                let lastArr = [];
+                let jsonTags = {!! json_encode($this->tags) !!};
+                testarray = jsonTags.map(obj => Object.entries(obj))
+                .map(arr => arr.slice(0,2))
+                .map(arr => {
+                    let ob = Object.fromEntries(arr)
+                    lastArr.push(ob)
+                })
+                this.selectedItems = [...lastArr]
+
                 this.$watch("filteredItems", (newValues, oldValues) => {
                     // Reset the activeIndex whenever the filteredItems array changes
                     if (newValues.length !== oldValues.length) this.activeIndex = -1;
@@ -266,8 +272,6 @@
                     ) return;
                     this.scrollToActiveElement();
                 });
-
-                this.selectedItems = this.allItems.filter(i => i.selected)
             },
             reset() {
                 this.expanded = false;

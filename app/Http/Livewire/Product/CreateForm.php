@@ -32,6 +32,7 @@ class CreateForm extends Component
         'content' => 'string|max:1000',
         'price' => 'required|numeric',
         'amount' => 'required|numeric',
+        'tags' => 'nullable',
     ];
 
     public function mount($id = null)
@@ -79,6 +80,7 @@ class CreateForm extends Component
                 'content' => 'nullable|max:1000',
                 'price' => 'nullable|numeric',
                 'amount' => 'nullable|numeric',
+                'tags' => 'nullable',
             ]);
             $newTags = [];
             foreach ($this->tags as $item) {

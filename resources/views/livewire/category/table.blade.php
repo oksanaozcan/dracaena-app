@@ -7,13 +7,7 @@
     <div class="absolute top-16 right-10"><h1 class="py-6 text-xl font-semibold leading-tight text-gray-800">Amount: {{$count}}</h1></div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div class="flex justify-between">
-            <button
-                @click="openModal=true"
-                type="button" class="btn-common btn-danger"
-            >Bulk delete</button>
-            <div class="w-1/4">
-                <x-text-input wire:model='search' class="w-full px-4 py-2" placeholder="Search..."/>
-            </div>
+
         </div>
 
         @if ($checkedTitles)
