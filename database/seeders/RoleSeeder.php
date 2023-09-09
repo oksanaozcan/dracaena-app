@@ -8,6 +8,7 @@ use App\Types\PermissionType;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleSeeder extends Seeder
 {
@@ -16,6 +17,9 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+         // Reset cached roles and permissions
+         app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
         // Permissions
         Permission::create(['name' => PermissionType::CAN_CREATE_USER]);
         Permission::create(['name' => PermissionType::CAN_UPDATE_USER]);
@@ -38,22 +42,8 @@ class RoleSeeder extends Seeder
         $managerRole = Role::create(['name' => RoleType::MANAGER]);
         $assistantRole = Role::create(['name' => RoleType::ASSISTANT]);
 
+        // gets all permissions via Gate::before rule; see AuthServiceProvider for $adminRole
         // Defining permissions to role
-        $adminRole->givePermissionTo([
-            PermissionType::CAN_CREATE_USER,
-            PermissionType::CAN_UPDATE_USER,
-            PermissionType::CAN_DELETE_USER,
-            PermissionType::CAN_CREATE_CATEGORY,
-            PermissionType::CAN_UPDATE_CATEGORY,
-            PermissionType::CAN_DELETE_CATEGORY,
-            PermissionType::CAN_CREATE_TAG,
-            PermissionType::CAN_UPDATE_TAG,
-            PermissionType::CAN_DELETE_TAG,
-            PermissionType::CAN_CREATE_PRODUCT,
-            PermissionType::CAN_UPDATE_PRODUCT,
-            PermissionType::CAN_DELETE_PRODUCT,
-          ]);
-
         $managerRole->givePermissionTo([
             PermissionType::CAN_CREATE_CATEGORY,
             PermissionType::CAN_UPDATE_CATEGORY,

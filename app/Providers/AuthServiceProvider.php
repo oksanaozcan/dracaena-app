@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Types\RoleType;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::after(function ($user, $ability) {
+            return $user->hasRole(RoleType::ADMIN); // note this returns boolean
+         });
     }
 }
