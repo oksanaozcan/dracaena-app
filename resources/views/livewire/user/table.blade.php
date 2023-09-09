@@ -10,9 +10,9 @@
 
         </div>
 
-        @if ($checkedTitles)
+        @if ($checkedNames)
             <div>Checked values:
-                @foreach ($checkedTitles as $checkedItem)
+                @foreach ($checkedNames as $checkedItem)
                     <span>{{$checkedItem}}, </span>
                 @endforeach
             </div>
@@ -33,8 +33,15 @@
                         </span>
                     </th>
                     <th scope="col">
-                        Title
-                        <span wire:click="sortBy('title')" class="pl-4">
+                        Name
+                        <span wire:click="sortBy('name')" class="pl-4">
+                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
+                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
+                        </span>
+                    </th>
+                    <th scope="col">
+                        Email
+                        <span wire:click="sortBy('email')" class="pl-4">
                             <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
                             <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
                         </span>
@@ -46,23 +53,7 @@
                             <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
                         </span>
                     </th>
-                    <th scope="col">
-                        Category
-                        <span wire:click="sortBy('category_id')" class="pl-4">
-                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
-                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
-                        </span>
-                    </th>
-                    <th scope="col">
-                        Tags
-                    </th>
-                    <th scope="col">
-                        Is selling
-                        <span wire:click="sortBy('is_selling')" class="pl-4">
-                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
-                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
-                        </span>
-                    </th>
+
                     <th scope="col">
                         Action
                     </th>
@@ -75,43 +66,35 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($products as $item)
+                @forelse ($users as $item)
                 <tr
                 wire:loading.class.delay="opacity-50"
-                wire:click="selectProduct({{$item->id}})"
-                style="background-color: {{$item->id === $selectedProduct ? 'slite' : 'white'}}"
+                wire:click="selectUser({{$item->id}})"
+                style="background-color: {{$item->id === $selectedUser ? 'slite' : 'white'}}"
                 >
                 <td>
-                    <input wire:model='checkedTitles' type="checkbox" value="{{$item->title}}"/>
+                    <input wire:model='checkedNames' type="checkbox" value="{{$item->name}}"/>
                 </td>
                 <td scope="row">
                     {{$item->id}}
                 </td>
                 <td>
-                    {{$item->title}}
+                    {{$item->name}}
+                </td>
+                <td>
+                    {{$item->email}}
                 </td>
                 <td>
                     {{$item->created_at->format('j F, Y')}}
                 </td>
-                <td>
-                    {{$item->category->title ?? "None"}}
-                </td>
-                <td>
-                    @foreach ($item->tags as $t)
-                        <span>{{$t->title}}, </span>
-                    @endforeach
-                </td>
-                <td>
-                    {{$item->is_selling ? 'On' : 'None'}}
-                </td>
                 <td >
-                    <a href="{{route('products.show', $item->id)}}" class="link-blue">Show</a>
+                    <a href="{{route('users.show', $item->id)}}" class="link-blue">Show</a>
                 </td>
                 <td>
-                    <a wire:click='editProduct({{$item->id}})' class="link-green">Edit</a>
+                    <a wire:click='editUser({{$item->id}})' class="link-green">Edit</a>
                 </td>
                 <td>
-                    <a wire:click='destroyProduct({{$item->id}})' class="link-red">Delete</a>
+                    <a wire:click='destroyUser({{$item->id}})' class="link-red">Delete</a>
                 </td>
                 </tr>
                 @empty
@@ -128,7 +111,7 @@
             </tbody>
         </table>
         <div class="px-2 py-4">
-            {{ $products->links() }}
+            {{ $users->links() }}
         </div>
     </div>
 

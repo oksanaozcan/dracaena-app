@@ -107,29 +107,11 @@ class ProductService {
             DB::beginTransaction();
 
             $deletingProd = Product::find($id);
+            $deletingProd->tags()->detach();
+
             $deletingPreview = substr($deletingProd->preview, strlen(url('/storage/')) + 1);
 
             $deletingProd->delete();
-            Storage::disk('public')->delete($deletingPreview);
-
-            DB::commit();
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            abort(500, $exception);
-        }
-    }
-
-    public function destroyProductByTitle($title)
-    {
-        try {
-            DB::beginTransaction();
-
-            $deletingPreview = DB::table('products')->where('title', $title)->pluck('preview')->first();
-            $deletingPreview = substr($deletingPreview, strlen(url('/storage/')) + 1);
-
-            Product::where('title', $title)->delete();
-
             Storage::disk('public')->delete($deletingPreview);
 
             DB::commit();

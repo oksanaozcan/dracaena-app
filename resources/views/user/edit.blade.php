@@ -11,7 +11,7 @@
     </div>
     <div class="overflow-hidden shadow-sm basis-5/6">
       <div class="p-6 text-gray-900">
-        <livewire:user.create-form>
+        <livewire:user.create-form :id="$id">
       </div>
     </div>
   </div>

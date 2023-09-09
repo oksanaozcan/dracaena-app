@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
       Category::factory(10)->create();
 
-      for ($i=0; $i < 1000; $i++) {
+      for ($i=0; $i < 200; $i++) {
         Product::factory()->hasTags(1)->create();
       }
     }
