@@ -40,6 +40,9 @@
                         </span>
                     </th>
                     <th scope="col">
+                        Roles
+                    </th>
+                    <th scope="col">
                         Email
                         <span wire:click="sortBy('email')" class="pl-4">
                             <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
@@ -80,6 +83,11 @@
                 </td>
                 <td>
                     {{$item->name}}
+                </td>
+                <td>
+                    @foreach ($item->roles as $r)
+                        <span>{{$r->name}}</span>
+                    @endforeach
                 </td>
                 <td>
                     {{$item->email}}

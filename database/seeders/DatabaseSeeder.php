@@ -15,12 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-      $this->call(RoleSeeder::class);
-      $this->call(AdminSeeder::class);
+      $this->call([
+        RoleSeeder::class,
+        AdminSeeder::class,
+        ManagerSeeder::class,
+        AssistantSeeder::class,
+      ]);
 
       Category::factory(10)->create();
 
-      for ($i=0; $i < 200; $i++) {
+      for ($i=0; $i < 40; $i++) {
         Product::factory()->hasTags(1)->create();
       }
     }

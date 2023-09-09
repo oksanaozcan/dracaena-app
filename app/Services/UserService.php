@@ -11,7 +11,7 @@ class UserService {
 
     public function searchForTable($search, $sortField, $sortDirection)
     {
-        $users = User::search('name', $search)
+        $users = User::with('roles')->search('name', $search)
         ->orderBy($sortField, $sortDirection)
         ->paginate(15);
 
