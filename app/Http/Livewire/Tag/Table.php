@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\TagService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Table extends Component
 {
     use WithPagination;
+    use AuthorizesRequests;
 
     public $search = '';
 
@@ -46,6 +48,8 @@ class Table extends Component
 
     public function destroyTag($id, TagService $tagService)
     {
+        $tag = Tag::find($id);
+        $this->authorize('delete', $tag);
         $tagService->destroyTag($id);
     }
 

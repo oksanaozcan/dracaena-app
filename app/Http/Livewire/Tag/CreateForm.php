@@ -9,9 +9,12 @@ use App\Jobs\Tag\StoreTagJob;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Throwable;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CreateForm extends Component
 {
+    use AuthorizesRequests;
+
     public $tag;
     public $title;
 
@@ -40,12 +43,14 @@ class CreateForm extends Component
         $this->validate();
 
         if ($this->tag === null) {
+            $this->authorize('create', Tag::class);
             StoreTagJob::dispatch($this->title);
 
             $this->emit('tagAdded');
             $this->reset();
             session()->flash('success_message', 'Tag successfully added.');
         } else {
+            $this->authorize('update', $this->tag);
             $tagService->updateTag($this->title, $this->tag);
             return redirect()->route('tags.index');
         }

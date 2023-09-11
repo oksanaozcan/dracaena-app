@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Tag;
 use App\Policies\CategoryPolicy;
+use App\Policies\TagPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Types\RoleType;
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Category::class => CategoryPolicy::class,
+        Tag::class => TagPolicy::class,
     ];
 
     /**

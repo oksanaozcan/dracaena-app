@@ -10,6 +10,11 @@ use Illuminate\Http\RedirectResponse;
 
 class TagController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']);
+    }
+
     public function index(): View
     {
         return view('tag.index');
@@ -17,6 +22,7 @@ class TagController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Tag::class);
         return view('tag.create');
     }
 
@@ -33,6 +39,7 @@ class TagController extends Controller
 
     public function edit(Tag $tag): View
     {
+        $this->authorize('update', $tag);
         $id = $tag->id;
         return view('tag.edit', compact('id'));
     }
@@ -44,6 +51,8 @@ class TagController extends Controller
 
     public function destroy($id, TagService $tagService): RedirectResponse
     {
+        $tag = Tag::find($id);
+        $this->authorize('delete', $tag);
         $tagService->destroyTag($id);
         return redirect()->route('tags.index');
         /**
