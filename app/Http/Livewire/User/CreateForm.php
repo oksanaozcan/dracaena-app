@@ -6,10 +6,12 @@ use Livewire\Component;
 use App\Models\User;
 use App\Services\UserService;
 use Livewire\WithFileUploads;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CreateForm extends Component
 {
     use WithFileUploads;
+    use AuthorizesRequests;
 
     public $user;
     public $name;
@@ -40,6 +42,7 @@ class CreateForm extends Component
     public function submitForm(UserService $userService)
     {
         if ($this->user === null) {
+            $this->authorize('create', User::class);
             $this->validate();
             $userService->storeUser($this->name, $this->email);
 
@@ -47,6 +50,7 @@ class CreateForm extends Component
             $this->reset();
             session()->flash('success_message', 'User successfully added.');
         } else {
+            $this->authorize('update', $this->user);
             $this->validate([
                 'name' => 'required|string|min:3',
                 'email' => 'required|string|email|unique:users,email,'.$this->user->id,

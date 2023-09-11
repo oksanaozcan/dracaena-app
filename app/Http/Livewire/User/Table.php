@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\UserService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Table extends Component
 {
     use WithPagination;
+    use AuthorizesRequests;
 
     public $search = '';
 
@@ -46,6 +48,8 @@ class Table extends Component
 
     public function destroyUser($id, UserService $userService)
     {
+        $user = User::find($id);
+        $this->authorize('delete', $user);
         $userService->destroyUser($id);
     }
 

@@ -25,15 +25,14 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['verified'])->group(function() {
     Route::resources([
+        'users' => UserController::class,
         'categories' => CategoryController::class,
         'tags' => TagController::class,
     ]);
 });
 
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resources([
-        'users' => UserController::class,
         'products' => ProductController::class,
     ]);
 });
