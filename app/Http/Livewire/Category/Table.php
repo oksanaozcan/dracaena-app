@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\CategoryService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Table extends Component
 {
     use WithPagination;
+    use AuthorizesRequests;
 
     public $search = '';
 
@@ -46,6 +48,8 @@ class Table extends Component
 
     public function destroyCategory($id, CategoryService $categoryService)
     {
+        $category = Category::find($id);
+        $this->authorize('delete', $category);
         $categoryService->destroyCategory($id);
     }
 

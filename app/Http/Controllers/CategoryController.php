@@ -10,6 +10,11 @@ use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']);
+    }
+
     public function index(): View
     {
         return view('category.index');
@@ -17,6 +22,7 @@ class CategoryController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Category::class);
         return view('category.create');
     }
 
@@ -33,6 +39,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category): View
     {
+        $this->authorize('update', $category);
         $id = $category->id;
         return view('category.edit', compact('id'));
     }
@@ -44,6 +51,8 @@ class CategoryController extends Controller
 
     public function destroy($id, CategoryService $categoryService): RedirectResponse
     {
+        $category = Category::find($id);
+        $this->authorize('delete', $category);
         $categoryService->destroyCategory($id);
         return redirect()->route('categories.index');
         /**

@@ -23,11 +23,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['verified'])->group(function() {
+    Route::resources([
+        'categories' => CategoryController::class,
+    ]);
+});
+
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resources([
         'users' => UserController::class,
         'tags' => TagController::class,
-        'categories' => CategoryController::class,
         'products' => ProductController::class,
     ]);
 });

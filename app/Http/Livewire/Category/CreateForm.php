@@ -6,10 +6,12 @@ use Livewire\Component;
 use App\Models\Category;
 use App\Services\CategoryService;
 use Livewire\WithFileUploads;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CreateForm extends Component
 {
     use WithFileUploads;
+    use AuthorizesRequests;
 
     public $category;
     public $title;
@@ -39,6 +41,7 @@ class CreateForm extends Component
     public function submitForm(CategoryService $categoryService)
     {
         if ($this->category === null) {
+            $this->authorize('create', Category::class);
             $this->validate();
             $categoryService->storeCategory($this->title, $this->preview);
 
@@ -46,6 +49,7 @@ class CreateForm extends Component
             $this->reset();
             session()->flash('success_message', 'Category successfully added.');
         } else {
+            $this->authorize('update', $this->category);
             $this->validate([
                 'title' => 'required|string|min:3|unique:categories,title,'.$this->category->id,
                 'preview' => 'nullable|image|max:1024', // 1MB Max
