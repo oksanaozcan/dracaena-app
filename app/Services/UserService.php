@@ -26,7 +26,7 @@ class UserService {
         return User::findOrFail($id);
     }
 
-    public function storeUser($name, $email)
+    public function storeUser($name, $email, $roleName)
     {
         try {
             DB::beginTransaction();
@@ -37,7 +37,8 @@ class UserService {
                 'name' => $name,
                 'email' => $email,
                 'password' => Hash::make($password),
-            ])->assignRole(RoleType::ASSISTANT);
+                'remember_token' => Str::random(10),
+            ])->assignRole($roleName);
 
             DB::commit();
 
@@ -49,7 +50,7 @@ class UserService {
         }
     }
 
-    public function updateUser(User $user, $name, $email)
+    public function updateUser(User $user, $name, $email, $roleName)
     {
         try {
             DB::beginTransaction();
@@ -58,6 +59,9 @@ class UserService {
                 'name' => $name,
                 'email' => $email,
             ]);
+
+            $user->removeRole($user->roles[0]);
+            $user->assignRole($roleName);
 
             DB::commit();
 

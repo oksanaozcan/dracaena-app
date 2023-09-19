@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\PasswordMail;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\DB;
 
 class CreateForm extends Component
 {
@@ -19,10 +20,12 @@ class CreateForm extends Component
     public $user;
     public $name;
     public $email;
+    public $roleName;
 
     protected $rules = [
         'name' => 'required|string|min:3',
-        'email'=> 'required|string|email|unique:users,email'
+        'email'=> 'required|string|email|unique:users,email',
+        'roleName' => 'required',
     ];
 
     public function mount($id = null)
@@ -32,6 +35,7 @@ class CreateForm extends Component
             $this->user = $u;
             $this->name = $u->name;
             $this->email = $u->email;
+            $this->roleName = $u->roles[0]->name;
         } else {
             $this->user = null;
         }
@@ -47,7 +51,7 @@ class CreateForm extends Component
         if ($this->user === null) {
             $this->authorize('create', User::class);
             $this->validate();
-            $arr = $userService->storeUser($this->name, $this->email);
+            $arr = $userService->storeUser($this->name, $this->email, $this->roleName);
 
             Mail::to($this->email)->send(new PasswordMail($arr[0]));
 
@@ -61,14 +65,17 @@ class CreateForm extends Component
             $this->validate([
                 'name' => 'required|string|min:3',
                 'email' => 'required|string|email|unique:users,email,'.$this->user->id,
+                'roleName' => 'required',
             ]);
-            $userService->updateUser($this->name, $this->email);
+            $userService->updateUser($this->user, $this->name, $this->email, $this->roleName);
             return redirect()->route('users.index');
         }
     }
 
     public function render()
     {
-        return view('livewire.user.create-form');
+        return view('livewire.user.create-form', [
+            'roles' => DB::table('roles')->get(),
+        ]);
     }
 }
