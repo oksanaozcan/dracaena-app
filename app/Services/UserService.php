@@ -6,6 +6,9 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Types\RoleType;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserService {
 
@@ -28,12 +31,17 @@ class UserService {
         try {
             DB::beginTransaction();
 
+            $password = Str::random(10);
+
             $u = User::create([
                 'name' => $name,
                 'email' => $email,
-            ]);
+                'password' => Hash::make($password),
+            ])->assignRole(RoleType::ASSISTANT);
 
             DB::commit();
+
+            return [$password, $u];
 
         } catch (Exception $exception) {
             DB::rollBack();

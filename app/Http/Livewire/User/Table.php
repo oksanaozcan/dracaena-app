@@ -41,7 +41,7 @@ class Table extends Component
         $this->resetPage();
     }
 
-    public function editProduct($id)
+    public function editUser($id)
     {
         return redirect()->route('users.edit', $id);
     }

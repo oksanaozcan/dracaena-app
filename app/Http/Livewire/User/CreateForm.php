@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Services\UserService;
 use Livewire\WithFileUploads;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\User\PasswordMail;
+use Illuminate\Auth\Events\Registered;
 
 class CreateForm extends Component
 {
@@ -44,7 +47,11 @@ class CreateForm extends Component
         if ($this->user === null) {
             $this->authorize('create', User::class);
             $this->validate();
-            $userService->storeUser($this->name, $this->email);
+            $arr = $userService->storeUser($this->name, $this->email);
+
+            Mail::to($this->email)->send(new PasswordMail($arr[0]));
+
+            event(new Registered($arr[1]));
 
             $this->emit('userAdded');
             $this->reset();
