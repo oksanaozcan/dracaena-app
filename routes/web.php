@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BillboardController;
 
 Route::redirect('/', '/login');
 
@@ -28,6 +29,7 @@ Route::middleware(['verified'])->group(function() {
         'users' => UserController::class,
         'categories' => CategoryController::class,
         'tags' => TagController::class,
+        'billboards' => BillboardController::class,
     ]);
 });
 

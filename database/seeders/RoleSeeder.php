@@ -37,6 +37,10 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => PermissionType::CAN_UPDATE_PRODUCT]);
         Permission::create(['name' => PermissionType::CAN_DELETE_PRODUCT]);
 
+        Permission::create(['name' => PermissionType::CAN_CREATE_BILLBOARD]);
+        Permission::create(['name' => PermissionType::CAN_UPDATE_BILLBOARD]);
+        Permission::create(['name' => PermissionType::CAN_DELETE_BILLBOARD]);
+
         // Roles
         $adminRole = Role::create(['name' => RoleType::ADMIN]);
         $managerRole = Role::create(['name' => RoleType::MANAGER]);
@@ -54,11 +58,15 @@ class RoleSeeder extends Seeder
             PermissionType::CAN_CREATE_PRODUCT,
             PermissionType::CAN_UPDATE_PRODUCT,
             PermissionType::CAN_DELETE_PRODUCT,
+            PermissionType::CAN_CREATE_BILLBOARD,
+            PermissionType::CAN_UPDATE_BILLBOARD,
+            PermissionType::CAN_DELETE_BILLBOARD,
         ]);
 
         $assistantRole->givePermissionTo([
             PermissionType::CAN_CREATE_TAG,
             PermissionType::CAN_CREATE_PRODUCT,
+            PermissionType::CAN_CREATE_BILLBOARD,
         ]);
     }
 }

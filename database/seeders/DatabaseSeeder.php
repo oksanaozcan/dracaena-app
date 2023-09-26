@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Tag;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Billboard;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
       ]);
 
       Category::factory(10)->create();
+      Billboard::factory(5)->create();
 
       for ($i=0; $i < 40; $i++) {
         Product::factory()->hasTags(1)->create();

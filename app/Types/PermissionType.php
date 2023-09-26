@@ -20,4 +20,8 @@ class PermissionType
   public const CAN_UPDATE_PRODUCT = 'update-product';
   public const CAN_DELETE_PRODUCT = 'delete-product';
 
+  public const CAN_CREATE_BILLBOARD = 'create-billboard';
+  public const CAN_UPDATE_BILLBOARD = 'update-billboard';
+  public const CAN_DELETE_BILLBOARD = 'delete-billboard';
+
 }
