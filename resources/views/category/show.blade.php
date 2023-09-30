@@ -25,6 +25,14 @@
                         <li>{{$p->title}}</li>
                     @endforeach
                 </ul>
+                <hr/>
+                <hr/>
+                <hr/>
+                <ul class="text-base text-gray-700">Filters:
+                    @foreach ($category->categoryFilters as $cf)
+                        <li>{{$cf->title}}</li>
+                    @endforeach
+                </ul>
             </div>
             <div class="flex justify-between px-6 pt-4 pb-2">
                 <a class="btn-common btn-primary" href="{{route('categories.edit', $category->id)}}">Edit</a>

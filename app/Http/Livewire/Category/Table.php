@@ -19,7 +19,7 @@ class Table extends Component
 
     public $selectedCategory;
 
-    public $sortField = 'created_at';
+    public $sortField = 'id';
     public $sortDirection = 'desc';
 
     public $checkedTitles = [];

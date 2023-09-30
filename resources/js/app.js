@@ -36,6 +36,15 @@ document.addEventListener('alpine:init', () => {
             },
             {
                 id: uuidv4(),
+                faIcon: 'fa-solid fa-filter',
+                title: 'Filters of category',
+                links: [
+                    {title: 'list', url: '/category-filters'},
+                    {title: 'create', url: '/category-filters/create'},
+                ],
+            },
+            {
+                id: uuidv4(),
                 faIcon: 'fa-solid fa-plant-wilt',
                 title: 'Products',
                 links: [

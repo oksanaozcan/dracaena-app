@@ -22,9 +22,8 @@ class DatabaseSeeder extends Seeder
         ManagerSeeder::class,
         AssistantSeeder::class,
         CategorySeeder::class,
+        CategoryFilterSeeder::class,
       ]);
-
-    //   Category::factory(10)->create();
 
       Billboard::factory(5)->create();
 

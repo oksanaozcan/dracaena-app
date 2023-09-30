@@ -13,6 +13,7 @@ class CategoryService {
     {
         $categories = Category::search('title', $search)
         ->withCount('products')
+        ->withCount('categoryFilters')
         ->orderBy($sortField, $sortDirection)
         ->paginate(15);
 
@@ -21,7 +22,7 @@ class CategoryService {
 
     public function findById($id)
     {
-        return Category::with('products')->findOrFail($id);
+        return Category::with(['products', 'categoryFilters'])->findOrFail($id);
     }
 
     public function storeCategory($title, $preview)

@@ -50,6 +50,9 @@
                         Products
                     </th>
                     <th scope="col">
+                        Filters
+                    </th>
+                    <th scope="col">
                         Action
                     </th>
                     <th scope="col">
@@ -81,6 +84,9 @@
                 </td>
                 <td>
                     {{$item->products_count}}
+                </td>
+                <td>
+                    {{$item->category_filters_count}}
                 </td>
                 <td >
                     <a href="{{route('categories.show', $item->id)}}" class="link-blue">Show</a>
