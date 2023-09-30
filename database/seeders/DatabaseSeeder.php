@@ -21,9 +21,11 @@ class DatabaseSeeder extends Seeder
         AdminSeeder::class,
         ManagerSeeder::class,
         AssistantSeeder::class,
+        CategorySeeder::class,
       ]);
 
-      Category::factory(10)->create();
+    //   Category::factory(10)->create();
+
       Billboard::factory(5)->create();
 
       for ($i=0; $i < 40; $i++) {

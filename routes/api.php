@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\TagApiController;
 use App\Http\Controllers\API\CategoryApiController;
 use App\Http\Controllers\API\BillboardApiController;
+use App\Http\Controllers\API\ProductApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,11 @@ use App\Http\Controllers\API\BillboardApiController;
 
 Route::get('tags', [TagApiController::class, 'index']);
 Route::get('categories', [CategoryApiController::class, 'index']);
-Route::get('billboards', [BillboardApiController::class, 'index']);
+Route::get('billboards/{id}', [BillboardApiController::class, 'show']);
+
+Route::get('products', [ProductApiController::class, 'index']);
+
+Route::get('products/{id}', [ProductApiController::class, 'show']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
