@@ -29,6 +29,10 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => PermissionType::CAN_UPDATE_CATEGORY]);
         Permission::create(['name' => PermissionType::CAN_DELETE_CATEGORY]);
 
+        Permission::create(['name' => PermissionType::CAN_CREATE_CATEGORY_FILTER]);
+        Permission::create(['name' => PermissionType::CAN_UPDATE_CATEGORY_FILTER]);
+        Permission::create(['name' => PermissionType::CAN_DELETE_CATEGORY_FILTER]);
+
         Permission::create(['name' => PermissionType::CAN_CREATE_TAG]);
         Permission::create(['name' => PermissionType::CAN_UPDATE_TAG]);
         Permission::create(['name' => PermissionType::CAN_DELETE_TAG]);
@@ -52,12 +56,19 @@ class RoleSeeder extends Seeder
             PermissionType::CAN_CREATE_CATEGORY,
             PermissionType::CAN_UPDATE_CATEGORY,
             PermissionType::CAN_DELETE_CATEGORY,
+
+            PermissionType::CAN_CREATE_CATEGORY_FILTER,
+            PermissionType::CAN_UPDATE_CATEGORY_FILTER,
+            PermissionType::CAN_DELETE_CATEGORY_FILTER,
+
             PermissionType::CAN_CREATE_TAG,
             PermissionType::CAN_UPDATE_TAG,
             PermissionType::CAN_DELETE_TAG,
+
             PermissionType::CAN_CREATE_PRODUCT,
             PermissionType::CAN_UPDATE_PRODUCT,
             PermissionType::CAN_DELETE_PRODUCT,
+
             PermissionType::CAN_CREATE_BILLBOARD,
             PermissionType::CAN_UPDATE_BILLBOARD,
             PermissionType::CAN_DELETE_BILLBOARD,

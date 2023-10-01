@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryFilterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BillboardController;
 
@@ -28,6 +29,7 @@ Route::middleware(['verified'])->group(function() {
     Route::resources([
         'users' => UserController::class,
         'categories' => CategoryController::class,
+        'category-filters' => CategoryFilterController::class,
         'tags' => TagController::class,
         'billboards' => BillboardController::class,
     ]);
