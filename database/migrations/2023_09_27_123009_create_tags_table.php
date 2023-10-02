@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->unique();
+            $table->string('title');
+            $table->unsignedBigInteger('category_filter_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('category_filter_id')->references('id')->on('category_filters');
         });
     }
 

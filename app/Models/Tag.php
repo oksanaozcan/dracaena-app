@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product;
 
 class Tag extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = ['title', 'category_filter_id'];
+
+    public function categoryFilter()
+    {
+        return $this->belongsTo(CategoryFilter::class, 'category_filter_id', 'id');
+    }
 
     public function products()
     {

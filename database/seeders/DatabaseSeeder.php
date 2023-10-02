@@ -7,7 +7,9 @@ use Illuminate\Database\Seeder;
 use App\Models\Tag;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductTag;
 use App\Models\Billboard;
+use App\Utils\DBSeederHelper;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,12 +25,22 @@ class DatabaseSeeder extends Seeder
         AssistantSeeder::class,
         CategorySeeder::class,
         CategoryFilterSeeder::class,
+        TagSeeder::class,
       ]);
 
       Billboard::factory(5)->create();
 
-      for ($i=0; $i < 40; $i++) {
-        Product::factory()->hasTags(1)->create();
-      }
+      Product::factory(5)
+        ->create()
+        ->each(function ($product) {
+            if ($product->category_id != 5) {
+                $product->tags()->save(
+                    ProductTag::factory()->make([
+                        'product_id' => $product->id,
+                        'tag_id' => DBSeederHelper::defineTagId($product->category_id)
+                    ])
+                );
+            }
+        });
     }
 }
