@@ -20,12 +20,13 @@ class StoreTagJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public $title
+        public $title,
+        public $category_filter_id
     ){}
 
     public function handle(TagService $tagService): void
     {
-        $tagService->storeTag($this->title);
+        $tagService->storeTag($this->title, $this->category_filter_id);
     }
 
     /**

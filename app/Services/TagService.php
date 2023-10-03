@@ -23,18 +23,19 @@ class TagService {
         }])->findOrFail($id);
     }
 
-    public function storeTag($title)
+    public function storeTag($title, $category_filter_id)
     {
         Tag::create([
             'title' => $title,
+            'category_filter_id' => $category_filter_id
         ]);
-
     }
 
-    public function updateTag($title, Tag $tag)
+    public function updateTag($title, $category_filter_id, Tag $tag)
     {
         Tag::find($tag->id)->update([
             'title' => $title,
+            'category_filter_id' => $category_filter_id
         ]);
     }
 
