@@ -4,8 +4,10 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CategoryFilterResource;
+use App\Http\Resources\TagResource;
 
-class TagResource extends JsonResource
+class NavigationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +19,9 @@ class TagResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'category_filter_id' => $this->category_filter_id
+            'preview' => $this->preview,
+            'category_filters' => CategoryFilterResource::collection($this->categoryFilters),
+            'tags' => TagResource::collection($this->tags),
         ];
     }
 }

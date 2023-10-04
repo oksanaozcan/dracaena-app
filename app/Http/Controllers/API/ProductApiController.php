@@ -20,11 +20,12 @@ class ProductApiController extends Controller
             // ->orderBy('price')
             ->get();
         } else {
-            $products = Cache::rememberForever('products:all', function () {
-                return Product::all();
-            })->each(function($product) {
-                Cache::put('products:'.$product->id, $product);
-            });
+            // $products = Cache::rememberForever('products:all', function () {
+            //     return Product::all();
+            // })->each(function($product) {
+            //     Cache::put('products:'.$product->id, $product);
+            // });
+            $products = Product::all();
         }
 
         return ProductResource::collection($products);

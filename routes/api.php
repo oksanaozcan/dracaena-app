@@ -6,6 +6,7 @@ use App\Http\Controllers\API\TagApiController;
 use App\Http\Controllers\API\CategoryApiController;
 use App\Http\Controllers\API\BillboardApiController;
 use App\Http\Controllers\API\ProductApiController;
+use App\Http\Controllers\API\NavigationApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,9 @@ use App\Http\Controllers\API\ProductApiController;
 |
 */
 
-Route::get('tags', [TagApiController::class, 'index']);
-Route::get('categories', [CategoryApiController::class, 'index']);
+// Route::get('tags', [TagApiController::class, 'index']);
+// Route::get('categories', [CategoryApiController::class, 'index']);
+Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 Route::get('billboards/{id}', [BillboardApiController::class, 'show']);
 
 Route::get('products', [ProductApiController::class, 'index']);
