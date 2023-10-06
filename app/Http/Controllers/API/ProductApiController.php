@@ -14,17 +14,23 @@ class ProductApiController extends Controller
     public function index(Request $request): JsonResource
     {
         $categoryId = $request->query('category_id');
+        $tagId = $request->query('tag_id');
 
         if ($categoryId) {
             $products = Product::where('category_id', $categoryId)
             // ->orderBy('price')
             ->get();
-        } else {
-            // $products = Cache::rememberForever('products:all', function () {
-            //     return Product::all();
-            // })->each(function($product) {
-            //     Cache::put('products:'.$product->id, $product);
-            // });
+        }
+
+        if ($tagId) {
+            $products = Product::whereHas('tags', function ($query) use ($tagId) {
+                $query->where('tag_id', $tagId);
+            })
+            // ->orderBy('price')
+            ->get();
+        }
+
+        if (!$tagId && !$categoryId) {
             $products = Product::all();
         }
 
@@ -33,7 +39,8 @@ class ProductApiController extends Controller
 
     public function show($id): JsonResource
     {
-        $product = Cache::get('products:'.$id);
+        // $product = Cache::get('products:'.$id);
+        $product = Product::find($id);
         return new ProductResource($product);
     }
 }

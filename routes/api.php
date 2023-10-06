@@ -2,8 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\TagApiController;
-use App\Http\Controllers\API\CategoryApiController;
 use App\Http\Controllers\API\BillboardApiController;
 use App\Http\Controllers\API\ProductApiController;
 use App\Http\Controllers\API\NavigationApiController;
@@ -19,8 +17,6 @@ use App\Http\Controllers\API\NavigationApiController;
 |
 */
 
-// Route::get('tags', [TagApiController::class, 'index']);
-// Route::get('categories', [CategoryApiController::class, 'index']);
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 Route::get('billboards/{id}', [BillboardApiController::class, 'show']);
 
