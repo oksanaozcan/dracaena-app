@@ -16,6 +16,8 @@ class CartService {
         try {
             DB::beginTransaction();
 
+            Log::info($request);
+
             $validated = $request->validate([
                 'client_id' => 'required|string',
                 'product_id' => 'required',
@@ -25,6 +27,29 @@ class CartService {
                 'client_id' => $validated['client_id'],
                 'product_id' => $validated['product_id'],
             ]);
+
+            DB::commit();
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            abort(500, $exception);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $userId = $request->input('userId');
+            $productId = $request->input('productId');
+
+            $cart = Cart::where([
+                "client_id" => $userId,
+                "product_id" => $productId
+            ]);
+
+            $cart->delete();
 
             DB::commit();
 

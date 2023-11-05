@@ -8,6 +8,9 @@ use App\Services\CartService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\ProductResource;
+use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 
 class CartApiController extends Controller
 {
@@ -20,6 +23,19 @@ class CartApiController extends Controller
 
         } catch (Exception $exception) {
             return response()->json(['error' => 'Cart item addition failed', 'message' => $exception->getMessage()], 500);
+        }
+    }
+
+    public function delete(Request $request, CartService $cartService): JsonResponse
+    {
+        // Log::info($request);
+        try {
+            $cartService->delete($request);
+
+            return response()->json(['message' => 'Item removed from cart successfully'], 201);
+
+        } catch (Exception $exception) {
+            return response()->json(['error' => 'Cart item removing failed', 'message' => $exception->getMessage()], 500);
         }
     }
 }

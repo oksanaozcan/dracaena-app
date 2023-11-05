@@ -19,16 +19,15 @@ use App\Http\Controllers\API\CartApiController;
 */
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
+
 Route::get('billboards/{id}', [BillboardApiController::class, 'show']);
 
 Route::get('products', [ProductApiController::class, 'index']);
-
 Route::get('products/{id}', [ProductApiController::class, 'show']);
+Route::get('carts/{userId}', [ProductApiController::class, 'cart']);
 
-Route::controller(CartApiController::class)->group(function () {
-    // Route::get('/carts/{id}', 'show');
-    Route::post('/carts', 'store');
-});
+Route::post('carts', [CartApiController::class, 'store']);
+Route::delete('carts', [CartApiController::class, 'delete']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -43,4 +43,13 @@ class ProductApiController extends Controller
         $product = Product::find($id);
         return new ProductResource($product);
     }
+
+    public function cart($userId)
+    {
+         $products = Product::whereHas('carts', function ($query) use ($userId) {
+            $query->where('client_id', $userId);
+        })->get();
+
+        return ProductResource::collection($products);
+    }
 }

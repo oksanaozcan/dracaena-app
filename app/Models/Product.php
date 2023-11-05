@@ -20,4 +20,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Tag::class, 'product_tags', 'product_id', 'tag_id');
     }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'id');
+    }
 }
