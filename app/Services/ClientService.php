@@ -2,28 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\Cart;
+use App\Models\Client;
 use Exception;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class CartService {
+class ClientService {
 
     public function store(Request $request)
     {
         try {
             DB::beginTransaction();
 
-            $validated = $request->validate([
-                'client_id' => 'required|string',
-                'product_id' => 'required',
-            ]);
-
-            Cart::create([
-                'client_id' => $validated['client_id'],
-                'product_id' => $validated['product_id'],
+            Client::create([
+                'clerk_id' => $request->input("data.id"),
             ]);
 
             DB::commit();
@@ -39,15 +32,9 @@ class CartService {
         try {
             DB::beginTransaction();
 
-            $userId = $request->input('userId');
-            $productId = $request->input('productId');
+            $client = Client::where(["clerk_id" => $request->input("data.id")]);
 
-            $cart = Cart::where([
-                "client_id" => $userId,
-                "product_id" => $productId
-            ]);
-
-            $cart->delete();
+            $client->delete();
 
             DB::commit();
 
