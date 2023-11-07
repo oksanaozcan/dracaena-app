@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:clear-livewire-tmp-dir')->daily()->at('07:00');
         $schedule->command('app:remove-marked-as-read-database-notifications')->weekly();
+        $schedule->command('model:prune')->daily(); 
     }
 
     /**

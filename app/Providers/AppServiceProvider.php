@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Laravel\Cashier\Cashier;
+use App\Models\Client;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,5 +36,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         ini_set('memory_limit', '512M');
+
+        Cashier::useCustomerModel(Client::class);
+
+
     }
 }
