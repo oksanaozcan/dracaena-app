@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Cart;
+use App\Models\Client;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +15,11 @@ class CartService {
     public function store(Request $request)
     {
         try {
+
             DB::beginTransaction();
 
             $validated = $request->validate([
-                'client_id' => 'required|string',
+                'client_id' => 'required',
                 'product_id' => 'required',
             ]);
 
