@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('client_id');
+            $table->string('transaction_id');
             $table->string('customer_name');
             $table->boolean('payment_status');
             $table->decimal('total_amount', $precision = 8, $scale = 2);

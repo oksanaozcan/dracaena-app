@@ -53,4 +53,5 @@ class ClientApiController extends Controller
             abort(500, $exception);
         }
     }
+
 }
