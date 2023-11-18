@@ -22,9 +22,9 @@ Route::post('clients', [ClientApiController::class, 'processRequest']);
 Route::post('carts', [CartApiController::class, 'store']);
 Route::delete('carts', [CartApiController::class, 'delete']);
 
-Route::post('checkout', [OrderApiController::class, 'checkout']);
-Route::get('checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');
-Route::get('checkout/cancel', [OrderApiController::class, 'cancel'])->name('checkout.cancel');
+Route::post('/checkout', [OrderApiController::class, 'checkout']);
+Route::get('/checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [OrderApiController::class, 'cancel'])->name('checkout.cansel');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

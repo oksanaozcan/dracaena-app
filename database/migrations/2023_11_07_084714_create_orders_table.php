@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('client_id');
-            $table->string('transaction_id');
-            $table->string('customer_name');
+            $table->string('session_id');
+            $table->string('customer_name')->nullable();
             $table->boolean('payment_status');
             $table->decimal('total_amount', $precision = 8, $scale = 2);
             $table->enum('payment_method', ['credit card', 'PayPal', 'cash on delivery']);
-            $table->json('shipping_address');
-            $table->json('billing_address');
-            $table->decimal('discount_amount', $precision = 8, $scale = 2);
-            $table->timestamp('completed_at', $precision = 0);
+            $table->json('shipping_address')->nullable();
+            $table->json('billing_address')->nullable();
+            $table->decimal('discount_amount', $precision = 8, $scale = 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
 
