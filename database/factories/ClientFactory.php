@@ -19,7 +19,6 @@ class ClientFactory extends Factory
     {
         return [
             'clerk_id' => 'user_2XpxHHpFdmBrIPKS7qL3tnCnb2n',
-            //user_2XpxHHpFdmBrIPKS7qL3tnCnb2n
         ];
     }
 }

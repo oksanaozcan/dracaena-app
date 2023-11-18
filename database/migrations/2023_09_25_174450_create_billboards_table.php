@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('billboards', function (Blueprint $table) {
             $table->id();
             $table->string('image');
+            $table->foreignId('category_id')->constrained();
             $table->string('description');
             $table->timestamps();
         });

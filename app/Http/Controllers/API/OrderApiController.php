@@ -57,8 +57,10 @@ class OrderApiController extends Controller
         $order->products()->attach($pr);
       }
 
+      DB::table('carts')->where('client_id', $request->input("clientId"))->delete();
+
       return response()->json([
-        'url' => $session->url
+        'url' => $session->url,
       ]);
 
     }

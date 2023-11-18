@@ -10,11 +10,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class BillboardApiController extends Controller
 {
-    // public function index()
-    // {
-    //     return BillboardResource::collection(Billboard::all());
-    // }
-
     public function show($id): JsonResource
     {
         $billboard = Billboard::findOrFail($id);

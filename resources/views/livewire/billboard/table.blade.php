@@ -34,7 +34,14 @@
                     </th>
                     <th scope="col">
                         Description
-                        <span wire:click="sortBy('title')" class="pl-4">
+                        <span wire:click="sortBy('description')" class="pl-4">
+                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
+                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
+                        </span>
+                    </th>
+                    <th scope="col">
+                        Category
+                        <span wire:click="sortBy('category_id')" class="pl-4">
                             <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
                             <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
                         </span>
@@ -75,6 +82,9 @@
                 </td>
                 <td>
                     {{$item->description}}
+                </td>
+                <td>
+                    {{$item->category->title}}
                 </td>
                 <td>
                     <img src="{{$item->image}}"  alt="billboard-image" style="width:100px">
