@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductTag;
 use App\Models\Billboard;
+use App\Models\BillboardTag;
 use App\Models\Client;
 use App\Utils\DBSeederHelper;
 
@@ -31,6 +32,10 @@ class DatabaseSeeder extends Seeder
 
       Billboard::factory(5)->create();
       Client::factory()->create();
+
+      $this->call([
+        BillboardTagSeeder::class,
+      ]);
 
       Product::factory(5)
         ->create()

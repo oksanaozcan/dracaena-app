@@ -47,6 +47,9 @@
                         </span>
                     </th>
                     <th scope="col">
+                        Tags
+                    </th>
+                    <th scope="col">
                         Image
                     </th>
                     <th scope="col">
@@ -85,6 +88,11 @@
                 </td>
                 <td>
                     {{$item->category->title}}
+                </td>
+                <td>
+                    @foreach ($item->tags as $t)
+                        <span>{{$t->title}}, </span>
+                    @endforeach
                 </td>
                 <td>
                     <img src="{{$item->image}}"  alt="billboard-image" style="width:100px">
