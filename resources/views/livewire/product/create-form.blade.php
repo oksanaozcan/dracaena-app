@@ -242,11 +242,11 @@
                 if (this.category_id) {
                     this.allItems = [...this.items].filter(item => item.category_id.toString() === this.category_id.toString());
                 } else {
-                    this.allItems = [...this.items];
+                    this.allItems = [];
                 }
 
                 this.$watch("category_id", (newVal, oldVal) => {
-                    this.allItems = [...this.items].filter(item => item.category_id.toString() === this.category_id.toString());
+                    this.allItems = [...this.items].filter(item => item.category_id.toString() === newVal.toString());
                     console.log(this.allItems)
 
                     if (newVal != oldVal) {
@@ -263,20 +263,6 @@
                     lastArr.push(ob)
                 })
                 this.selectedItems = [...lastArr]
-
-                this.$watch("filteredItems", (newValues, oldValues) => {
-                    // Reset the activeIndex whenever the filteredItems array changes
-                    if (newValues.length !== oldValues.length) this.activeIndex = -1;
-                });
-
-                this.$watch('selectedItems', (newValue, oldValue) => {
-                    if (this.allowDuplicates) return;
-
-                    this.allItems = this.items.filter((item,idx,all) => {
-                        return newValue.every(n => n.title !==item.title);
-                    }
-                    );
-                })
 
                 this.$watch("activeIndex", (newValue, oldValue) => {
                     if (
@@ -334,11 +320,6 @@
                 return {
                     maxHeight: `${this.size * this.itemHeight + 2}px`,
                 };
-            },
-            get filteredItems() {
-                return this.allItems.filter(item =>
-                item.title.toLowerCase().includes(this.search.toLowerCase())
-                )
             },
         }
     }
