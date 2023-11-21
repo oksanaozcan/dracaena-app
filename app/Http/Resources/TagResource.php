@@ -17,7 +17,8 @@ class TagResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'category_filter_id' => $this->category_filter_id
+            'category_filter_id' => $this->category_filter_id,
+            'category_id' => $this->categoryFilter->category->id,
         ];
     }
 }

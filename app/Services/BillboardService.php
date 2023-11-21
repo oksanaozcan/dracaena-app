@@ -11,19 +11,22 @@ class BillboardService {
 
     public function searchForTable($search, $sortField, $sortDirection)
     {
-        $billboards = Billboard::search('description', $search)
-        ->orderBy($sortField, $sortDirection)
-        ->paginate(15);
+        $billboards = Billboard::with(['category' => function ($query) {
+            $query->select('id','title');
+        },
+        'tags' => function ($query) {
+            $query->select('tag_id','title');
+        }])->search('title', $search)->orderBy($sortField, $sortDirection)->paginate(15);
 
         return $billboards;
     }
 
     public function findById($id)
     {
-        return Billboard::findOrFail($id);
+        return Billboard::with('category', 'tags')->findOrFail($id);
     }
 
-    public function storeBillboard($description, $image)
+    public function storeBillboard($description, $image, $category_id, $tags=[])
     {
         try {
             DB::beginTransaction();
@@ -32,7 +35,12 @@ class BillboardService {
             Billboard::create([
                 'description' => $description,
                 'image' => url('/storage/' . $pathImage),
+                'category_id' => $category_id,
             ]);
+
+            if (isset($tags)) {
+                $p->tags()->attach($tags);
+            }
 
             DB::commit();
 
@@ -42,7 +50,7 @@ class BillboardService {
         }
     }
 
-    public function updateBillboard($description, Billboard $billboard, $image=null)
+    public function updateBillboard($description, Billboard $billboard, $image=null, $category_id, $tags=[])
     {
         try {
             DB::beginTransaction();
@@ -54,6 +62,7 @@ class BillboardService {
                 $billboard->update([
                     'description' => $description,
                     'image' => url('/storage/' . $pathNewImage),
+                    'category_id' => $category_id,
                 ]);
 
                 Storage::disk('public')->delete($oldImage);
@@ -61,7 +70,15 @@ class BillboardService {
             } else {
                 $billboard->update([
                     'description' => $description,
+                    'category_id' => $category_id,
                 ]);
+            }
+
+            if (isset($tags) && $billboard->tags->isEmpty()) {
+                $billboard->tags()->attach($tags);
+            }
+            if (isset($tags) && $billboard->tags->isNotEmpty()) {
+                $billboard->tags()->sync($tags);
             }
 
             DB::commit();

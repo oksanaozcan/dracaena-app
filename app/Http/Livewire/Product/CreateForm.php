@@ -97,7 +97,7 @@ class CreateForm extends Component
     {
         return view('livewire.product.create-form', [
             'categories' => CategoryResource::collection(Category::all()),
-            'tags_fore_select' => TagResource::collection(Tag::all()),
+            'tags_fore_select' => TagResource::collection(Tag::with(['categoryFilter'])->get()),
         ]);
     }
 }

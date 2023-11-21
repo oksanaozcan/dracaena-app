@@ -52,7 +52,230 @@
     <div class="h-2">
         @error('description') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
     </div>
-
 </div>
+
+<div class="mt-4 mb-6">
+    <label for="category_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+    <select
+        wire:model='category_id'
+        name="category_id"
+        value="{{$this->category_id}}"
+        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        required
+    >
+    <option value="">Select category</option>
+    @foreach($categories as $category)
+        <option value="{{$category->id}}">{{$category->title}}</option>
+    @endforeach
+    </select>
+    <div class="h-2">
+        @error('category_id') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
+    </div>
+</div>
+
+<div class="w-full">
+    {{-- Start Components --}}
+    <div class="relative"
+        x-data="multiselectBillboard({
+            items: {{ json_encode($tags_fore_select) }},
+        })"
+        x-init='onInit()'
+        @focusout='handleBlure'
+    >
+        {{-- Start Item Tgas And Input Fields  --}}
+        <div class="relative flex items-center justify-between px-1 border-2 rounded-md">
+            <ul class="flex flex-wrap items-center w-full">
+                {{-- Tags (Selected) --}}
+                <template x-for='(selectedItem,idx) in selectedItems'>
+                    <li
+                        @click='removeElByInd(idx)'
+                        @keyup.delete="removeElByInd(idx)"
+                        @keyup.backspace="removeElByInd(idx)"
+                        tabindex="0"
+                        x-text="selectedItem.title + ' X'"
+                        class="relative px-2 py-2 m-1 border rounded-md cursor-pointer hover:bg-gray-100"
+                    ></li>
+                </template>
+
+                {{-- Search Input --}}
+                <input
+                    x-ref="searchInput"
+                    x-model='search'
+                    @keyup.enter="addActiveItem"
+                    @click='expanded = true'
+                    @focusin='expanded = true'
+                    @input='expanded = true'
+                    @keyup.arrow-down='expanded = true; selectNextItem'
+                    @keyup.arrow-up='expanded = true; selectPrevItem'
+                    @keyup.esc='reset'
+                    type="text"
+                    class="flex-grow py-2 px-2 mx-1 my-1.5"
+                    :placeholder="searchPlaceholder"
+                />
+                {{-- Arrow Icon  --}}
+                <i
+                    @click='expanded = !expanded'
+                    :class="expanded && 'rotate-180'"
+                    class="fa-solid fa-chevron-down"
+                ></i>
+            </ul>
+        </div>
+        {{-- End Item Tags and Input Field --}}
+
+        {{-- Start items list --}}
+        <template
+            x-if='expanded'
+        >
+            <ul
+                class="w-full overflow-auto list-none border-2 border-t-0 rounded-md"
+                tabindex="0"
+                :style="listBoxStyle"
+                x-ref="listBox"
+            >
+            <template x-if="filteredItems.length">
+                <template x-for='(filteredItem, idx) in filteredItems'>
+                    {{-- Item element --}}
+                    <li
+                        @click='handleItemClick(filteredItem)'
+                        :class="idx == activeIndex && 'bg-amber-200'"
+                        x-text='filteredItem.title'
+                        class="px-2 py-2 cursor-pointer hover:bg-amber-200"
+                    ></li>
+                </template>
+            </template>
+                <template x-if='!filteredItems.length'>
+                    {{-- Empty text --}}
+                    <li x-text="emptyText" class="px-2 py-2 text-gray-400 cursor-pointer"></li>
+                </template>
+            </ul>
+        </template>
+
+        {{-- End Items List --}}
+    </div>
+    {{-- end Component --}}
+</div>
+
+<script>
+    function multiselectBillboard (config) {
+        return {
+            items: config.items ?? [],
+            allItems: null,
+            selectedItems: @entangle('tags'),
+            category_id: @entangle('category_id'),
+            search: '',
+            searchPlaceholder: config.searchPlaceholder ?? 'Type here...',
+            expanded: false,
+            emptyText: config.emptyText ?? 'No items found',
+            allowDuplicates: config.allowDuplicates ?? false,
+            size: config.size ?? 6,
+            itemHeight: config.itemHeight ?? 40,
+            maxTagChars: config.maxTagChars ?? 25,
+            activeIndex: -1,
+            onInit() {
+
+                if (this.category_id) {
+                    this.allItems = [...this.items].filter(item => item.category_id.toString() === this.category_id.toString());
+                } else {
+                    this.allItems = [...this.items];
+                }
+
+                this.$watch("category_id", (newVal, oldVal) => {
+                    this.allItems = [...this.items].filter(item => item.category_id.toString() === newVal.toString());
+
+                    console.log(this.allItems)
+
+                    if (newVal != oldVal) this.selectedItems = [];
+                })
+
+                let lastArr = [];
+                let jsonTags = {!! json_encode($this->tags) !!};
+                testarray = jsonTags.map(obj => Object.entries(obj))
+                .map(arr => arr.slice(0,2))
+                .map(arr => {
+                    let ob = Object.fromEntries(arr)
+                    lastArr.push(ob)
+                })
+                this.selectedItems = [...lastArr]
+
+                this.$watch("filteredItems", (newValues, oldValues) => {
+                    // Reset the activeIndex whenever the filteredItems array changes
+                    if (newValues.length !== oldValues.length) this.activeIndex = -1;
+                });
+
+                this.$watch('selectedItems', (newValue, oldValue) => {
+                    if (this.allowDuplicates) return;
+
+                    this.allItems = this.items.filter((item,idx,all) => {
+                        return newValue.every(n => n.title !==item.title);
+                    }
+                    );
+                })
+
+                this.$watch("activeIndex", (newValue, oldValue) => {
+                    if (
+                        this.activeIndex == -1 ||
+                        !this.filteredItems[this.activeIndex] ||
+                        !this.expanded
+                    ) return;
+                    this.scrollToActiveElement();
+                });
+            },
+            reset() {
+                this.expanded = false;
+            },
+            handleBlure(e) {
+                if (this.$el.contains(e.relatedTarget)) return;
+                this.expanded = false;
+            },
+            handleItemClick(selectedItem) {
+                this.selectedItems.push(selectedItem);
+
+                this.search = "";
+                this.$refs.searchInput.focus();
+            },
+            removeElByInd(idx) {
+                this.selectedItems.splice(idx, 1);
+            },
+            selectPrevItem() {
+                if (!filteredItems.length) return;
+                if (this.activeIndex == 0 || this.activeIndex == -1) {
+                    this.activeIndex = this.filteredItems.length - 1;
+                }
+                this.activeIndex--;
+            },
+            selectNextItem() {
+                if (!filteredItems.length) return;
+                if (this.filteredItems.length - 1 == this.activeIndex) return (this.activeIndex = 0);
+                this.activeIndex++;
+            },
+            addActiveItem() {
+                if (!this.filteredItems[this.activeIndex]) return;
+                this.selectedItems.push(this.filteredItems[this.activeIndex]);
+            },
+            scrollToActiveElement() {
+                const avaliableListElements = [...this.$refs.listBox.children].slice(2, -1);
+                avaliableListElements[this.activeIndex].scrollIntoView({
+                    block: "end",
+                })
+            },
+            shortenedTitle (title, maxChar) {
+                return !maxChars || title.length <= maxChars
+                    ? title
+                    : `${title.substr(0, maxChars)}...`;
+            },
+            get listBoxStyle() {
+                return {
+                    maxHeight: `${this.size * this.itemHeight + 2}px`,
+                };
+            },
+            get filteredItems() {
+                return this.allItems.filter(item =>
+                item.title.toLowerCase().includes(this.search.toLowerCase())
+                )
+            },
+        }
+    }
+</script>
+
 <x-form.submit-btn/>
 </form>

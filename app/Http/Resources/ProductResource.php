@@ -23,7 +23,7 @@ class ProductResource extends JsonResource
             'content' => $this->content,
             'preview'=> $this->preview,
             'price' => $this->price,
-            'category' => new CategoryResource(Category::findOrFail($this->category_id)),
+            'category' => new CategoryResource($this->category),
         ];
     }
 }

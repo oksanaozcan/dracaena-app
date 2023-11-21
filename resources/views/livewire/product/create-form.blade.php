@@ -138,8 +138,6 @@
     </div>
 </div>
 
-{{-- begin test functional--------------------------------------------- --}}
-
 <div class="w-full">
     {{-- Start Components --}}
     <div class="relative"
@@ -199,10 +197,11 @@
                 :style="listBoxStyle"
                 x-ref="listBox"
             >
-            <template x-if="filteredItems.length">
-                <template x-for='(filteredItem, idx) in filteredItems'>
+            <template x-if="allItems.length">
+                <template x-for='(filteredItem, idx) in allItems'>
                     {{-- Item element --}}
                     <li
+                        :key='filteredItem.id'
                         @click='handleItemClick(filteredItem)'
                         :class="idx == activeIndex && 'bg-amber-200'"
                         x-text='filteredItem.title'
@@ -210,7 +209,7 @@
                     ></li>
                 </template>
             </template>
-                <template x-if='!filteredItems.length'>
+                <template x-if='!allItems.length'>
                     {{-- Empty text --}}
                     <li x-text="emptyText" class="px-2 py-2 text-gray-400 cursor-pointer"></li>
                 </template>
@@ -228,6 +227,7 @@
             items: config.items ?? [],
             allItems: null,
             selectedItems: @entangle('tags'),
+            category_id: @entangle('category_id'),
             search: '',
             searchPlaceholder: config.searchPlaceholder ?? 'Type here...',
             expanded: false,
@@ -238,7 +238,21 @@
             maxTagChars: config.maxTagChars ?? 25,
             activeIndex: -1,
             onInit() {
-                this.allItems = [...this.items];
+
+                if (this.category_id) {
+                    this.allItems = [...this.items].filter(item => item.category_id.toString() === this.category_id.toString());
+                } else {
+                    this.allItems = [...this.items];
+                }
+
+                this.$watch("category_id", (newVal, oldVal) => {
+                    this.allItems = [...this.items].filter(item => item.category_id.toString() === this.category_id.toString());
+                    console.log(this.allItems)
+
+                    if (newVal != oldVal) {
+                        this.selectedItems = [];
+                    }
+                })
 
                 let lastArr = [];
                 let jsonTags = {!! json_encode($this->tags) !!};
@@ -329,8 +343,6 @@
         }
     }
 </script>
-
-{{-- end test functional----------------------------------------------- --}}
 
 <x-form.submit-btn/>
 </form>
