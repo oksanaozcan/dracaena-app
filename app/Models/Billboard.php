@@ -18,7 +18,7 @@ class Billboard extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function tags(): BelongsToMany
+    public function tags()
     {
         return $this->belongsToMany(Tag::class, 'billboard_tags', 'billboard_id', 'tag_id');
     }

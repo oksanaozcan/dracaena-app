@@ -6,6 +6,7 @@ use App\Models\Billboard;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BillboardService {
 
@@ -32,14 +33,16 @@ class BillboardService {
             DB::beginTransaction();
             $pathImage = Storage::disk('public')->put('billboard_images', $image);
 
-            Billboard::create([
+            Log::info($tags);
+
+            $b = Billboard::create([
                 'description' => $description,
                 'image' => url('/storage/' . $pathImage),
                 'category_id' => $category_id,
             ]);
 
             if (isset($tags)) {
-                $p->tags()->attach($tags);
+                $b->tags()->attach($tags);
             }
 
             DB::commit();

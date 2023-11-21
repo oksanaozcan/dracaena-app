@@ -247,7 +247,6 @@
 
                 this.$watch("category_id", (newVal, oldVal) => {
                     this.allItems = [...this.items].filter(item => item.category_id.toString() === newVal.toString());
-                    console.log(this.allItems)
 
                     if (newVal != oldVal) {
                         this.selectedItems = [];
