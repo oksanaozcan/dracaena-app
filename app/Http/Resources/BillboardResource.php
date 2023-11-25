@@ -18,6 +18,7 @@ class BillboardResource extends JsonResource
             'id' => $this->id,
             'image' => $this->image,
             'description' => $this->description,
+            'category_id' => $this->category_id,
         ];
     }
 }

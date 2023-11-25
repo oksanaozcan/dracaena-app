@@ -11,7 +11,7 @@ use App\Http\Controllers\API\OrderApiController;
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 
-Route::get('billboards/{id}', [BillboardApiController::class, 'show']);
+Route::get('billboards', [BillboardApiController::class, 'index']);
 
 Route::get('products', [ProductApiController::class, 'index']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
