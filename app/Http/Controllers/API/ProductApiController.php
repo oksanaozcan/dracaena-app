@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class ProductApiController extends Controller
 {
@@ -35,7 +36,7 @@ class ProductApiController extends Controller
     {
         $products = Product::where('category_id', $categoryId)
         // ->orderBy('price')
-        ->get();
+        ->paginate(8);
         return ProductResource::collection($products);
     }
 
@@ -45,25 +46,24 @@ class ProductApiController extends Controller
             $query->where('tag_id', $tagId);
         })
         // ->orderBy('price')
-        ->get();
+        ->paginate();
         return ProductResource::collection($products);
     }
 
     public function getProductsBySearch($search): JsonResource
     {
-        $products = Product::where('title', 'like', '%'.$search.'%')->get();
+        $products = Product::where('title', 'like', '%'.$search.'%')->paginate(8);
         return ProductResource::collection($products);
     }
 
     public function index(Request $request): JsonResource
     {
-        $products = Product::all();
+        $products = Product::paginate(8);
         return ProductResource::collection($products);
     }
 
     public function show($id): JsonResource
     {
-        // $product = Cache::get('products:'.$id);
         $product = Product::find($id);
         return new ProductResource($product);
     }

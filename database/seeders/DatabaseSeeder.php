@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         BillboardTagSeeder::class,
       ]);
 
-      Product::factory(5)
+      Product::factory(20)
         ->create()
         ->each(function ($product) {
             if ($product->category_id != 5) {
