@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Filters\ProductFilter;
+// use Illuminate\Http\Request;
+use App\Http\Requests\API\Product\IndexRequest;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Product;
 use App\Http\Resources\ProductResource;
@@ -12,53 +14,13 @@ use Illuminate\Support\Facades\Log;
 
 class ProductApiController extends Controller
 {
-    public function processRequest (Request $request)
+    public function index (IndexRequest $request): JsonResource
     {
-        $categoryId = $request->query('category_id');
-        $tagId = $request->query('tag_id');
-        $search = $request->query('search');
+        $validated = $request->validated();
 
-        if ($categoryId) {
-            return $this->getProductsByCategory($categoryId);
-        }
-        if ($tagId) {
-            return $this->getProductsByTag($tagId);
-        }
-        if ($search) {
-            return $this->getProductsBySearch($search);
-        }
-        if (!$tagId && !$categoryId && !$search) {
-            return $this->index($request);
-        }
-    }
+        $filter = app()->make(ProductFilter::class, ['queryParams' => array_filter($validated)]);
+        $products = Product::filter($filter)->paginate(8);
 
-    public function getProductsByCategory($categoryId): JsonResource
-    {
-        $products = Product::where('category_id', $categoryId)
-        // ->orderBy('price')
-        ->paginate(8);
-        return ProductResource::collection($products);
-    }
-
-    public function getProductsByTag($tagId): JsonResource
-    {
-        $products = Product::whereHas('tags', function ($query) use ($tagId) {
-            $query->where('tag_id', $tagId);
-        })
-        // ->orderBy('price')
-        ->paginate();
-        return ProductResource::collection($products);
-    }
-
-    public function getProductsBySearch($search): JsonResource
-    {
-        $products = Product::where('title', 'like', '%'.$search.'%')->paginate(8);
-        return ProductResource::collection($products);
-    }
-
-    public function index(Request $request): JsonResource
-    {
-        $products = Product::paginate(8);
         return ProductResource::collection($products);
     }
 
@@ -68,7 +30,7 @@ class ProductApiController extends Controller
         return new ProductResource($product);
     }
 
-    public function cart($userId)
+    public function cart($userId): JsonResource
     {
          $products = Product::whereHas('carts', function ($query) use ($userId) {
             $query->where('client_id', $userId);

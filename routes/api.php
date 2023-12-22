@@ -13,7 +13,7 @@ Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFilter
 
 Route::get('billboards', [BillboardApiController::class, 'index']);
 
-Route::get('products', [ProductApiController::class, 'processRequest']);
+Route::get('products', [ProductApiController::class, 'index']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
 Route::get('carts/{userId}', [ProductApiController::class, 'cart']);
 
