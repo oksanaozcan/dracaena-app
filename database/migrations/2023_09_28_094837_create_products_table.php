@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->nullable();
             $table->unsignedInteger('amount')->nullable();
             $table->foreignId('category_id')->constrained();
-            $table->boolean('is_selling')->default(false);
+            $table->boolean('is_selling')->default(true);
             $table->timestamps();
         });
     }

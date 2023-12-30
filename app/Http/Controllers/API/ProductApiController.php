@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\ProductFilter;
-// use Illuminate\Http\Request;
 use App\Http\Requests\API\Product\IndexRequest;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Product;
@@ -17,9 +16,19 @@ class ProductApiController extends Controller
     public function index (IndexRequest $request): JsonResource
     {
         $validated = $request->validated();
-
         $filter = app()->make(ProductFilter::class, ['queryParams' => array_filter($validated)]);
-        $products = Product::filter($filter)->paginate(8);
+
+        $page = request('page');
+        $categoryId = request('category_id');
+        $tagId = request('tag_id');
+        $search = request('search');
+        $sort = request('sort');
+
+        $cacheKey = "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}";
+
+        $products = Cache::tags('products')->remember($cacheKey, now()->addHours(2), function () use ($page, $filter) {
+            return Product::filter($filter)->paginate(8, ['*'], 'page', $page);
+        });
 
         return ProductResource::collection($products);
     }

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 
 class ProductObserver
 {
@@ -10,32 +11,26 @@ class ProductObserver
 
     public function created(Product $product): void
     {
-        // add product into cache redis if its property is_selling equel true
-        // see functional laravel:
-        // $user = User::withoutEvents(function () {
-        //     User::findOrFail(1)->delete();
-
-        //     return User::find(2);
-        // });
+        Cache::tags('products')->flush();
     }
 
     public function updated(Product $product): void
     {
-        //
+        Cache::tags('products')->flush();
     }
 
     public function deleted(Product $product): void
     {
-        //
+        Cache::tags('products')->flush();
     }
 
     public function restored(Product $product): void
     {
-        //
+        Cache::tags('products')->flush();
     }
 
     public function forceDeleted(Product $product): void
     {
-        //
+        Cache::tags('products')->flush();
     }
 }
