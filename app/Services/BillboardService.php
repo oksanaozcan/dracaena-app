@@ -6,7 +6,6 @@ use App\Models\Billboard;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class BillboardService {
 
@@ -32,8 +31,6 @@ class BillboardService {
         try {
             DB::beginTransaction();
             $pathImage = Storage::disk('public')->put('billboard_images', $image);
-
-            Log::info($tags);
 
             $b = Billboard::create([
                 'description' => $description,
