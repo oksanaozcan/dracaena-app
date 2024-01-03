@@ -6,6 +6,8 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Http\Filters\ProductFilter;
+use Illuminate\Support\Facades\Cache;
 
 class ProductService {
 
@@ -114,5 +116,25 @@ class ProductService {
             DB::rollBack();
             abort(500, $exception);
         }
+    }
+
+    public function getCachedProducts(array $validated, ProductFilter $filter): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        $cacheKey = $this->generateCacheKey($validated);
+
+        return Cache::tags('products')->remember($cacheKey, now()->addHours(2), function () use ($validated, $filter) {
+            return Product::filter($filter)->paginate(8, ['*'], 'page', $validated['page']);
+        });
+    }
+
+    protected function generateCacheKey(array $validated): string
+    {
+        $page = $validated['page'] ?? '';
+        $categoryId = $validated['category_id'] ?? '';
+        $tagId = $validated['tag_id'] ?? '';
+        $search = $validated['search'] ?? '';
+        $sort = $validated['sort'] ?? '';
+
+        return "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}";
     }
 }

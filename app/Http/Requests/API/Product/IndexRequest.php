@@ -22,6 +22,7 @@ class IndexRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'page' => 'nullable|string',
             'category_id' => 'nullable|string',
             'tag_id' => 'nullable|string',
             'search' => 'nullable|string',
