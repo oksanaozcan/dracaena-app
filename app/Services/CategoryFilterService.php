@@ -58,14 +58,12 @@ class CategoryFilterService {
         }
     }
 
-    public function destroyCategoryFilter($id)
+    public function destroyCategoryFilter(CategoryFilter $categoryFilter)
     {
         try {
             DB::beginTransaction();
 
-            $deletingCf = CategoryFilter::find($id);
-
-            $deletingCf->delete();
+            $categoryFilter->delete();
 
             DB::commit();
 

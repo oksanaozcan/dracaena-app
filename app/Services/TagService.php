@@ -16,13 +16,6 @@ class TagService {
         return $tags;
     }
 
-    public function findById($id)
-    {
-        return Tag::with(['products' => function ($query) {
-            $query->select('product_id','title');
-        }])->findOrFail($id);
-    }
-
     public function storeTag($title, $category_filter_id)
     {
         Tag::create([
@@ -39,9 +32,9 @@ class TagService {
         ]);
     }
 
-    public function destroyTag($id)
+    public function destroyTag(Tag $tag)
     {
-        Tag::find($id)->delete();
+        $tag->delete();
     }
 
     public function destroyTagByTitle($title)

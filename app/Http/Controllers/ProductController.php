@@ -10,6 +10,8 @@ use Illuminate\Http\RedirectResponse;
 
 class ProductController extends Controller
 {
+    public function __construct(public ProductService $productService) {}
+
     public function index(): View
     {
         return view('product.index');
@@ -25,9 +27,8 @@ class ProductController extends Controller
          /** @see App\Http\Livewire\Product\CreateForm */
     }
 
-    public function show(string $id, ProductService $productService): View
+    public function show(Product $product): View
     {
-        $product = $productService->findById($id);
         return view('product.show', compact('product'));
     }
 
@@ -42,9 +43,9 @@ class ProductController extends Controller
          /** @see App\Http\Livewire\Product\CreateForm */
     }
 
-    public function destroy($id, ProductService $productService): RedirectResponse
+    public function destroy(Product $product): RedirectResponse
     {
-        $productService->destroyProduct($id);
+        $this->productService->destroyProduct($product);
         return redirect()->route('products.index');
           /**
          * destroy from page product.index

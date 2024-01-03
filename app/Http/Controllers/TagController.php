@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 
 class TagController extends Controller
 {
-    public function __construct()
+    public function __construct(public TagService $tagService)
     {
         $this->middleware('auth')->except(['index','show']);
     }
@@ -31,9 +31,8 @@ class TagController extends Controller
         /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
-    public function show($id, TagService $tagService): View
+    public function show(Tag $tag): View
     {
-        $tag = $tagService->findById($id);
         return view('tag.show', compact('tag'));
     }
 
@@ -49,11 +48,10 @@ class TagController extends Controller
          /** @see App\Http\Livewire\Tag\CreateForm */
     }
 
-    public function destroy($id, TagService $tagService): RedirectResponse
+    public function destroy(Tag $tag): RedirectResponse
     {
-        $tag = Tag::find($id);
         $this->authorize('delete', $tag);
-        $tagService->destroyTag($id);
+        $this->tagService->destroyTag($tag);
         return redirect()->route('tags.index');
         /**
          * destroy from page tag.index

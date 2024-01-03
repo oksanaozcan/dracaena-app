@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 
 class CategoryFilterController extends Controller
 {
-    public function __construct()
+    public function __construct(public CategoryFilterService $categoryFilterService)
     {
         $this->middleware('auth')->except(['index','show']);
     }
@@ -31,9 +31,8 @@ class CategoryFilterController extends Controller
         /** @see App\Http\Livewire\CategoryFilter\CreateForm */
     }
 
-    public function show($id, CategoryFilterService $categoryFilterService): View
+    public function show(CategoryFilter $categoryFilter): View
     {
-        $categoryFilter = $categoryFilterService->findById($id);
         return view('category-filter.show', compact('categoryFilter'));
     }
 
@@ -49,11 +48,10 @@ class CategoryFilterController extends Controller
         /** @see App\Http\Livewire\CategoryFilter\CreateForm */
     }
 
-    public function destroy($id, CategoryFilterService $categoryFilterService): RedirectResponse
+    public function destroy(CategoryFilter $categoryFilter): RedirectResponse
     {
-        $categoryFilter = CategoryFilter::find($id);
         $this->authorize('delete', $categoryFilter);
-        $categoryFilterService->destroyCategoryFilter($id);
+        $this->categoryFilterService->destroyCategoryFilter($categoryFilter);
         return redirect()->route('category-filters.index');
     }
 }

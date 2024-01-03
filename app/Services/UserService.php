@@ -21,11 +21,6 @@ class UserService {
         return $users;
     }
 
-    public function findById($id)
-    {
-        return User::findOrFail($id);
-    }
-
     public function storeUser($name, $email, $roleName)
     {
         try {
@@ -71,14 +66,12 @@ class UserService {
         }
     }
 
-    public function destroyUser($id)
+    public function destroyUser(User $user)
     {
         try {
             DB::beginTransaction();
 
-            $deletingUser = User::find($id);
-
-            $deletingUser->delete();
+            $user->delete();
 
             DB::commit();
 

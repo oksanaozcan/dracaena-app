@@ -74,15 +74,14 @@ class CategoryService {
         }
     }
 
-    public function destroyCategory($id)
+    public function destroyCategory(Category $category)
     {
         try {
             DB::beginTransaction();
 
-            $deletingCat = Category::find($id);
-            $deletingPreview = substr($deletingCat->preview, strlen(url('/storage/')) + 1);
+            $deletingPreview = substr($category->preview, strlen(url('/storage/')) + 1);
 
-            $deletingCat->delete();
+            $category->delete();
             Storage::disk('public')->delete($deletingPreview);
 
             DB::commit();

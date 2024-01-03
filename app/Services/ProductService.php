@@ -21,11 +21,6 @@ class ProductService {
         return $products;
     }
 
-    public function findById($id)
-    {
-        return Product::with('category', 'tags')->findOrFail($id);
-    }
-
     public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id, $tags=[])
     {
         try {
@@ -101,17 +96,16 @@ class ProductService {
         }
     }
 
-    public function destroyProduct($id)
+    public function destroyProduct(Product $product)
     {
         try {
             DB::beginTransaction();
 
-            $deletingProd = Product::find($id);
-            $deletingProd->tags()->detach();
+            $product->tags()->detach();
 
-            $deletingPreview = substr($deletingProd->preview, strlen(url('/storage/')) + 1);
+            $deletingPreview = substr($product->preview, strlen(url('/storage/')) + 1);
 
-            $deletingProd->delete();
+            $product->delete();
             Storage::disk('public')->delete($deletingPreview);
 
             DB::commit();

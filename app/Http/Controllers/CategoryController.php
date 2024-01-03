@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends Controller
 {
-    public function __construct()
+    public function __construct(public CategoryService $categoryService)
     {
         $this->middleware('auth')->except(['index','show']);
     }
@@ -31,9 +31,8 @@ class CategoryController extends Controller
         /** @see App\Http\Livewire\Category\CreateForm */
     }
 
-    public function show($id, CategoryService $categoryService): View
+    public function show(Category $category): View
     {
-        $category = $categoryService->findById($id);
         return view('category.show', compact('category'));
     }
 
@@ -49,11 +48,10 @@ class CategoryController extends Controller
         /** @see App\Http\Livewire\Category\CreateForm */
     }
 
-    public function destroy($id, CategoryService $categoryService): RedirectResponse
+    public function destroy(Category $category): RedirectResponse
     {
-        $category = Category::find($id);
         $this->authorize('delete', $category);
-        $categoryService->destroyCategory($id);
+        $this->categoryService->destroyCategory($category);
         return redirect()->route('categories.index');
         /**
          * destroy from page category.index

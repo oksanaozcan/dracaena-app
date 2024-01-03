@@ -89,15 +89,14 @@ class BillboardService {
         }
     }
 
-    public function destroyBillboard($id)
+    public function destroyBillboard(Billboard $billboard)
     {
         try {
             DB::beginTransaction();
 
-            $deletingBill = Billboard::find($id);
-            $deletingImage = substr($deletingBill->image, strlen(url('/storage/')) + 1);
+            $deletingImage = substr($billboard->image, strlen(url('/storage/')) + 1);
 
-            $deletingBill->delete();
+            $billboard->delete();
             Storage::disk('public')->delete($deletingImage);
 
             DB::commit();

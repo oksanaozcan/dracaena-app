@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
-    public function __construct()
+    public function __construct(public UserService $userService)
     {
         $this->middleware('auth');
     }
@@ -32,11 +32,9 @@ class UserController extends Controller
          /** @see App\Http\Livewire\User\CreateForm */
     }
 
-    public function show(string $id, UserService $userService): View
+    public function show(User $user): View
     {
-        $user = User::find($id);
         $this->authorize('view', $user);
-        $user = $userService->findById($id);
         return view('user.show', compact('user'));
     }
 
@@ -52,11 +50,10 @@ class UserController extends Controller
          /** @see App\Http\Livewire\User\CreateForm */
     }
 
-    public function destroy($id, UserService $userService): RedirectResponse
+    public function destroy(User $user): RedirectResponse
     {
-        $user = User::find($id);
         $this->authorize('delete', $user);
-        $userService->destroyUser($id);
+        $this->userService->destroyUser($user);
         return redirect()->route('users.index');
           /**
          * destroy from page user.index
