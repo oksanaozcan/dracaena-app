@@ -20,22 +20,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-      $this->call([
-        RoleSeeder::class,
-        AdminSeeder::class,
-        ManagerSeeder::class,
-        AssistantSeeder::class,
-        CategorySeeder::class,
-        CategoryFilterSeeder::class,
-        TagSeeder::class,
-      ]);
+        $this->call(CategorySeeder::class);
+        $this->call([
+            RoleSeeder::class,
+            AdminSeeder::class,
+            ManagerSeeder::class,
+            AssistantSeeder::class,
+            CategoryFilterSeeder::class,
+            TagSeeder::class,
+        ]);
 
-      Billboard::factory(5)->create();
-      Client::factory()->create();
+        Billboard::factory(5)->create();
+        $this->call(ClientSeeder::class);
 
-      $this->call([
-        BillboardTagSeeder::class,
-      ]);
+        $this->call([
+            BillboardTagSeeder::class,
+        ]);
 
       Product::factory(20)
         ->create()

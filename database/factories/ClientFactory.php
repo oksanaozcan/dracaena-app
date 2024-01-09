@@ -18,7 +18,7 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'clerk_id' => 'user_2XpxHHpFdmBrIPKS7qL3tnCnb2n',
+            'clerk_id' => 'user_' . Str::random(27),
         ];
     }
 }
