@@ -42,7 +42,6 @@ class ApiProductShowTest extends TestCase
 
     public function test_2_it_should_return_404_if_product_does_not_exist()
     {
-        // Choose an ID that doesn't exist in the database
         $nonExistentProductId = 999;
 
         $response = $this->getJson("/api/products/{$nonExistentProductId}");

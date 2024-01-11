@@ -5,14 +5,11 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Product;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestHelper;
 
 class ApiProductIndexContentTest extends TestCase
 {
-    use DatabaseTransactions;
     use TestHelper;
 
     public function test_1_it_should_test_the_content_of_the_json_response_list(){

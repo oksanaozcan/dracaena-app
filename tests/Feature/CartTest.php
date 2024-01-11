@@ -5,29 +5,19 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Category;
-use App\Models\Client;
-use App\Models\Product;
 use App\Models\Cart;
 use App\Http\Resources\ProductResource;
+use Tests\TestHelper;
 
 class CartTest extends TestCase
 {
-    use WithFaker;
+    use TestHelper;
 
     public function test_1_it_should_return_products_in_client_cart()
     {
-        $cat = Category::factory()->create();
-        $client = Client::factory()->create();
-        $pr = Product::factory()->create([
-            'title' => $this->faker->word().'Product',
-            'description' => $this->faker->sentence,
-            'content' => $this->faker->text,
-            'preview' => $this->faker->imageUrl(),
-            'price' => $this->faker->randomFloat(2, 10, 1000),
-            'amount' => $this->faker->randomNumber(4),
-            'category_id' => $cat->id,
-        ]);
+        $client = $this->createClient();
+        $data = $this->createCategoryAndProduct();
+        $pr = $data['product'];
 
         Cart::create([
             'client_id' => $client->clerk_id,
@@ -60,7 +50,7 @@ class CartTest extends TestCase
 
     public function test_2_it_should_return_empty_array_for_client_with_no_products_in_cart()
     {
-        $client = Client::factory()->create();
+        $client = $this->createClient();
 
         $response = $this->getJson("api/carts/{$client->clerk_id}");
 
