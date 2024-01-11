@@ -8,25 +8,19 @@ use Tests\TestCase;
 use App\Models\Product;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestHelper;
 
 class ApiProductIndexContentTest extends TestCase
 {
-    use WithFaker;
     use DatabaseTransactions;
+    use TestHelper;
 
     public function test_1_it_should_test_the_content_of_the_json_response_list(){
         $arr = [];
 
         for ($i=0; $i < 8; $i++) {
-            $p = Product::factory()->create([
-                'title' => $this->faker->word().'Product',
-                'description' => $this->faker->sentence,
-                'content' => $this->faker->text,
-                'preview' => $this->faker->imageUrl(),
-                'price' => $this->faker->randomFloat(2, 10, 1000),
-                'amount' => $this->faker->randomNumber(4),
-                'category_id' => $this->faker->numberBetween(1, 5),
-            ]);
+            $data = $this->createCategoryAndProduct();
+            $p = $data['product'];
             array_push($arr, $p);
         }
 

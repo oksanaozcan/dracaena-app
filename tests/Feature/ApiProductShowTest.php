@@ -7,22 +7,16 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use App\Models\Product;
+use Tests\TestHelper;
 
 class ApiProductShowTest extends TestCase
 {
-    use WithFaker;
+    use TestHelper;
 
     public function test_1_it_should_test_the_json_response()
     {
-        $p = Product::factory()->create([
-            'title' => $this->faker->word().'Product',
-            'description' => $this->faker->sentence,
-            'content' => $this->faker->text,
-            'preview' => $this->faker->imageUrl(),
-            'price' => $this->faker->randomFloat(2, 10, 1000),
-            'amount' => $this->faker->randomNumber(4),
-            'category_id' => $this->faker->numberBetween(1, 5),
-        ]);
+        $data = $this->createCategoryAndProduct();
+        $p = $data['product'];
 
         $response = $this->getJson("/api/products/{$p->id}");
 

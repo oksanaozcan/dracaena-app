@@ -7,21 +7,18 @@ use App\Models\Client;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
+use App\Http\Requests\API\Cart\StoreRequest;
 use Illuminate\Support\Facades\Log;
 
 class CartService {
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         try {
 
             DB::beginTransaction();
 
-            $validated = $request->validate([
-                'client_id' => 'required',
-                'product_id' => 'required',
-            ]);
+            $validated = $request->validated();
 
             Cart::create([
                 'client_id' => $validated['client_id'],

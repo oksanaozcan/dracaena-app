@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\API\Cart\StoreRequest;
 use App\Services\CartService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class CartApiController extends Controller
 {
-    public function store(Request $request, CartService $cartService): JsonResponse
+    public function store(StoreRequest $request, CartService $cartService): JsonResponse
     {
         try {
             $cartService->store($request);
@@ -28,7 +28,6 @@ class CartApiController extends Controller
 
     public function delete(Request $request, CartService $cartService): JsonResponse
     {
-        // Log::info($request);
         try {
             $cartService->delete($request);
 
