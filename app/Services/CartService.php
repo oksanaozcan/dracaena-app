@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\API\Cart\StoreRequest;
+use App\Http\Requests\API\Cart\DeleteRequest;
 use Illuminate\Support\Facades\Log;
 
 class CartService {
@@ -33,18 +34,21 @@ class CartService {
         }
     }
 
-    public function delete(Request $request)
+    public function delete(DeleteRequest $request)
     {
         try {
             DB::beginTransaction();
 
-            $userId = $request->input('userId');
-            $productId = $request->input('productId');
+            $validated = $request->validated();
 
             $cart = Cart::where([
-                "client_id" => $userId,
-                "product_id" => $productId
-            ]);
+                "client_id" => $validated['userId'],
+                "product_id" => $validated['productId']
+            ])->first();
+
+            if (!$cart) {
+                return abort(404, 'Cart item not found');
+            }
 
             $cart->delete();
 

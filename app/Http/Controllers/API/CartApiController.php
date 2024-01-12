@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Cart\StoreRequest;
+use App\Http\Requests\API\Cart\DeleteRequest;
 use App\Services\CartService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -26,15 +27,15 @@ class CartApiController extends Controller
         }
     }
 
-    public function delete(Request $request, CartService $cartService): JsonResponse
+    public function delete(DeleteRequest $request, CartService $cartService): JsonResponse
     {
         try {
             $cartService->delete($request);
 
-            return response()->json(['message' => 'Item removed from cart successfully'], 201);
+            return response()->json(['message' => 'Cart item deleted successfully'], 201);
 
         } catch (Exception $exception) {
-            return response()->json(['error' => 'Cart item removing failed', 'message' => $exception->getMessage()], 500);
+            return response()->json(['error' => 'Cart item deletion failed', 'message' => $exception->getMessage()], 500);
         }
     }
 }
