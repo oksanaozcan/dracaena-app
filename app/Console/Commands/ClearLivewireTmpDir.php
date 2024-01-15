@@ -13,7 +13,12 @@ class ClearLivewireTmpDir extends Command
 
     public function handle(): void
     {
-        Storage::delete(Storage::files('livewire-tmp'));
-        $this->info('Temporary files were successfully deleted');
+        $files = Storage::allFiles('livewire-tmp');
+        if (empty($files)) {
+            $this->info('No files found in the livewire-tmp directory');
+        } else {
+            Storage::delete(Storage::files('livewire-tmp'));
+            $this->info('Temporary files were successfully deleted');
+        }
     }
 }
