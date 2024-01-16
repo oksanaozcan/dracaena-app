@@ -9,15 +9,14 @@ use Illuminate\Support\Facades\Redis;
 
 class RedisRemoveAllDataCommandTest extends TestCase
 {
+    protected $message = 'Flushing the cache does not respect your configured cache "prefix" and will remove all entries from the cache. Consider this carefully when clearing a cache which is shared by other applications. Do you want to remove cache?';
+
     public function test_1_it_removes_all_data_from_redis_cache()
     {
          Cache::shouldReceive('flush')->once();
 
          $this->artisan('redis:flush')
-             ->expectsQuestion(
-                 'Flushing the cache does not respect your configured cache "prefix" and will remove all entries from the cache. Consider this carefully when clearing a cache which is shared by other applications. Do you want to remove cache?',
-                 'yes'
-             )
+             ->expectsQuestion($this->message, 'yes')
              ->expectsOutput('All Redis Cache removed')
              ->assertExitCode(0);
     }
@@ -29,10 +28,7 @@ class RedisRemoveAllDataCommandTest extends TestCase
         });
 
         $this->artisan('redis:flush')
-            ->expectsQuestion(
-                'Flushing the cache does not respect your configured cache "prefix" and will remove all entries from the cache. Consider this carefully when clearing a cache which is shared by other applications. Do you want to remove cache?',
-                'no'
-            )
+            ->expectsQuestion($this->message, 'no')
             ->expectsOutput('Cancel removing')
             ->assertExitCode(0);
 
