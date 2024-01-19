@@ -21,34 +21,34 @@ class RoleSeeder extends Seeder
          app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Permissions
-        Permission::create(['name' => PermissionType::CAN_CREATE_USER]);
-        Permission::create(['name' => PermissionType::CAN_UPDATE_USER]);
-        Permission::create(['name' => PermissionType::CAN_DELETE_USER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_USER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_USER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_USER]);
 
-        Permission::create(['name' => PermissionType::CAN_CREATE_CATEGORY]);
-        Permission::create(['name' => PermissionType::CAN_UPDATE_CATEGORY]);
-        Permission::create(['name' => PermissionType::CAN_DELETE_CATEGORY]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_CATEGORY]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_CATEGORY]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_CATEGORY]);
 
-        Permission::create(['name' => PermissionType::CAN_CREATE_CATEGORY_FILTER]);
-        Permission::create(['name' => PermissionType::CAN_UPDATE_CATEGORY_FILTER]);
-        Permission::create(['name' => PermissionType::CAN_DELETE_CATEGORY_FILTER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_CATEGORY_FILTER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_CATEGORY_FILTER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_CATEGORY_FILTER]);
 
-        Permission::create(['name' => PermissionType::CAN_CREATE_TAG]);
-        Permission::create(['name' => PermissionType::CAN_UPDATE_TAG]);
-        Permission::create(['name' => PermissionType::CAN_DELETE_TAG]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_TAG]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_TAG]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_TAG]);
 
-        Permission::create(['name' => PermissionType::CAN_CREATE_PRODUCT]);
-        Permission::create(['name' => PermissionType::CAN_UPDATE_PRODUCT]);
-        Permission::create(['name' => PermissionType::CAN_DELETE_PRODUCT]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_PRODUCT]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_PRODUCT]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_PRODUCT]);
 
-        Permission::create(['name' => PermissionType::CAN_CREATE_BILLBOARD]);
-        Permission::create(['name' => PermissionType::CAN_UPDATE_BILLBOARD]);
-        Permission::create(['name' => PermissionType::CAN_DELETE_BILLBOARD]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_BILLBOARD]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_BILLBOARD]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_BILLBOARD]);
 
         // Roles
-        $adminRole = Role::create(['name' => RoleType::ADMIN]);
-        $managerRole = Role::create(['name' => RoleType::MANAGER]);
-        $assistantRole = Role::create(['name' => RoleType::ASSISTANT]);
+        $adminRole = Role::firstOrCreate(['name' => RoleType::ADMIN]);
+        $managerRole = Role::firstOrCreate(['name' => RoleType::MANAGER]);
+        $assistantRole = Role::firstOrCreate(['name' => RoleType::ASSISTANT]);
 
         // gets all permissions via Gate::before rule; see AuthServiceProvider for $adminRole
         // Defining permissions to role

@@ -10,6 +10,9 @@ use Illuminate\Http\RedirectResponse;
 
 class BillboardController extends Controller
 {
+    /** @see realization of store and update method to App\Http\Livewire\Billboard\CreateForm */
+    /**destroy from page billboard.index @see App\Http\Livewire\Billboard\Table * */
+
     public function __construct(public BillboardService $billboardService)
     {
         $this->middleware('auth')->except(['index','show']);
@@ -26,11 +29,6 @@ class BillboardController extends Controller
         return view('billboard.create');
     }
 
-    public function store(Request $request): View
-    {
-        /** @see App\Http\Livewire\Billboard\CreateForm */
-    }
-
     public function show(Billboard $billboard): View
     {
         return view('billboard.show', compact('billboard'));
@@ -43,19 +41,10 @@ class BillboardController extends Controller
         return view('billboard.edit', compact('id'));
     }
 
-    public function update(Request $request, Billboard $billboard)
-    {
-        /** @see App\Http\Livewire\Billboard\CreateForm */
-    }
-
     public function destroy(Billboard $billboard): RedirectResponse
     {
         $this->authorize('delete', $billboard);
         $this->billboardService->destroyBillboard($billboard);
         return redirect()->route('billboards.index');
-        /**
-         * destroy from page billboard.index
-         * @see App\Http\Livewire\Billboard\Table
-        * */
     }
 }

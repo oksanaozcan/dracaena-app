@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Types\PermissionType;
+use App\Types\RoleType;
 
 class BillboardPolicy
 {

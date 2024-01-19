@@ -6,11 +6,16 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Client;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Cart;
+use App\Models\User;
+use App\Models\Billboard;
+use App\Types\RoleType;
+use Illuminate\Support\Str;
 
 trait TestHelper
 {
     use WithFaker;
-    
+
     protected function createCategoryAndProduct(): array
     {
         $category = Category::factory()->create();
@@ -31,5 +36,97 @@ trait TestHelper
     {
         $client = Client::factory()->create();
         return $client;
+    }
+
+    protected function createProductAndPutItInCartOfClient(): array
+    {
+        $client = $this->createClient();
+        $data = $this->createCategoryAndProduct();
+        $pr = $data['product'];
+
+        $cartItem = Cart::create([
+            'client_id' => $client->clerk_id,
+            'product_id' => $pr->id,
+        ]);
+
+        return ['product' => $pr, 'client' => $client, 'cartItem' => $cartItem];
+    }
+
+    protected function createUser(): User
+    {
+        $user = User::create([
+            'name' => $this->faker->name(),
+            'email' => $this->faker->email(),
+            'email_verified_at' => now(),
+            'password' => bcrypt('123456789'),
+            'remember_token' => Str::random(10),
+        ])->assignRole(RoleType::ASSISTANT);
+
+        return $user;
+    }
+
+    protected function createBillboard(): Billboard
+    {
+        $category = Category::factory()->create();
+
+        $b = Billboard::create([
+            'image' => $this->faker->imageUrl(),
+            'category_id' => $category->id,
+            'description' => $this->faker->sentence,
+        ]);
+
+        return $b;
+    }
+
+    protected function assertRoleCanAccessPage($roleType, $route, $model, $page)
+    {
+        $user = User::factory()->$roleType()->create();
+        $response = $this->actingAs($user)->get(route($route));
+
+        $response->assertStatus(200)->assertViewIs("$model.$page");
+    }
+
+    protected function assertRoleCanDeleteModel($roleType, $model, $route, $dir)
+    {
+        $user = User::factory()->$roleType()->create();
+
+        $response = $this->actingAs($user)
+            ->delete(route($route, $model));
+
+        $response->assertRedirect(route("$dir.index"));
+
+        $this->assertDatabaseMissing($dir, ['id' => $model->id]);
+    }
+
+    protected function assertRoleCanEditModel($roleType, $model, $route, $view)
+    {
+        $user = User::factory()->$roleType()->create();
+
+        $response = $this->actingAs($user)
+            ->get(route($route, $model));
+
+        $response->assertStatus(200)
+            ->assertViewIs($view)
+            ->assertViewHas('id', $model->id);
+    }
+
+    protected function assertRoleCanNotEditModel($roleType, $model, $route)
+    {
+        $user = User::factory()->$roleType()->create();
+
+        $response = $this->actingAs($user)
+            ->get(route($route, $model));
+
+        $response->assertStatus(403);
+    }
+
+    protected function assertRoleCanAccessShowPage($roleType, $model, $route, $view)
+    {
+        $user = User::factory()->$roleType()->create();
+        $response = $this->actingAs($user)
+            ->get(route($route, $model->id));
+
+        $response->assertStatus(200)
+            ->assertViewIs($view);
     }
 }
