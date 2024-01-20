@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Models\Category;
+use App\Models\CategoryFilter;
 use App\Models\Product;
 use App\Models\Client;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,6 +16,21 @@ use Illuminate\Support\Str;
 trait TestHelper
 {
     use WithFaker;
+
+    protected function createCategory(): Category
+    {
+        $category = Category::factory()->create();
+        return $category;
+    }
+
+    protected function createCategoryFilter(): CategoryFilter
+    {
+        $cat = Category::factory()->create();
+        $cf = CategoryFilter::factory()->create([
+            'category_id' => $cat->id,
+        ]);
+        return $cf;
+    }
 
     protected function createCategoryAndProduct(): array
     {
@@ -86,16 +102,35 @@ trait TestHelper
         $response->assertStatus(200)->assertViewIs("$model.$page");
     }
 
-    protected function assertRoleCanDeleteModel($roleType, $model, $route, $dir)
+    protected function assertRoleCanDeleteModel($roleType, $model, $route, $dir, $tableName=null)
     {
         $user = User::factory()->$roleType()->create();
 
         $response = $this->actingAs($user)
             ->delete(route($route, $model));
-
         $response->assertRedirect(route("$dir.index"));
 
-        $this->assertDatabaseMissing($dir, ['id' => $model->id]);
+        if ($tableName == null) {
+            $this->assertDatabaseMissing($dir, ['id' => $model->id]);
+        } else {
+            $this->assertDatabaseMissing($tableName, ['id' => $model->id]);
+        }
+
+
+
+
+
+    }
+
+    protected function assertRoleCanNotDeleteModel($roleType, $model, $route)
+    {
+
+        $user = User::factory()->$roleType()->create();
+
+        $response = $this->actingAs($user)
+            ->delete(route($route, $model));
+
+        $response->assertStatus(403);
     }
 
     protected function assertRoleCanEditModel($roleType, $model, $route, $view)
@@ -128,5 +163,27 @@ trait TestHelper
 
         $response->assertStatus(200)
             ->assertViewIs($view);
+    }
+
+    protected function assertRedirectNotAuthUsersFromPageToVerifNoticeRoute($route, $model=null)
+    {
+        if ($model != null) {
+            $response = $this->get(route($route, $model->id));
+        } else {
+            $response = $this->get(route($route));
+        }
+        $response->assertStatus(302)
+            ->assertRedirect(route('verification.notice'));
+    }
+
+    protected function assertRedirectNotAuthUsersToLogin($route, $model=null)
+    {
+        if ($model != null) {
+            $response = $this->get(route($route, $model->id));
+        } else {
+            $response = $this->get(route($route));
+        }
+        $response->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 }

@@ -5,11 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\User;
 use Tests\TestHelper;
-use App\Models\Billboard;
-use App\Types\RoleType;
-use Illuminate\Support\Str;
 use Database\Seeders\RoleSeeder;
 
 class BillboardControllerTest extends TestCase
@@ -55,18 +51,12 @@ class BillboardControllerTest extends TestCase
 
     public function test_7_it_redirects_not_authenticated_users_from_index_to_login_page()
     {
-        $response = $this->get(route('billboards.index'));
-
-        $response->assertStatus(302)
-            ->assertRedirect(route('verification.notice'));
+        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("billboards.index");
     }
 
     public function test_8_it_redirects_not_authenticated_users_from_create_to_login_page()
     {
-        $response = $this->get(route('billboards.create'));
-
-        $response->assertStatus(302)
-            ->assertRedirect(route('login'));
+        $this->assertRedirectNotAuthUsersToLogin("billboards.create");
     }
 
     public function test_9_it_allows_authorized_admin_users_to_edit_a_billboard()
@@ -90,10 +80,7 @@ class BillboardControllerTest extends TestCase
     public function test_12_it_redirects_not_authenticated_users_from_edit_to_login_page()
     {
         $billboard = $this->createBillboard();
-        $response = $this->get(route('billboards.edit', $billboard->id));
-
-        $response->assertStatus(302)
-            ->assertRedirect(route('login'));
+        $this->assertRedirectNotAuthUsersToLogin("billboards.create", $billboard);
     }
 
     public function test_13_it_displays_the_show_page_for_authenticated_admin_users()
@@ -117,10 +104,7 @@ class BillboardControllerTest extends TestCase
     public function test_16_it_redirects_not_authenticated_users_from_show_to_login_page()
     {
         $billboard = $this->createBillboard();
-        $response = $this->get(route('billboards.show', $billboard->id));
-
-        $response->assertStatus(302)
-            ->assertRedirect(route('verification.notice'));
+        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("billboards.show", $billboard);
     }
 
     public function test_17_it_allows_authorized_admin_users_to_delete_a_billboard()
@@ -138,12 +122,6 @@ class BillboardControllerTest extends TestCase
     public function test_19_it_does_not_allow_authorized_assistant_users_to_delete_a_billboard()
     {
         $billboard = $this->createBillboard();
-        $user = User::factory()->assistant()->create();
-        $this->assertTrue($user->hasRole(RoleType::ASSISTANT));
-
-        $response = $this->actingAs($user)
-            ->delete(route('billboards.destroy', $billboard));
-
-        $response->assertStatus(403);
+        $this->assertRoleCanNotDeleteModel("assistant", $billboard, "billboards.destroy");
     }
 }
