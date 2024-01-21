@@ -13,7 +13,7 @@ class DbNotificationController extends Controller
         return view('notifications');
     }
 
-    public function markasread($id): RedirectResponse
+    public function markasread($id = null): RedirectResponse
     {
         if ($id) {
             auth()->user()->notifications->where('id', $id)->markAsRead();

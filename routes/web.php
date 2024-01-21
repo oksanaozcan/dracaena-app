@@ -17,7 +17,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/notifications', [DbNotificationController::class, 'index'])->middleware(['auth', 'verified'])->name('notifications');
-Route::get('/markasread/{id}', [DbNotificationController::class, 'markasread'])->middleware(['auth', 'verified'])->name('markasread');
+Route::get('/markasread/{id?}', [DbNotificationController::class, 'markasread'])->middleware(['auth', 'verified'])->name('markasread');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

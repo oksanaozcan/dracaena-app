@@ -94,12 +94,16 @@ trait TestHelper
         return $b;
     }
 
-    protected function assertRoleCanAccessPage($roleType, $route, $model, $page)
+    protected function assertRoleCanAccessPage($roleType, $route, $model=null, $page)
     {
         $user = User::factory()->$roleType()->create();
         $response = $this->actingAs($user)->get(route($route));
 
-        $response->assertStatus(200)->assertViewIs("$model.$page");
+        if ($model == null) {
+            $response->assertStatus(200)->assertViewIs($page);
+        } else {
+            $response->assertStatus(200)->assertViewIs("$model.$page");
+        }
     }
 
     protected function assertRoleCanDeleteModel($roleType, $model, $route, $dir, $tableName=null)
