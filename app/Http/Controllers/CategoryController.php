@@ -8,6 +8,9 @@ use App\Services\CategoryService;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+ /** @see realization of store and update method to App\Http\Livewire\Category\CreateForm */
+    /**destroy from page category.index @see App\Http\Livewire\Category\Table * */
+
 class CategoryController extends Controller
 {
     public function __construct(public CategoryService $categoryService)
@@ -26,11 +29,6 @@ class CategoryController extends Controller
         return view('category.create');
     }
 
-    public function store(Request $request): View
-    {
-        /** @see App\Http\Livewire\Category\CreateForm */
-    }
-
     public function show(Category $category): View
     {
         return view('category.show', compact('category'));
@@ -43,19 +41,10 @@ class CategoryController extends Controller
         return view('category.edit', compact('id'));
     }
 
-    public function update(Request $request, Category $category)
-    {
-        /** @see App\Http\Livewire\Category\CreateForm */
-    }
-
     public function destroy(Category $category): RedirectResponse
     {
         $this->authorize('delete', $category);
         $this->categoryService->destroyCategory($category);
         return redirect()->route('categories.index');
-        /**
-         * destroy from page category.index
-         * @see App\Http\Livewire\Category\Table
-        * */
     }
 }

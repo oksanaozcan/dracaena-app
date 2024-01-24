@@ -8,9 +8,15 @@ use App\Services\ProductService;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+ /** @see realization of store and update method to App\Http\Livewire\Product\CreateForm */
+    /**destroy from page category.index @see App\Http\Livewire\Product\Table * */
+
 class ProductController extends Controller
 {
-    public function __construct(public ProductService $productService) {}
+    public function __construct(public ProductService $productService)
+    {
+        $this->middleware('auth')->except(['index','show']);
+    }
 
     public function index(): View
     {
@@ -19,12 +25,8 @@ class ProductController extends Controller
 
     public function create(): View
     {
+        $this->authorize('create', Product::class);
         return view('product.create');
-    }
-
-    public function store(Request $request)
-    {
-         /** @see App\Http\Livewire\Product\CreateForm */
     }
 
     public function show(Product $product): View
@@ -34,22 +36,15 @@ class ProductController extends Controller
 
     public function edit(Product $product): View
     {
+        $this->authorize('update', $product);
         $id = $product->id;
         return view('product.edit', compact('id'));
     }
 
-    public function update(Request $request, Product $product)
-    {
-         /** @see App\Http\Livewire\Product\CreateForm */
-    }
-
     public function destroy(Product $product): RedirectResponse
     {
+        $this->authorize('delete', $product);
         $this->productService->destroyProduct($product);
         return redirect()->route('products.index');
-          /**
-         * destroy from page product.index
-         * @see App\Http\Livewire\Product\Table
-        * */
     }
 }

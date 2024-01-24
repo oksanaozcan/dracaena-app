@@ -8,6 +8,9 @@ use App\Services\TagService;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+ /** @see realization of store and update method to App\Http\Livewire\Tag\CreateForm */
+    /**destroy from page tag.index @see App\Http\Livewire\Tag\Table * */
+
 class TagController extends Controller
 {
     public function __construct(public TagService $tagService)
@@ -26,11 +29,6 @@ class TagController extends Controller
         return view('tag.create');
     }
 
-    public function store(Request $request)
-    {
-        /** @see App\Http\Livewire\Tag\CreateForm */
-    }
-
     public function show(Tag $tag): View
     {
         return view('tag.show', compact('tag'));
@@ -43,19 +41,10 @@ class TagController extends Controller
         return view('tag.edit', compact('id'));
     }
 
-    public function update(Request $request, Tag $tag)
-    {
-         /** @see App\Http\Livewire\Tag\CreateForm */
-    }
-
     public function destroy(Tag $tag): RedirectResponse
     {
         $this->authorize('delete', $tag);
         $this->tagService->destroyTag($tag);
         return redirect()->route('tags.index');
-        /**
-         * destroy from page tag.index
-         * @see App\Http\Livewire\Tag\Table
-        * */
     }
 }

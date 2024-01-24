@@ -8,6 +8,9 @@ use Illuminate\View\View;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 
+ /** @see realization of store and update method to App\Http\Livewire\User\CreateForm */
+    /**destroy from page user.index @see App\Http\Livewire\User\Table * */
+
 class UserController extends Controller
 {
     public function __construct(public UserService $userService)
@@ -27,11 +30,6 @@ class UserController extends Controller
         return view('user.create');
     }
 
-    public function store(Request $request)
-    {
-         /** @see App\Http\Livewire\User\CreateForm */
-    }
-
     public function show(User $user): View
     {
         $this->authorize('view', $user);
@@ -45,19 +43,10 @@ class UserController extends Controller
         return view('user.edit', compact('id'));
     }
 
-    public function update(Request $request, User $user)
-    {
-         /** @see App\Http\Livewire\User\CreateForm */
-    }
-
     public function destroy(User $user): RedirectResponse
     {
         $this->authorize('delete', $user);
         $this->userService->destroyUser($user);
         return redirect()->route('users.index');
-          /**
-         * destroy from page user.index
-         * @see App\Http\Livewire\User\Table
-        * */
     }
 }

@@ -8,6 +8,8 @@ use App\Services\CategoryFilterService;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+ /** @see realization of store and update method to App\Http\Livewire\CategoryFilter\CreateForm */
+
 class CategoryFilterController extends Controller
 {
     public function __construct(public CategoryFilterService $categoryFilterService)
@@ -26,11 +28,6 @@ class CategoryFilterController extends Controller
         return view('category-filter.create');
     }
 
-    public function store(Request $request): View
-    {
-        /** @see App\Http\Livewire\CategoryFilter\CreateForm */
-    }
-
     public function show(CategoryFilter $categoryFilter): View
     {
         return view('category-filter.show', compact('categoryFilter'));
@@ -41,11 +38,6 @@ class CategoryFilterController extends Controller
         $this->authorize('update', $categoryFilter);
         $id = $categoryFilter->id;
         return view('category-filter.edit', compact('id'));
-    }
-
-    public function update(Request $request, CategoryFilter $categoryFilter)
-    {
-        /** @see App\Http\Livewire\CategoryFilter\CreateForm */
     }
 
     public function destroy(CategoryFilter $categoryFilter): RedirectResponse

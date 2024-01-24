@@ -111,7 +111,7 @@ class CategoryControllerTest extends TestCase
     public function test_17_it_allows_authorized_manager_users_to_delete_a_category()
     {
         $cat = $this->createCategory();
-        $this->assertRoleCanDeleteModel("admin", $cat, "categories.destroy", "categories");
+        $this->assertRoleCanDeleteModel("manager", $cat, "categories.destroy", "categories");
     }
 
     public function test_18_it_does_not_allow_authorized_assistant_users_to_delete_a_category()
