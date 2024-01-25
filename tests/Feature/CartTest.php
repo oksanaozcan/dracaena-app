@@ -11,6 +11,7 @@ use Tests\TestHelper;
 
 class CartTest extends TestCase
 {
+    use RefreshDatabase;
     use TestHelper;
 
     public function test_1_it_should_return_products_in_client_cart()

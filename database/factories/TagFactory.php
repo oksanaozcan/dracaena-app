@@ -18,6 +18,7 @@ class TagFactory extends Factory
     {
         return [
           'title' => $this->faker->unique()->word().'Tag',
+          'category_filter_id' => $this->faker->numberBetween(1, 16),
         ];
     }
 }

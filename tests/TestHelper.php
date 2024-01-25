@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Category;
 use App\Models\CategoryFilter;
 use App\Models\Product;
+use App\Models\Tag;
 use App\Models\Client;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\Cart;
@@ -21,6 +22,15 @@ trait TestHelper
     {
         $category = Category::factory()->create();
         return $category;
+    }
+
+    protected function createTag(): Tag
+    {
+        $cf = $this->createCategoryFilter();
+        $t = Tag::factory()->create([
+            'category_filter_id' => $cf->id,
+        ]);
+        return $t;
     }
 
     protected function createCategoryFilter(): CategoryFilter
@@ -68,16 +78,9 @@ trait TestHelper
         return ['product' => $pr, 'client' => $client, 'cartItem' => $cartItem];
     }
 
-    protected function createUser(): User
+    protected function createUserWithRole($roleType): User
     {
-        $user = User::create([
-            'name' => $this->faker->name(),
-            'email' => $this->faker->email(),
-            'email_verified_at' => now(),
-            'password' => bcrypt('123456789'),
-            'remember_token' => Str::random(10),
-        ])->assignRole(RoleType::ASSISTANT);
-
+        $user = $user = User::factory()->$roleType()->create();
         return $user;
     }
 
@@ -106,6 +109,13 @@ trait TestHelper
         }
     }
 
+    protected function assertRoleCanNotAccessPage($roleType, $route, $page)
+    {
+        $user = User::factory()->$roleType()->create();
+        $response = $this->actingAs($user)->get(route($route));
+        $response->assertStatus(403);
+    }
+
     protected function assertRoleCanDeleteModel($roleType, $model, $route, $dir, $tableName=null)
     {
         $user = User::factory()->$roleType()->create();
@@ -119,16 +129,10 @@ trait TestHelper
         } else {
             $this->assertDatabaseMissing($tableName, ['id' => $model->id]);
         }
-
-
-
-
-
     }
 
     protected function assertRoleCanNotDeleteModel($roleType, $model, $route)
     {
-
         $user = User::factory()->$roleType()->create();
 
         $response = $this->actingAs($user)
@@ -167,6 +171,15 @@ trait TestHelper
 
         $response->assertStatus(200)
             ->assertViewIs($view);
+    }
+
+    protected function assertRoleCanNotAccessShowPage($roleType, $model, $route, $view)
+    {
+        $user = User::factory()->$roleType()->create();
+        $response = $this->actingAs($user)
+            ->get(route($route, $model->id));
+
+        $response->assertStatus(403);
     }
 
     protected function assertRedirectNotAuthUsersFromPageToVerifNoticeRoute($route, $model=null)
