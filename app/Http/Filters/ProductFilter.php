@@ -4,9 +4,12 @@ namespace App\Http\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use  App\Http\Filters\ProductFilterTestingTrait;
 
 class ProductFilter extends AbstractFilter
 {
+    use ProductFilterTestingTrait;
+
   public const SEARCH = 'search';
   public const CATEGORY_ID = 'category_id';
   public const TAG_ID = 'tag_id';

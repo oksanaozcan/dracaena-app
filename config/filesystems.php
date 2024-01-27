@@ -56,6 +56,13 @@ return [
             'throw' => false,
         ],
 
+        'tmp-for-tests' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/tmp-for-tests'),
+            'url' => env('APP_URL').'/storage/tmp-for-tests',
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*
