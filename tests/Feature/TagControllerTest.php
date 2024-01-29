@@ -17,6 +17,7 @@ class TagControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $this->t = $this->createTag();
     }
 
     public function test_1_it_displays_the_tag_index_page_for_authenticated_admin_users()
@@ -51,8 +52,7 @@ class TagControllerTest extends TestCase
 
     public function test_7_it_does_not_allow_authorized_assistant_users_to_edit_a_tag()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanNotEditModel("assistant", $t, "tags.edit");
+        $this->assertRoleCanNotEditModel("assistant", $this->t, "tags.edit");
     }
 
     public function test_8_it_redirects_not_authenticated_users_from_index_to_login_page()
@@ -67,61 +67,51 @@ class TagControllerTest extends TestCase
 
     public function test_10_it_allows_authorized_admin_users_to_edit_a_tag()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanEditModel("admin", $t, "tags.edit", "tag.edit");
+        $this->assertRoleCanEditModel("admin", $this->t, "tags.edit", "tag.edit");
     }
 
     public function test_11_it_allows_authorized_manager_users_to_edit_a_tag()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanEditModel("manager", $t, "tags.edit", "tag.edit");
+        $this->assertRoleCanEditModel("manager", $this->t, "tags.edit", "tag.edit");
     }
 
     public function test_12_it_redirects_not_authenticated_users_from_edit_to_login_page()
     {
-        $t = $this->createTag();
-        $this->assertRedirectNotAuthUsersToLogin("tags.edit", $t);
+        $this->assertRedirectNotAuthUsersToLogin("tags.edit", $this->t);
     }
 
     public function test_13_it_displays_the_show_page_for_authenticated_admin_users()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanAccessShowPage("admin", $t, "tags.show", "tag.show");
+        $this->assertRoleCanAccessShowPage("admin", $this->t, "tags.show", "tag.show");
     }
 
     public function test_14_it_displays_the_show_page_for_authenticated_manager_users()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanAccessShowPage("manager", $t, "tags.show", "tag.show");
+        $this->assertRoleCanAccessShowPage("manager", $this->t, "tags.show", "tag.show");
     }
 
     public function test_15_it_displays_the_show_page_for_authenticated_assistant_users()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanAccessShowPage("assistant", $t, "tags.show", "tag.show");
+        $this->assertRoleCanAccessShowPage("assistant", $this->t, "tags.show", "tag.show");
     }
 
     public function test_16_it_redirects_not_authenticated_users_from_show_to_login_page()
     {
-        $t = $this->createTag();
-        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("tags.show", $t);
+        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("tags.show", $this->t);
     }
 
     public function test_17_it_allows_authorized_admin_users_to_delete_a_tag()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanDeleteModel("admin", $t, "tags.destroy", "tags");
+        $this->assertRoleCanDeleteModel("admin", $this->t, "tags.destroy", "tags");
     }
 
     public function test_18_it_allows_authorized_manager_users_to_delete_a_tag()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanDeleteModel("manager", $t, "tags.destroy", "tags");
+        $this->assertRoleCanDeleteModel("manager", $this->t, "tags.destroy", "tags");
     }
 
     public function test_19_it_does_not_allow_authorized_assistant_users_to_delete_a_tag()
     {
-        $t = $this->createTag();
-        $this->assertRoleCanNotDeleteModel("assistant", $t, "tags.destroy");
+        $this->assertRoleCanNotDeleteModel("assistant", $this->t, "tags.destroy");
     }
 }

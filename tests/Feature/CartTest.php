@@ -14,18 +14,23 @@ class CartTest extends TestCase
     use RefreshDatabase;
     use TestHelper;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->client = $this->createClient();
+    }
+
     public function test_1_it_should_return_products_in_client_cart()
     {
-        $client = $this->createClient();
         $data = $this->createCategoryAndProduct();
         $pr = $data['product'];
 
         Cart::create([
-            'client_id' => $client->clerk_id,
+            'client_id' => $this->client->clerk_id,
             'product_id' => $pr->id,
         ]);
 
-        $response = $this->getJson("api/carts/{$client->clerk_id}");
+        $response = $this->getJson("api/carts/{$this->client->clerk_id}");
 
         $response
             ->assertStatus(200)
@@ -51,9 +56,7 @@ class CartTest extends TestCase
 
     public function test_2_it_should_return_empty_array_for_client_with_no_products_in_cart()
     {
-        $client = $this->createClient();
-
-        $response = $this->getJson("api/carts/{$client->clerk_id}");
+        $response = $this->getJson("api/carts/{$this->client->clerk_id}");
 
         $response
             ->assertStatus(200)

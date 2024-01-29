@@ -17,6 +17,7 @@ class BillboardControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $this->b = $this->createBillboard();
     }
 
     public function test_1_it_displays_the_billboard_index_page_for_authenticated_admin_users()
@@ -61,67 +62,56 @@ class BillboardControllerTest extends TestCase
 
     public function test_9_it_allows_authorized_admin_users_to_edit_a_billboard()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanEditModel("admin", $billboard, "billboards.edit", "billboard.edit");
+        $this->assertRoleCanEditModel("admin", $this->b, "billboards.edit", "billboard.edit");
     }
 
     public function test_10_it_allows_authorized_manager_users_to_edit_a_billboard()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanEditModel("manager", $billboard, "billboards.edit", "billboard.edit");
+        $this->assertRoleCanEditModel("manager", $this->b, "billboards.edit", "billboard.edit");
     }
 
     public function test_11_it_does_not_allow_authorized_assistant_users_to_edit_a_billboard()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanNotEditModel("assistant", $billboard, "billboards.edit");
+        $this->assertRoleCanNotEditModel("assistant", $this->b, "billboards.edit");
     }
 
     public function test_12_it_redirects_not_authenticated_users_from_edit_to_login_page()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRedirectNotAuthUsersToLogin("billboards.create", $billboard);
+        $this->assertRedirectNotAuthUsersToLogin("billboards.create", $this->b);
     }
 
     public function test_13_it_displays_the_show_page_for_authenticated_admin_users()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanAccessShowPage("admin", $billboard, "billboards.show", "billboard.show");
+        $this->assertRoleCanAccessShowPage("admin", $this->b, "billboards.show", "billboard.show");
     }
 
     public function test_14_it_displays_the_show_page_for_authenticated_manager_users()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanAccessShowPage("manager", $billboard, "billboards.show", "billboard.show");
+        $this->assertRoleCanAccessShowPage("manager", $this->b, "billboards.show", "billboard.show");
     }
 
     public function test_15_it_displays_the_show_page_for_authenticated_assistant_users()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanAccessShowPage("assistant", $billboard, "billboards.show", "billboard.show");
+        $this->assertRoleCanAccessShowPage("assistant", $this->b, "billboards.show", "billboard.show");
     }
 
     public function test_16_it_redirects_not_authenticated_users_from_show_to_login_page()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("billboards.show", $billboard);
+        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("billboards.show", $this->b);
     }
 
     public function test_17_it_allows_authorized_admin_users_to_delete_a_billboard()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanDeleteModel("admin", $billboard, "billboards.destroy", "billboards");
+        $this->assertRoleCanDeleteModel("admin", $this->b, "billboards.destroy", "billboards");
     }
 
     public function test_18_it_allows_authorized_manager_users_to_delete_a_billboard()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanDeleteModel("manager", $billboard, "billboards.destroy", "billboards");
+        $this->assertRoleCanDeleteModel("manager", $this->b, "billboards.destroy", "billboards");
     }
 
     public function test_19_it_does_not_allow_authorized_assistant_users_to_delete_a_billboard()
     {
-        $billboard = $this->createBillboard();
-        $this->assertRoleCanNotDeleteModel("assistant", $billboard, "billboards.destroy");
+        $this->assertRoleCanNotDeleteModel("assistant", $this->b, "billboards.destroy");
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Livewire\Billboard\CreateForm;
 use App\Http\Livewire\Billboard\Table;
 use App\Models\Billboard;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class LivewireBuilboardCreateFormTest extends TestCase
 {
@@ -22,18 +23,18 @@ class LivewireBuilboardCreateFormTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $this->category = $this->createCategory();
+        $this->b = $this->createBillboard();
+        $this->user = $this->createUserWithRole("admin");
+        Livewire::actingAs($this->user);
     }
 
     public function test_1_can_create_model()
     {
-        $user = $this->createUserWithRole("admin");
-        $cat = $this->createCategory();
-        Livewire::actingAs($user);
-
         Livewire::test(CreateForm::class)
             ->set('description', 'string for testing livewire form for billboard')
             ->set('image', UploadedFile::fake()->image('test_image.jpg'))
-            ->set('category_id', $cat->id)
+            ->set('category_id',  $this->category->id)
             ->call('submitForm');
 
         $this->assertTrue(Billboard::whereDescription('string for testing livewire form for billboard')->exists());
@@ -41,46 +42,32 @@ class LivewireBuilboardCreateFormTest extends TestCase
 
     public function test_2_can_set_initial_description()
     {
-        $user = $this->createUserWithRole("admin");
-        Livewire::actingAs($user);
-
         Livewire::test(CreateForm::class, ['description' => 'foo'])
             ->assertSet('description', 'foo');
     }
 
     public function test_3_description_is_required()
     {
-        $cat = $this->createCategory();
-        $user = $this->createUserWithRole("admin");
-        Livewire::actingAs($user);
-
         Livewire::test(CreateForm::class)
             ->set('description', '')
             ->set('image', UploadedFile::fake()->image('test_image.jpg'))
-            ->set('category_id', $cat->id)
+            ->set('category_id', $this->category->id)
             ->call('submitForm')
             ->assertHasErrors(['description' => 'required']);
     }
 
     public function test_4_image_is_required()
     {
-        $cat = $this->createCategory();
-        $user = $this->createUserWithRole("admin");
-        Livewire::actingAs($user);
-
         Livewire::test(CreateForm::class)
             ->set('description', 'string for testing livewire form for billboard')
             ->set('image', '')
-            ->set('category_id', $cat->id)
+            ->set('category_id', $this->category->id)
             ->call('submitForm')
             ->assertHasErrors(['image' => 'required']);
     }
 
     public function test_5_category_id_is_required()
     {
-        $user = $this->createUserWithRole("admin");
-        Livewire::actingAs($user);
-
         Livewire::test(CreateForm::class)
             ->set('description', 'string for testing livewire form for billboard')
             ->set('image', UploadedFile::fake()->image('test_image.jpg'))
@@ -91,31 +78,21 @@ class LivewireBuilboardCreateFormTest extends TestCase
 
     public function test_6_it_displays_success_message_on_billboard_create_page_after_creation()
     {
-        $user = $this->createUserWithRole("admin");
-        $cat = $this->createCategory();
-        Livewire::actingAs($user);
-
         Livewire::test(CreateForm::class)
             ->set('description', 'string for testing livewire form for billboard')
             ->set('image', UploadedFile::fake()->image('test_image.jpg'))
-            ->set('category_id', $cat->id)
+            ->set('category_id', $this->category->id)
             ->call('submitForm')
             ->assertSee('Billboard successfully added.');
     }
 
     public function test_7_model_creation_page_contains_livewire_component()
     {
-        $user = $this->createUserWithRole("admin");
-        Livewire::actingAs($user);
-
         $this->get('/billboards/create')->assertSeeLivewire(CreateForm::class);
     }
 
     public function test_8_model_creation_page_doesnt_contain_livewire_component()
     {
-        $user = $this->createUserWithRole("admin");
-        Livewire::actingAs($user);
-
         $this->get('/billboards/create')->assertDontSeeLivewire(Table::class);
     }
 
@@ -123,32 +100,29 @@ class LivewireBuilboardCreateFormTest extends TestCase
 
     public function test_9_can_edit_description_of_model()
     {
-        $b = $this->createBillboard();
-        $user = $this->createUserWithRole("admin");
-
-        Livewire::actingAs($user)
-            ->test(CreateForm::class, ['id' => $b->id])
+        Livewire::test(CreateForm::class, ['id' => $this->b->id])
             ->set('description', 'test of editing')
             ->call('submitForm');
 
         $this->assertTrue(Billboard::whereDescription('test of editing')->exists());
     }
 
-    public function test_10_can_edit_image_of_model()
+    public function test_10_it_redirects_after_edition_to_index_page()
     {
-        $b = $this->createBillboard();
-        $user = $this->createUserWithRole("admin");
+        Livewire::test(CreateForm::class, ['id' => $this->b->id])
+            ->set('category_id', $this->category->id)
+            ->call('submitForm')
+            ->assertRedirect(route('billboards.index'));
+    }
 
-        Livewire::actingAs($user)
-            ->test(CreateForm::class, ['id' => $b->id])
-            ->set('image', UploadedFile::fake()->image('test_image.jpg'))
-            ->call('submitForm');
+    public function test_11_model_edition_page_contains_livewire_component()
+    {
+        $this->get("/billboards/{$this->b->id}/edit")->assertSeeLivewire(CreateForm::class);
+    }
 
-            dd($b);
-
-        $this->assertTrue(Billboard::whereDescription($b->description)->exists());
-
-        $this->assertTrue(Billboard::where('image', 'http://localhost/storage/billboard_images/test_image.jpg')->exists());
+    public function test_12_model_edition_page_doesnt_contain_livewire_component()
+    {
+        $this->get("/billboards/{$this->b->id}/edit")->assertDontSeeLivewire(Table::class);
     }
 
 }

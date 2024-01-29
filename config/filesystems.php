@@ -55,14 +55,6 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
-
-        'tmp-for-tests' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public/tmp-for-tests'),
-            'url' => env('APP_URL').'/storage/tmp-for-tests',
-            'visibility' => 'public',
-        ],
-
     ],
 
     /*

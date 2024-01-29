@@ -17,6 +17,8 @@ class ProductControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $data = $this->createCategoryAndProduct();
+        $this->p = $data["product"];
     }
 
     public function test_1_it_displays_the_product_index_page_for_authenticated_admin_users()
@@ -51,9 +53,7 @@ class ProductControllerTest extends TestCase
 
     public function test_7_it_does_not_allow_authorized_assistant_users_to_edit_a_product()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanNotEditModel("assistant", $p, "products.edit");
+        $this->assertRoleCanNotEditModel("assistant",  $this->p, "products.edit");
     }
 
     public function test_8_it_redirects_not_authenticated_users_from_index_to_login_page()
@@ -68,71 +68,51 @@ class ProductControllerTest extends TestCase
 
     public function test_10_it_allows_authorized_admin_users_to_edit_a_product()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanEditModel("admin", $p, "products.edit", "product.edit");
+        $this->assertRoleCanEditModel("admin",  $this->p, "products.edit", "product.edit");
     }
 
     public function test_11_it_allows_authorized_manager_users_to_edit_a_product()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanEditModel("manager", $p, "products.edit", "product.edit");
+        $this->assertRoleCanEditModel("manager",  $this->p, "products.edit", "product.edit");
     }
 
     public function test_12_it_redirects_not_authenticated_users_from_edit_to_login_page()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRedirectNotAuthUsersToLogin("categories.edit", $p);
+        $this->assertRedirectNotAuthUsersToLogin("categories.edit",  $this->p);
     }
 
     public function test_13_it_displays_the_show_page_for_authenticated_admin_users()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanAccessShowPage("admin", $p, "products.show", "product.show");
+        $this->assertRoleCanAccessShowPage("admin",  $this->p, "products.show", "product.show");
     }
 
     public function test_14_it_displays_the_show_page_for_authenticated_manager_users()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanAccessShowPage("manager", $p, "products.show", "product.show");
+        $this->assertRoleCanAccessShowPage("manager",  $this->p, "products.show", "product.show");
     }
 
     public function test_15_it_displays_the_show_page_for_authenticated_assistant_users()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanAccessShowPage("assistant", $p, "products.show", "product.show");
+        $this->assertRoleCanAccessShowPage("assistant",  $this->p, "products.show", "product.show");
     }
 
     public function test_16_it_redirects_not_authenticated_users_from_show_to_login_page()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRedirectNotAuthUsersToLogin("products.show", $p);
+        $this->assertRedirectNotAuthUsersToLogin("products.show",  $this->p);
     }
 
     public function test_17_it_allows_authorized_admin_users_to_delete_a_product()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanDeleteModel("admin", $p, "products.destroy", "products");
+        $this->assertRoleCanDeleteModel("admin",  $this->p, "products.destroy", "products");
     }
 
     public function test_18_it_allows_authorized_manager_users_to_delete_a_product()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanDeleteModel("manager", $p, "products.destroy", "products");
+        $this->assertRoleCanDeleteModel("manager",  $this->p, "products.destroy", "products");
     }
 
     public function test_19_it_does_not_allow_authorized_assistant_users_to_delete_a_product()
     {
-        $data = $this->createCategoryAndProduct();
-        $p = $data["product"];
-        $this->assertRoleCanNotDeleteModel("assistant", $p, "products.destroy");
+        $this->assertRoleCanNotDeleteModel("assistant",  $this->p, "products.destroy");
     }
 }

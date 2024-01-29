@@ -19,6 +19,7 @@ class DbNotificationControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $this->user = User::factory()->admin()->create();
     }
 
     public function test_1_index_method_returns_view_for_admin_users()
@@ -38,12 +39,11 @@ class DbNotificationControllerTest extends TestCase
 
     public function test_4_mark_as_read_method_marks_notification_as_read()
     {
-        $user = User::factory()->admin()->create();
         $notification = DbNotification::factory()->create([
-            'notifiable_id' => $user->id
+            'notifiable_id' => $this->user->id
         ]);
 
-        $response = $this->actingAs($user)->get("/markasread/{$notification->id}");
+        $response = $this->actingAs($this->user)->get("/markasread/{$notification->id}");
 
         $this->assertDatabaseHas('notifications', ['id' => $notification->id]);
         $this->assertNotNull(DbNotification::find($notification->id)->read_at);
@@ -53,9 +53,7 @@ class DbNotificationControllerTest extends TestCase
 
     public function test_5_mark_as_read_method_redirects_back_when_no_id_provided()
     {
-        $user = User::factory()->admin()->create();
-
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
                          ->get('/markasread');
 
         $response->assertStatus(302);

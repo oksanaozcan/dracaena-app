@@ -17,6 +17,7 @@ class CategoryControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $this->cat = $this->createCategory();
     }
 
     public function test_1_it_displays_the_category_index_page_for_authenticated_admin_users()
@@ -46,8 +47,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_6_it_does_not_allow_authorized_assistant_users_to_edit_a_category()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanNotEditModel("assistant", $cat, "categories.edit");
+        $this->assertRoleCanNotEditModel("assistant", $this->cat, "categories.edit");
     }
 
     public function test_7_it_redirects_not_authenticated_users_from_index_to_login_page()
@@ -62,61 +62,51 @@ class CategoryControllerTest extends TestCase
 
     public function test_9_it_allows_authorized_admin_users_to_edit_a_category()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanEditModel("admin", $cat, "categories.edit", "category.edit");
+        $this->assertRoleCanEditModel("admin", $this->cat, "categories.edit", "category.edit");
     }
 
     public function test_10_it_allows_authorized_manager_users_to_edit_a_category()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanEditModel("manager", $cat, "categories.edit", "category.edit");
+        $this->assertRoleCanEditModel("manager", $this->cat, "categories.edit", "category.edit");
     }
 
     public function test_11_it_redirects_not_authenticated_users_from_edit_to_login_page()
     {
-        $cat = $this->createCategory();
-        $this->assertRedirectNotAuthUsersToLogin("categories.edit", $cat);
+        $this->assertRedirectNotAuthUsersToLogin("categories.edit", $this->cat);
     }
 
     public function test_12_it_displays_the_show_page_for_authenticated_admin_users()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanAccessShowPage("admin", $cat, "categories.show", "category.show");
+        $this->assertRoleCanAccessShowPage("admin", $this->cat, "categories.show", "category.show");
     }
 
     public function test_13_it_displays_the_show_page_for_authenticated_manager_users()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanAccessShowPage("manager", $cat, "categories.show", "category.show");
+        $this->assertRoleCanAccessShowPage("manager", $this->cat, "categories.show", "category.show");
     }
 
     public function test_14_it_displays_the_show_page_for_authenticated_assistant_users()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanAccessShowPage("assistant", $cat, "categories.show", "category.show");
+        $this->assertRoleCanAccessShowPage("assistant", $this->cat, "categories.show", "category.show");
     }
 
     public function test_15_it_redirects_not_authenticated_users_from_show_to_login_page()
     {
-        $cat = $this->createCategory();
-        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("categories.show", $cat);
+        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("categories.show", $this->cat);
     }
 
     public function test_16_it_allows_authorized_admin_users_to_delete_a_category()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanDeleteModel("admin", $cat, "categories.destroy", "categories");
+        $this->assertRoleCanDeleteModel("admin", $this->cat, "categories.destroy", "categories");
     }
 
     public function test_17_it_allows_authorized_manager_users_to_delete_a_category()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanDeleteModel("manager", $cat, "categories.destroy", "categories");
+        $this->assertRoleCanDeleteModel("manager", $this->cat, "categories.destroy", "categories");
     }
 
     public function test_18_it_does_not_allow_authorized_assistant_users_to_delete_a_category()
     {
-        $cat = $this->createCategory();
-        $this->assertRoleCanNotDeleteModel("assistant", $cat, "categories.destroy");
+        $this->assertRoleCanNotDeleteModel("assistant", $this->cat, "categories.destroy");
     }
 }

@@ -17,6 +17,7 @@ class CategoryFilterControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
+        $this->cf = $this->createCategoryFilter();
     }
 
     public function test_1_it_displays_the_index_page_for_authenticated_admin_users()
@@ -56,67 +57,56 @@ class CategoryFilterControllerTest extends TestCase
 
     public function test_8_it_allows_authorized_admin_users_to_edit_a_category_filter()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanEditModel("admin", $cf, "category-filters.edit", "category-filter.edit");
+        $this->assertRoleCanEditModel("admin", $this->cf, "category-filters.edit", "category-filter.edit");
     }
 
     public function test_9_it_allows_authorized_manager_users_to_edit_a_category_filter()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanEditModel("manager", $cf, "category-filters.edit", "category-filter.edit");
+        $this->assertRoleCanEditModel("manager", $this->cf, "category-filters.edit", "category-filter.edit");
     }
 
     public function test_10_it_does_not_allow_authorized_assistant_users_to_edit_a_category_filter()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanNotEditModel("assistant", $cf, "category-filters.edit");
+        $this->assertRoleCanNotEditModel("assistant", $this->cf, "category-filters.edit");
     }
 
     public function test_11_it_redirects_not_authenticated_users_from_edit_to_login_page()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRedirectNotAuthUsersToLogin("category-filters.edit", $cf);
+        $this->assertRedirectNotAuthUsersToLogin("category-filters.edit", $this->cf);
     }
 
     public function test_12_it_displays_the_show_page_for_authenticated_admin_users()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanAccessShowPage("admin", $cf, "category-filters.show", "category-filter.show");
+        $this->assertRoleCanAccessShowPage("admin", $this->cf, "category-filters.show", "category-filter.show");
     }
 
     public function test_13_it_displays_the_show_page_for_authenticated_manager_users()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanAccessShowPage("manager", $cf, "category-filters.show", "category-filter.show");
+        $this->assertRoleCanAccessShowPage("manager", $this->cf, "category-filters.show", "category-filter.show");
     }
 
     public function test_14_it_displays_the_show_page_for_authenticated_assistant_users()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanAccessShowPage("assistant", $cf, "category-filters.show", "category-filter.show");
+        $this->assertRoleCanAccessShowPage("assistant", $this->cf, "category-filters.show", "category-filter.show");
     }
 
     public function test_15_it_redirects_not_authenticated_users_from_show_to_login_page()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("category-filters.show", $cf);
+        $this->assertRedirectNotAuthUsersFromPageToVerifNoticeRoute("category-filters.show", $this->cf);
     }
 
     public function test_16_it_allows_authorized_admin_users_to_delete_a_category_filter()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanDeleteModel("admin", $cf, "category-filters.destroy", "category-filters", "category_filters");
+        $this->assertRoleCanDeleteModel("admin", $this->cf, "category-filters.destroy", "category-filters", "category_filters");
     }
 
     public function test_17_it_allows_authorized_manager_users_to_delete_a_category_filter()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanDeleteModel("manager", $cf, "category-filters.destroy", "category-filters", "category_filters");
+        $this->assertRoleCanDeleteModel("manager", $this->cf, "category-filters.destroy", "category-filters", "category_filters");
     }
 
     public function test_18_it_does_not_allow_authorized_assistant_users_to_delete_a_category_filter()
     {
-        $cf = $this->createCategoryFilter();
-        $this->assertRoleCanNotDeleteModel("assistant", $cf, "category-filters.destroy");
+        $this->assertRoleCanNotDeleteModel("assistant", $this->cf, "category-filters.destroy");
     }
 }
