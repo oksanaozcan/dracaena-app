@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Console\Commands;
 
 use App\Jobs\Notification\RemoveReadedDbNotificationsJob;
 use Illuminate\Support\Facades\Artisan;

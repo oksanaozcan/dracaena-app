@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Filters;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,7 +11,7 @@ use Mockery;
 use Illuminate\Database\Eloquent\Builder;
 use Database\Seeders\RoleSeeder;
 
-class Z_AbstractFilterTest extends TestCase
+class AbstractFilterTest extends TestCase
 {
     use RefreshDatabase;
     use TestHelper;
