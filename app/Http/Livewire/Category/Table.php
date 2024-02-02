@@ -50,7 +50,8 @@ class Table extends Component
     {
         $category = Category::find($id);
         $this->authorize('delete', $category);
-        $categoryService->destroyCategory($id);
+        $categoryService->destroyCategory($category);
+        $this->emit('deletedCategories');
     }
 
     public function sortBy($columnHeader)

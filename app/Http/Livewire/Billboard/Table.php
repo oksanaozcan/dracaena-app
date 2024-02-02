@@ -50,7 +50,8 @@ class Table extends Component
     {
         $billboard = Billboard::find($id);
         $this->authorize('delete', $billboard);
-        $billboardService->destroyBillboard($id);
+        $billboardService->destroyBillboard($billboard);
+        $this->emit('deletedBillboards');
     }
 
     public function sortBy($columnHeader)

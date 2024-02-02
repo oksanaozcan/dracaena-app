@@ -89,7 +89,7 @@ class BillboardService {
         }
     }
 
-    public function destroyBillboard(Billboard $billboard)
+    public function destroyBillboard($billboard)
     {
         try {
             DB::beginTransaction();
