@@ -9,37 +9,24 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\CategoryService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Log;
 
 class Table extends Component
 {
     use WithPagination;
     use AuthorizesRequests;
 
-    public $search = '';
-
     public $selectedCategory;
 
     public $sortField = 'id';
     public $sortDirection = 'desc';
 
-    public $checkedTitles = [];
-
-    protected $queryString = ['search', 'sortField', 'sortDirection'];
+    protected $queryString = ['sortField', 'sortDirection'];
 
     protected $listeners = [
         'categoryAdded' => 'render',
         'deletedCategories' => 'render'
     ];
-
-    public function updated()
-    {
-        $this->emit('checkedTitlesUpdated', $this->checkedTitles);
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
 
     public function editCategory($id)
     {
@@ -50,8 +37,12 @@ class Table extends Component
     {
         $category = Category::find($id);
         $this->authorize('delete', $category);
-        $categoryService->destroyCategory($category);
-        $this->emit('deletedCategories');
+        if ($category->products->count() == 0 && $category->categoryFilters->count() == 0) {
+            $categoryService->destroyCategory($category);
+            $this->emit('deletedCategories');
+        } else {
+            $this->flushMessage($category);
+        }
     }
 
     public function sortBy($columnHeader)
@@ -71,7 +62,7 @@ class Table extends Component
 
     public function render(CategoryService $categoryService)
     {
-        $categories = $categoryService->searchForTable($this->search, $this->sortField, $this->sortDirection);
+        $categories = $categoryService->searchForTable(null, $this->sortField, $this->sortDirection);
         return view('livewire.category.table', [
             'categories' => $categories,
             'count' => Category::count()
@@ -81,5 +72,11 @@ class Table extends Component
     public function selectCategory(int $categoryId)
     {
         $this->selectedCategory = $categoryId;
+    }
+
+    public function flushMessage(Category $cat)
+    {
+        session()->flash('message', 'You can not delete this category right now because that has relationships with several products and filters. Please be sure to look at the details.');
+        return redirect()->route("categories.show", $cat);
     }
 }

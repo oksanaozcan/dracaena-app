@@ -47,4 +47,7 @@
     .link-red {
         @apply font-medium text-red-600 dark:text-red-500 hover:underline;
     }
+    .link-amber {
+        @apply font-medium text-amber-600 dark:text-amber-500 hover:underline;
+    }
 }

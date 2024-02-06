@@ -19,6 +19,7 @@ class CreateForm extends Component
 
     protected $rules = [
         'title' => 'required|string|min:3',
+        'category_id' => 'required',
     ];
 
     public function mount($id = null)

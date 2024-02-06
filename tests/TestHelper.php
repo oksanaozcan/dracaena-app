@@ -33,6 +33,15 @@ trait TestHelper
         return $t;
     }
 
+    protected function createCategoryFilterWithTag(): array
+    {
+        $cf = $this->createCategoryFilter();
+        $t = Tag::factory()->create([
+            'category_filter_id' => $cf->id,
+        ]);
+        return ['category_filter' => $cf, 'tag' => $t];
+    }
+
     protected function createCategoryFilter(): CategoryFilter
     {
         $cat = Category::factory()->create();

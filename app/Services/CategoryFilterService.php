@@ -11,6 +11,7 @@ class CategoryFilterService {
     public function searchForTable($search, $sortField, $sortDirection)
     {
         $categoryFilters = CategoryFilter::search('title', $search)
+        ->withCount('tags')
         ->orderBy($sortField, $sortDirection)
         ->paginate(15);
 

@@ -12,6 +12,19 @@
     <div class="overflow-hidden shadow-sm basis-5/6">
       <div class="p-6 text-gray-900">
 
+        <div>
+            @if (session()->has('message'))
+                <div
+                    class="relative px-4 py-3 my-2 text-red-700 bg-red-100 border border-red-400 rounded" role="alert"
+                    x-data="{show: true}"
+                    x-show="show"
+                    x-init="setTimeout(() => show = false, 4000)"
+                >
+                    {{ session('message') }}
+                </div>
+            @endif
+        </div>
+
         <div class="max-w-sm overflow-hidden rounded shadow-lg">
             <div class="px-6 py-4">
                 <img src="{{url($category->preview)}}" alt="preview" class="mb-2">
@@ -22,7 +35,7 @@
                 <p class="text-base text-gray-700">Deleted at: {{$category->deleted_at}}</p>
                 <ul class="text-base text-gray-700">Products:
                     @foreach ($category->products as $p)
-                        <li>{{$p->title}}</li>
+                        <li class=""><span>{{$p->title}}</span>: <a class="link-blue" href="{{route("products.edit", $p->id)}}">Edit</a></li>
                     @endforeach
                 </ul>
                 <hr/>
@@ -30,7 +43,7 @@
                 <hr/>
                 <ul class="text-base text-gray-700">Filters:
                     @foreach ($category->categoryFilters as $cf)
-                        <li>{{$cf->title}}</li>
+                        <li><span>{{$cf->title}}</span>: <a class="link-blue" href="{{route("category-filters.edit", $cf->id)}}">Edit</a></li>
                     @endforeach
                 </ul>
             </div>

@@ -81,7 +81,21 @@ class CategoryTableTest extends TestCase
         $this->canDestroyCategory(false);
     }
 
-    public function test_9_it_emits_event_category_added_and_calls_render_method()
+    public function test_9_user_can_not_destroy_category_if_this_category_has_a_relationships_with_any_products_or_category_filters()
+    {
+       $data = $this->createCategoryAndProduct();
+       $c = $data['category'];
+
+       Livewire::test(Table::class)
+       ->assertSee($c->id)
+       ->assertSee($c->title)
+       ->call("destroyCategory", $c->id)
+       ->assertRedirect(route("categories.show", $c))
+       ->assertStatus(200);
+       $this->assertTrue(Category::whereTitle($c->title)->exists());
+    }
+
+    public function test_10_it_emits_event_category_added_and_calls_render_method()
     {
         Livewire::test(CreateForm::class)
             ->set('title', 'string for test')

@@ -40,6 +40,9 @@
                         </span>
                     </th>
                     <th scope="col">
+                        Tags
+                    </th>
+                    <th scope="col">
                         Created at
                         <span wire:click="sortBy('created_at')" class="pl-4">
                             <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
@@ -79,6 +82,9 @@
                 </td>
                 <td>
                     {{$item->title}}
+                </td>
+                <td>
+                    {{$item->tags_count}}
                 </td>
                 <td>
                     {{$item->created_at->format('j F, Y')}}

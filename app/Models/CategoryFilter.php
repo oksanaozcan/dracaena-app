@@ -20,6 +20,6 @@ class CategoryFilter extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'category_filter_id');
+      return $this->hasMany(Tag::class, 'category_filter_id', 'id');
     }
 }

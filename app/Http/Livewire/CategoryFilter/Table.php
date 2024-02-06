@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\CategoryFilterService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Log;
 
 class Table extends Component
 {
@@ -50,7 +51,28 @@ class Table extends Component
     {
         $categoryFilter = CategoryFilter::find($id);
         $this->authorize('delete', $categoryFilter);
-        $categoryFilterService->destroyCategoryFilter($id);
+
+        $tags = $categoryFilter->tags;
+
+        $tagsHasNotAnyProducts = true;
+
+        foreach ($tags as $tag) {
+            if ($tag->products->count() > 0) {
+                $tagsHasNotAnyProducts = false;
+            }
+        }
+
+        Log::info($tagsHasNotAnyProducts);
+
+        if ($categoryFilter->tags->count() == 0) {
+            $categoryFilterService->destroyCategoryFilter($categoryFilter);
+            $this->emit('deletedCategoryFilters');
+        } elseif ($categoryFilter->tags->count() > 0 && $tagsHasNotAnyProducts) {
+            $categoryFilterService->destroyCategoryFilter($categoryFilter);
+            $this->emit('deletedCategoryFilters');
+        } else {
+            $this->flushMessage($categoryFilter);
+        }
     }
 
     public function sortBy($columnHeader)
@@ -80,5 +102,11 @@ class Table extends Component
     public function selectCategoryFilter(int $categoryFilterId)
     {
         $this->selectedCategoryFilter = $categoryFilterId;
+    }
+
+    public function flushMessage(CategoryFilter $cf)
+    {
+        session()->flash('message', 'You can not delete this category filter right now because that has relationships with several tags with products. Please be sure to look at the details.');
+        return redirect()->route("category-filters.show", $cf);
     }
 }
