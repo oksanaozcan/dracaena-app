@@ -9,7 +9,6 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\CategoryFilterService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Log;
 
 class Table extends Component
 {
@@ -61,8 +60,6 @@ class Table extends Component
                 $tagsHasNotAnyProducts = false;
             }
         }
-
-        Log::info($tagsHasNotAnyProducts);
 
         if ($categoryFilter->tags->count() == 0) {
             $categoryFilterService->destroyCategoryFilter($categoryFilter);

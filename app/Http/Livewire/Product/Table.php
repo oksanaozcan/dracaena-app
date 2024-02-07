@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Collection;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Table extends Component
 {
     use WithPagination;
+    use AuthorizesRequests;
 
     public $search = '';
 
@@ -46,7 +49,10 @@ class Table extends Component
 
     public function destroyProduct($id, ProductService $productService)
     {
-        $productService->destroyProduct($id);
+        $p = Product::find($id);
+        $this->authorize('delete', $p);
+        $productService->destroyProduct($p);
+        $this->emit('deletedProducts');
     }
 
     public function sortBy($columnHeader)

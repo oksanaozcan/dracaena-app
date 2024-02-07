@@ -10,10 +10,12 @@ use App\Services\ProductService;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\TagResource;
 use Livewire\WithFileUploads;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CreateForm extends Component
 {
     use WithFileUploads;
+    use AuthorizesRequests;
 
     public $product;
     public $title;
@@ -32,6 +34,7 @@ class CreateForm extends Component
         'content' => 'string|max:1000',
         'price' => 'required|numeric',
         'amount' => 'required|numeric',
+        'category_id' => 'required',
         'tags' => 'nullable',
     ];
 
@@ -60,6 +63,7 @@ class CreateForm extends Component
     public function submitForm(ProductService $productService)
     {
         if ($this->product === null) {
+            $this->authorize('create', Product::class);
             $newTags = [];
             foreach ($this->tags as $item) {
                 if (isset($item["id"])) {
@@ -73,13 +77,15 @@ class CreateForm extends Component
             $this->reset();
             session()->flash('success_message', 'Product successfully added.');
         } else {
+            $this->authorize('update', $this->product);
             $this->validate([
                 'title' => 'required|string|min:3|unique:products,title,'.$this->product->id,
-                'description' => 'nullable|string|min:3|max:100',
+                'description' => 'required|string|min:3|max:100',
                 'preview' => 'nullable|image|max:1024', // 1MB Max
                 'content' => 'nullable|max:1000',
                 'price' => 'nullable|numeric',
                 'amount' => 'nullable|numeric',
+                'category_id' => 'required',
                 'tags' => 'nullable',
             ]);
             $newTags = [];

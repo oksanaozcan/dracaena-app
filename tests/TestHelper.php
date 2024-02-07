@@ -55,7 +55,7 @@ trait TestHelper
     {
         $category = Category::factory()->create();
         $product = Product::factory()->create([
-            'title' => $this->faker->word() . 'Product',
+            'title' => Str::random(25).'Product',
             'description' => $this->faker->sentence,
             'content' => $this->faker->text,
             'preview' => $this->faker->imageUrl(),
@@ -65,6 +65,22 @@ trait TestHelper
         ]);
 
         return ['category' => $category, 'product' => $product];
+    }
+
+    protected function createProduct(): Product
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'title' => Str::random(25).'Product',
+            'description' => $this->faker->sentence,
+            'content' => $this->faker->text,
+            'preview' => $this->faker->imageUrl(),
+            'price' => $this->faker->randomFloat(2, 10, 1000),
+            'amount' => $this->faker->randomNumber(4),
+            'category_id' => $category->id,
+        ]);
+
+        return $product;
     }
 
     protected function createClient(): Client

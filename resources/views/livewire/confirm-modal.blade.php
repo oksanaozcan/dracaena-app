@@ -36,9 +36,9 @@
                     class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                 >Destroy</button>
                     @break
-                @case('Category')
+                @case('Product')
                 <button
-                    wire:click='destroyCheckedCategories()'
+                    wire:click='destroyCheckedProducts()'
                     @click="openModal=false"
                     @disabled($checkedTitles ? false : true)
                     type="button"

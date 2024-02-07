@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Http\Filters\ProductFilter;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ProductService {
 
@@ -136,5 +137,16 @@ class ProductService {
         $sort = $validated['sort'] ?? '';
 
         return "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}";
+    }
+
+    public function destroyProductByTitle($title)
+    {
+        $product = Product::where('title', $title)->first();
+
+        if ($product) {
+            $this->destroyProduct($product);
+        } else {
+            // Handle case where product with given title doesn't exist
+        }
     }
 }
