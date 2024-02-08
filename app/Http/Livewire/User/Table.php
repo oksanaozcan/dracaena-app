@@ -50,7 +50,8 @@ class Table extends Component
     {
         $user = User::find($id);
         $this->authorize('delete', $user);
-        $userService->destroyUser($id);
+        $userService->destroyUser($user);
+        $this->emit('deletedUsers');
     }
 
     public function sortBy($columnHeader)

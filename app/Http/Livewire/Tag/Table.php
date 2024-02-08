@@ -50,7 +50,8 @@ class Table extends Component
     {
         $tag = Tag::find($id);
         $this->authorize('delete', $tag);
-        $tagService->destroyTag($id);
+        $tagService->destroyTag($tag);
+        $this->emit('deletedTags');
     }
 
     public function sortBy($columnHeader)

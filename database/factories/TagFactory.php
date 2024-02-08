@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tag>
@@ -17,7 +18,7 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-          'title' => $this->faker->unique()->word().'Tag',
+          'title' => Str::random(15).'Tag',
           'category_filter_id' => $this->faker->numberBetween(1, 16),
         ];
     }

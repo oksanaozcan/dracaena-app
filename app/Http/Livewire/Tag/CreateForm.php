@@ -25,7 +25,8 @@ class CreateForm extends Component
     public $category_filter_id;
 
     protected $rules = [
-        'title' => 'required|unique:tags|min:3',
+        'title' => 'required|string|unique:tags|min:3',
+        'category_filter_id' => 'required',
     ];
 
     public function mount($id = null)
