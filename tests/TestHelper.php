@@ -105,7 +105,7 @@ trait TestHelper
 
     protected function createUserWithRole($roleType): User
     {
-        $user = $user = User::factory()->$roleType()->create();
+        $user = User::factory()->$roleType()->create();
         return $user;
     }
 
