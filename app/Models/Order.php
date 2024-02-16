@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Prunable;
 
     protected $table = 'orders';
     protected $guarded = [];
 
-    public function prunable()
+    public function prunable(): Builder
     {
-        return static::where('deleted_at', '<=', now()->subMonth());
+        return static::where('deleted_at', '<=', now()->subMonths(3));
     }
 
     public function client()
@@ -26,7 +28,27 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)
-        ->withPivot('amount');
+        return $this->belongsToMany(Product::class)->using(OrderProduct::class)->withTimestamps();
+    }
+
+    public function delete()
+    {
+        DB::table('order_product')
+        ->where('order_id', $this->id)
+        ->update(['deleted_at' => now()]);
+
+        return parent::delete();
+    }
+
+    public function restore()
+    {
+        $prs = DB::table('order_product')
+        ->where('order_id', $this->id)
+        ->update([
+            'deleted_at' => null,
+            'updated_at' => now(),
+        ]);
+
+        parent::restore();
     }
 }

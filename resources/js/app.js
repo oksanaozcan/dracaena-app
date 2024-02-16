@@ -61,6 +61,15 @@ document.addEventListener('alpine:init', () => {
                     {title: 'create', url: '/billboards/create'},
                 ],
             },
+            {
+                id: uuidv4(),
+                faIcon: 'fa-solid fa-money-bill',
+                title: 'Orders',
+                links: [
+                    {title: 'list', url: '/orders'},
+                    {title: 'destroyed', url: '/deleted-orders'},
+                ],
+            },
         ],
     }))
 })

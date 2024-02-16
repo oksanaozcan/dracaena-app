@@ -28,4 +28,7 @@ class PermissionType
   public const CAN_UPDATE_BILLBOARD = 'update-billboard';
   public const CAN_DELETE_BILLBOARD = 'delete-billboard';
 
+  public const CAN_DESTROY_ORDER = 'destroy-order';
+  public const CAN_RESTORE_ORDER = 'restore-order';
+  public const CAN_FORCE_DELETE_ORDER = 'force-delete-order';
 }

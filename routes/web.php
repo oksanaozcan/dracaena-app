@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryFilterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BillboardController;
+use App\Http\Controllers\OrderController;
 
 Route::redirect('/', '/login');
 
@@ -33,6 +34,13 @@ Route::middleware(['verified'])->group(function() {
         'tags' => TagController::class,
         'billboards' => BillboardController::class,
     ]);
+    
+    Route::resource('orders', OrderController::class)->except([
+        'create', 'store', 'edit', 'update'
+    ]);
+    Route::get('/deleted-orders', [OrderController::class, 'deletedOrders']);
+    Route::post('/order-restore/{$id}', [OrderController::class, 'restore']);
+    Route::delete('/order-force-delete/{$id}', [OrderController::class, 'forceDelete']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

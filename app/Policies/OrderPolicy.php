@@ -2,12 +2,13 @@
 
 namespace App\Policies;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use App\Types\RoleType;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class OrderPolicy
 {
     use HandlesAuthorization;
 
@@ -16,22 +17,27 @@ class UserPolicy
         return $user->hasRole(RoleType::ADMIN) ? true : false;
     }
 
-    public function view(User $user, User $model): bool
+    public function viewAnyDeleted(User $user): bool
     {
         return $user->hasRole(RoleType::ADMIN) ? true : false;
     }
 
-    public function create(User $user): bool
+    public function view(User $user, Order $order): bool
     {
         return $user->hasRole(RoleType::ADMIN) ? true : false;
     }
 
-    public function update(User $user, User $model): bool
+    public function destroy(User $user, Order $order): bool
     {
         return $user->hasRole(RoleType::ADMIN) ? true : false;
     }
 
-    public function delete(User $user, User $model): bool
+    public function restore(User $user, Order $order): bool
+    {
+        return $user->hasRole(RoleType::ADMIN) ? true : false;
+    }
+
+    public function forceDelete(User $user, Order $order): bool
     {
         return $user->hasRole(RoleType::ADMIN) ? true : false;
     }

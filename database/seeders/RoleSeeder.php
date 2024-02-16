@@ -45,6 +45,10 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_BILLBOARD]);
         Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_BILLBOARD]);
 
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DESTROY_ORDER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_RESTORE_ORDER]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_FORCE_DELETE_ORDER]);
+
         // Roles
         $adminRole = Role::firstOrCreate(['name' => RoleType::ADMIN]);
         $managerRole = Role::firstOrCreate(['name' => RoleType::MANAGER]);

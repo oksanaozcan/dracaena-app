@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laravel\Cashier\Cashier;
 use App\Models\Client;
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
 
         Builder::macro('search', function ($field, $string) {
             return $string ? $this->where($field, 'like', '%'.$string.'%') : $this;
+        });
+
+        EloquentBuilder::macro('softDeleted', function () {
+            return $this->onlyTrashed();
         });
 
         Builder::macro('toCsv', function () {

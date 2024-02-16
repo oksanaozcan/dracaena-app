@@ -7,10 +7,12 @@ use Illuminate\Database\Seeder;
 use App\Models\Tag;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Order;
 use App\Models\ProductTag;
 use App\Models\Billboard;
 use App\Models\BillboardTag;
 use App\Models\Client;
+use Illuminate\Support\Facades\DB;
 use App\Utils\DBSeederHelper;
 
 class DatabaseSeeder extends Seeder
@@ -48,6 +50,20 @@ class DatabaseSeeder extends Seeder
                     ])
                 );
             }
+        });
+
+    Product::factory(5)
+        ->create()
+        ->each(function ($product) {
+            $order = Order::factory()->create([
+                'total_amount' => $product->price,
+                'discount_amount' => null,
+            ]);
+
+            DB::table('order_product')->insert([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+            ]);
         });
     }
 }
