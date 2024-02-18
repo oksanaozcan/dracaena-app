@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
             }
         });
 
-    Product::factory(5)
+    Product::factory(8)
         ->create()
         ->each(function ($product) {
             $order = Order::factory()->create([

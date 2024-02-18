@@ -18,10 +18,10 @@ class RemoveMarkedAsReadDatabaseNotificationsTest extends TestCase
     public function test_1_it_dispatches_job_with_ids_of_read_notifications()
     {
         $mockedIds = [1, 2, 3];
-        $dbMock = Mockery::mock('alias:Illuminate\Support\Facades\DB');
-        $dbMock->shouldReceive('table')->with('notifications')->andReturnSelf();
-        $dbMock->shouldReceive('where')->with('read_at', '!=', null)->andReturnSelf();
-        $dbMock->shouldReceive('pluck')->with('id')->andReturn($mockedIds);
+
+        DB::shouldReceive('table')->with('notifications')->andReturnSelf();
+        DB::shouldReceive('where')->with('read_at', '!=', null)->andReturnSelf();
+        DB::shouldReceive('pluck')->with('id')->andReturn($mockedIds);
 
         Queue::fake();
 
@@ -30,7 +30,5 @@ class RemoveMarkedAsReadDatabaseNotificationsTest extends TestCase
         Queue::assertPushed(RemoveReadedDbNotificationsJob::class, function ($job) use ($mockedIds) {
             return $job->ids === $mockedIds;
         });
-
-        Mockery::close();
     }
 }

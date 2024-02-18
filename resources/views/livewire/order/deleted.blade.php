@@ -1,5 +1,5 @@
 <?php
-/** @see App\Http\Livewire\Order\Table */
+/** @see App\Http\Livewire\Order\Deleted */
 ?>
 <div
     x-data="{openModal: false}"
@@ -75,8 +75,6 @@
                 @forelse ($orders as $item)
                 <tr
                 wire:loading.class.delay="opacity-50"
-                wire:click="selectOrder({{$item->id}})"
-                style="background-color: {{$item->id === $selectedOrder ? 'slite' : 'white'}}"
                 >
                 <td scope="row">
                     {{$item->id}}

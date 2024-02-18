@@ -7,6 +7,7 @@ use App\Models\CategoryFilter;
 use App\Models\Product;
 use App\Models\Tag;
 use App\Models\Client;
+use App\Models\Order;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Models\Cart;
 use App\Models\User;
@@ -87,6 +88,27 @@ trait TestHelper
     {
         $client = Client::factory()->create();
         return $client;
+    }
+
+    protected function createOrder(): Order
+    {
+        $product = $this->createProduct();
+        $order = Order::factory()->create([
+            'total_amount' => $product->price,
+            'discount_amount' => null,
+        ]);
+        return $order;
+    }
+
+    protected function createSoftDeletedOrder(): Order
+    {
+        $product = $this->createProduct();
+        $order = Order::factory()->create([
+            'total_amount' => $product->price,
+            'discount_amount' => null,
+            'deleted_at' => now(),
+        ]);
+        return $order;
     }
 
     protected function createProductAndPutItInCartOfClient(): array

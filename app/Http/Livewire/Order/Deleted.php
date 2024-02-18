@@ -15,6 +15,8 @@ class Deleted extends Component
     use WithPagination;
     use AuthorizesRequests;
 
+    public $search = '';
+
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
 

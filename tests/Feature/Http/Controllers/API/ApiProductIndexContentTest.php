@@ -21,7 +21,7 @@ class ApiProductIndexContentTest extends TestCase
             array_push($arr, $p);
         }
 
-        $response = $this->getJson('/api/products?page=4');
+        $response = $this->getJson('/api/products?page=5');
 
         $response
         ->assertStatus(200)

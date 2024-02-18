@@ -27,37 +27,26 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $this->authorize('show', Order::class);
+        $this->authorize('show', $order);
         return view('order.show', compact('order'));
     }
 
     public function destroy(Order $order)
     {
-        $this->authorize('destroy', Order::class);
+        $this->authorize('destroy', $order);
         $this->orderService->destroyOrder($order);
         return redirect()->route('orders.index');
     }
 
-    // public function restore(Order $order)
-    // {
-    //     $this->authorize('restore', Order::class);
-    //     // $post = Post::withTrashed()->find($id);
-    //     // $post->restore(); // This restores the soft-deleted post
+    public function restore(Order $order)
+    {
+        $this->authorize('restore', $order);
+        $this->orderService->restoreOrder($order);
+    }
 
-    //     // Additional logic...
-    // }
-
-    // public function forceDelete(Order $order)
-    // {
-    //     $this->authorize('forceDelete', Order::class);
-    //     // // If you have not deleted before
-    //     // $post = Post::find($id);
-
-    //     // // If you have soft-deleted it before
-    //     // $post = Post::withTrashed()->find($id);
-
-    //     // $post->forceDelete(); // This permanently deletes the post for ever!
-
-    //     // Additional logic...
-    // }
+    public function forceDelete(Order $order)
+    {
+        $this->authorize('forceDelete', $order);
+        $this->orderService->forceDeleteOrder($order);
+    }
 }
