@@ -138,6 +138,29 @@ class CategoryCreateFormTest extends TestCase
         $this->get("/categories/{$this->c->id}/edit")->assertDontSeeLivewire(Table::class);
     }
 
+    public function test_15_it_can_upload_new_file_and_delete_old_preview_of_updated_model()
+    {
+        Storage::fake('public');
+
+        preg_match('/[^\/]+$/', $this->c->preview, $olds);
+        $oldPrev = $olds[0];
+
+        $newFile = UploadedFile::fake()->image('test-image.png');
+
+        Livewire::test(CreateForm::class, ['id' => $this->c->id])
+            ->set('title', 'some title')
+            ->set('preview', $newFile)
+            ->call('submitForm');
+
+        $this->c->refresh();
+
+        preg_match('/[^\/]+$/', $this->c->preview, $matches);
+        $fileName = $matches[0];
+
+        Storage::disk('public')->assertExists("category_previews/{$fileName}");
+        Storage::disk('public')->assertMissing("category_previews/{$oldPrev}");
+    }
+
     protected function canEditCategory(bool $case = true)
     {
         if ($case) {

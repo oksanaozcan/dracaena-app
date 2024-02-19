@@ -20,11 +20,6 @@ class CategoryService {
         return $categories;
     }
 
-    public function findById($id)
-    {
-        return Category::with(['products', 'categoryFilters'])->findOrFail($id);
-    }
-
     public function storeCategory($title, $preview)
     {
         try {
@@ -82,26 +77,6 @@ class CategoryService {
             $deletingPreview = substr($category->preview, strlen(url('/storage/')) + 1);
 
             $category->delete();
-            Storage::disk('public')->delete($deletingPreview);
-
-            DB::commit();
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            abort(500, $exception);
-        }
-    }
-
-    public function destroyCategoryByTitle($title)
-    {
-        try {
-            DB::beginTransaction();
-
-            $deletingPreview = DB::table('categories')->where('title', $title)->pluck('preview')->first();
-            $deletingPreview = substr($deletingPreview, strlen(url('/storage/')) + 1);
-
-            Category::where('title', $title)->delete();
-
             Storage::disk('public')->delete($deletingPreview);
 
             DB::commit();
