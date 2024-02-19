@@ -37,7 +37,7 @@ class Deleted extends Component
         $order = Order::onlyTrashed()->find($id);
         $this->authorize('forceDelete', $order);
         $orderService->forceDeleteOrder($order);
-        $this->emit('orceDeletedOrders');
+        $this->emit('forceDeletedOrders');
     }
 
     public function restoreOrder($id, OrderService $orderService)
