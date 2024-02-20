@@ -23,14 +23,4 @@ class ProductObserver
     {
         Cache::tags('products')->flush();
     }
-
-    public function restored(Product $product): void
-    {
-        Cache::tags('products')->flush();
-    }
-
-    public function forceDeleted(Product $product): void
-    {
-        Cache::tags('products')->flush();
-    }
 }

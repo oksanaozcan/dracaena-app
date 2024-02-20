@@ -64,4 +64,44 @@ class ProductFilterTest extends TestCase
 
         $this->assertStringContainsString("select * from `products` order by `price` asc", $builder->toSql());
     }
+
+    public function test_5_it_can_sort_by_price_desc()
+    {
+        $filter = new ProductFilter([]);
+        $builder = Product::query();
+
+        $filter->sort($builder, 'price-desc');
+
+        $this->assertStringContainsString("select * from `products` order by `price` desc", $builder->toSql());
+    }
+
+    public function test_6_it_can_sort_by_name_asc()
+    {
+        $filter = new ProductFilter([]);
+        $builder = Product::query();
+
+        $filter->sort($builder, 'name-asc');
+
+        $this->assertStringContainsString("select * from `products` order by `title` asc", $builder->toSql());
+    }
+
+    public function test_7_it_can_sort_by_name_desc()
+    {
+        $filter = new ProductFilter([]);
+        $builder = Product::query();
+
+        $filter->sort($builder, 'name-desc');
+
+        $this->assertStringContainsString("select * from `products` order by `title` desc", $builder->toSql());
+    }
+
+    public function test_8_it_can_sort_by_date_desc_rank()
+    {
+        $filter = new ProductFilter([]);
+        $builder = Product::query();
+
+        $filter->sort($builder, 'date-desc-rank');
+
+        $this->assertStringContainsString("select * from `products` order by `created_at` desc", $builder->toSql());
+    }
 }

@@ -23,34 +23,4 @@ class CartPolicy
     {
        return $client->clerk_id === $cart->client_id;
     }
-
-    public function create(User $user): bool
-    {
-        // All authenticated clients can create carts
-        return $user instanceof Client;
-    }
-
-    public function update(User $user, Cart $cart): bool
-    {
-        // Ensure the user can only update their own cart
-        if ($user instanceof User) {
-            return $user->id === $cart->user_id;
-        } elseif ($user instanceof Client) {
-            return $user->id === $cart->client_id;
-        }
-
-        return false;
-    }
-
-    public function delete(User $user, Cart $cart): bool
-    {
-        // Ensure the user can only delete their own cart
-        if ($user instanceof User) {
-            return $user->id === $cart->user_id;
-        } elseif ($user instanceof Client) {
-            return $user->id === $cart->client_id;
-        }
-
-        return false;
-    }
 }

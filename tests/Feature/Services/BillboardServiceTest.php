@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Services;
 
-use App\Services\CategoryService;
-use App\Models\Category;
+use App\Services\BillboardService;
+use App\Models\Billboard;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +12,7 @@ use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Tests\TestHelper;
 
-class CategoryServiceTest extends TestCase
+class BillboardServiceTest extends TestCase
 {
     use RefreshDatabase;
     use TestHelper;
@@ -20,24 +20,25 @@ class CategoryServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->c = $this->createCategory();
-        $this->cs = new CategoryService();
+        $this->b = $this->createBillboard();
+        $this->bs = new BillboardService();
     }
 
-    public function test_it_catches_exception_of_storing_category_and_rolls_back_transaction()
+    public function test_it_catches_exception_of_storing_billboard_and_rolls_back_transaction()
     {
-        $title = 'Test Category';
+        $descr = 'Test Billboard';
+        $cat_id = 1;
 
         Storage::fake('public');
-        $preview = UploadedFile::fake()->image('preview.jpg');
+        $image = UploadedFile::fake()->image('billboard.jpg');
 
         $this->dbBeginRollback();
         Storage::shouldReceive('disk->put')->andReturnUsing(function () {
-            throw new Exception('Failed to store preview image');
+            throw new Exception('Failed to store billboard image');
         });
 
         try {
-            $this->cs->storeCategory($title, $preview);
+            $this->bs->storeBillboard($descr, $image, $cat_id);
         } catch (Exception $exception) {
             $this->assertEquals(500, $exception->getStatusCode());
             return;
@@ -46,12 +47,13 @@ class CategoryServiceTest extends TestCase
         $this->fail('Exception was not caught.');
     }
 
-    public function test_it_catches_exception_of_updating_category_and_rolls_back_transaction()
+    public function test_it_catches_exception_of_updating_billboard_and_rolls_back_transaction()
     {
-        $title = 'Test Category';
+        $title = 'Test Billboard';
+        $cat_id = 2;
 
         Storage::fake('public');
-        $preview = UploadedFile::fake()->image('preview.jpg');
+        $image = UploadedFile::fake()->image('billboard.jpg');
 
         $this->dbBeginRollback();
         Storage::shouldReceive('disk->put')->andReturnUsing(function () {
@@ -59,7 +61,7 @@ class CategoryServiceTest extends TestCase
         });
 
         try {
-            $this->cs->updateCategory($title, $this->c, $preview);
+            $this->bs->updateBillboard($title, $this->b, $image, $cat_id);
         } catch (Exception $exception) {
             $this->assertEquals(500, $exception->getStatusCode());
             return;
@@ -68,12 +70,12 @@ class CategoryServiceTest extends TestCase
         $this->fail('Exception was not caught.');
     }
 
-    public function test_it_catches_exception_of_destroing_category_and_rolls_back_transaction()
+    public function test_it_catches_exception_of_destroing_billboard_and_rolls_back_transaction()
     {
         $this->dbBeginRollback();
 
         try {
-            $this->cs->destroyCategory($this->c);
+            $this->bs->destroyBillboard($this->b);
         } catch (Exception $exception) {
             $this->assertEquals(500, $exception->getStatusCode());
             return;

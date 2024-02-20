@@ -14,6 +14,8 @@ use Throwable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CategoryFilterResource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CreateForm extends Component
 {
@@ -51,10 +53,11 @@ class CreateForm extends Component
     public function submitForm(TagService $tagService)
     {
         $this->validate();
+        $user = auth()->user();
 
         if ($this->tag === null) {
             $this->authorize('create', Tag::class);
-            StoreTagJob::dispatch($this->title, $this->category_filter_id);
+            StoreTagJob::dispatch($this->title, $this->category_filter_id, $user);
 
             $this->emit('tagAdded');
             $this->reset();

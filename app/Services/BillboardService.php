@@ -21,11 +21,6 @@ class BillboardService {
         return $billboards;
     }
 
-    public function findById($id)
-    {
-        return Billboard::with('category', 'tags')->findOrFail($id);
-    }
-
     public function storeBillboard($description, $image, $category_id, $tags=[])
     {
         try {

@@ -134,9 +134,33 @@ class BillboardCreateFormTest extends TestCase
         $this->get("/billboards/{$this->b->id}/edit")->assertSeeLivewire(CreateForm::class);
     }
 
-    public function test_12_model_edition_page_doesnt_contain_livewire_component()
+    public function test_14_model_edition_page_doesnt_contain_livewire_component()
     {
         $this->get("/billboards/{$this->b->id}/edit")->assertDontSeeLivewire(Table::class);
+    }
+
+    public function test_15_it_can_upload_new_file_and_delete_old_image_of_updated_model()
+    {
+        Storage::fake('public');
+
+        preg_match('/[^\/]+$/', $this->b->image, $olds);
+        $oldPrev = $olds[0];
+
+        $newFile = UploadedFile::fake()->image('test-image.png');
+
+        Livewire::test(CreateForm::class, ['id' => $this->b->id])
+            ->set('description', 'some new description')
+            ->set('image', $newFile)
+            ->set('category_id', 1)
+            ->call('submitForm');
+
+        $this->b->refresh();
+
+        preg_match('/[^\/]+$/', $this->b->image, $matches);
+        $fileName = $matches[0];
+
+        Storage::disk('public')->assertExists("billboard_images/{$fileName}");
+        Storage::disk('public')->assertMissing("billboard_images/{$oldPrev}");
     }
 
     protected function canEditBillboard(bool $case = true)

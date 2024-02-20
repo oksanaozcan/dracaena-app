@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Billboard;
 use App\Types\RoleType;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 trait TestHelper
 {
@@ -249,5 +250,11 @@ trait TestHelper
         }
         $response->assertStatus(302)
             ->assertRedirect(route('login'));
+    }
+
+    protected function dbBeginRollback()
+    {
+        DB::shouldReceive('beginTransaction')->once();
+        DB::shouldReceive('rollBack')->once();
     }
 }

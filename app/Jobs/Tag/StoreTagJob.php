@@ -21,7 +21,8 @@ class StoreTagJob implements ShouldQueue
 
     public function __construct(
         public $title,
-        public $category_filter_id
+        public $category_filter_id,
+        public $user
     ){}
 
     public function handle(TagService $tagService): void
@@ -35,6 +36,6 @@ class StoreTagJob implements ShouldQueue
     public function failed(Throwable $exception): void
     {
         $admin = User::find(1);
-        $admin->notify(new StoreTagJobFailedNotification($admin, $this->title));
+        $admin->notify(new StoreTagJobFailedNotification($this->user, $this->title));
     }
 }
