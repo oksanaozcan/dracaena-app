@@ -26,4 +26,9 @@ trait ProductFilterTestingTrait
     {
         return $this->getQueryParam($key, $default);
     }
+
+    public function exposeRemoveQueryParam(string ...$keys)
+    {
+        return $this->removeQueryParam(...$keys);
+    }
 }

@@ -13,6 +13,10 @@ use App\Http\Livewire\Product\Table;
 use App\Models\Product;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use App\Services\ProductService;
+use App\Models\CategoryFilter;
+use App\Models\Tag;
 
 class ProductCreateFormTest extends TestCase
 {
@@ -159,6 +163,76 @@ class ProductCreateFormTest extends TestCase
     public function test_14_model_edition_page_doesnt_contain_livewire_component()
     {
         $this->get("/products/{$this->product->id}/edit")->assertDontSeeLivewire(Table::class);
+    }
+
+    public function test_15_it_can_upload_new_file_and_delete_old_preview_of_updated_model()
+    {
+        Storage::fake('public');
+
+        preg_match('/[^\/]+$/', $this->product->preview, $olds);
+        $oldPrev = $olds[0];
+
+        $newFile = UploadedFile::fake()->image('test-image.png');
+
+        Livewire::test(CreateForm::class, ['id' => $this->product->id])
+        ->set('title', 'test title 45644548754')
+        ->set('description', 'test descr')
+        ->set('preview', $newFile)
+        ->set('price', 25.25)
+        ->set('amount', 25)
+        ->set('category_id', 1)
+        ->call('submitForm');
+
+        $this->product->refresh();
+
+        preg_match('/[^\/]+$/', $this->product->preview, $matches);
+        $fileName = $matches[0];
+
+        Storage::disk('public')->assertExists("product_previews/{$fileName}");
+        Storage::disk('public')->assertMissing("product_previews/{$oldPrev}");
+    }
+
+    public function test_16_it_syncs_tags_if_tags_are_set_and_product_tags_are_not_empty()
+    {
+        $cat_id = $this->product->category_id;
+
+        $categoryFilter = CategoryFilter::factory()->create([
+            'category_id' => $this->product->category_id,
+        ]);
+        $t1 = Tag::factory()->create([
+            'category_filter_id' => $categoryFilter->id,
+        ]);
+        $t2 = Tag::factory()->create([
+            'category_filter_id' => $categoryFilter->id,
+        ]);
+        $tags = [$t1->id, $t2->id];
+        $this->product->tags()->attach($tags);
+
+        $t3 = Tag::factory()->create([
+            'category_filter_id' => $categoryFilter->id,
+        ]);
+        $t4 = Tag::factory()->create([
+            'category_filter_id' => $categoryFilter->id,
+        ]);
+
+        $newTags = [$t1->id, $t3->id, $t4->id];
+
+        $productService = new ProductService();
+        $productService->updateProduct(
+            'Updated Title',
+            $this->product,
+            null,
+            'Updated Description',
+            null,
+            20.50,
+            10,
+            $cat_id,
+            $newTags
+        );
+
+        $this->product->refresh();
+        $this->assertCount(count($newTags), $this->product->tags);
+        $this->assertEquals($newTags, $this->product->tags->pluck('id')->toArray());
     }
 
     protected function canEditProduct(bool $case = true)

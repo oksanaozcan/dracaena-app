@@ -10,6 +10,7 @@ use Tests\TestHelper;
 use Mockery;
 use Illuminate\Database\Eloquent\Builder;
 use Database\Seeders\RoleSeeder;
+use App\Http\Filters\AbstractFilter;
 
 class AbstractFilterTest extends TestCase
 {
@@ -58,5 +59,15 @@ class AbstractFilterTest extends TestCase
         $result = $filter->exposeGetQueryParam('category_id');
 
         $this->assertEquals('1', $result);
+    }
+
+    public function test_5_it_removes_query_parameters()
+    {
+        $queryParams = ['category_id' => '1'];
+        $filter = new ProductFilter($queryParams);
+
+        $filter->exposeRemoveQueryParam('category_id');
+
+        $this->assertArrayNotHasKey('category_id', [$filter->exposeGetQueryParam('category_id')]);
     }
 }

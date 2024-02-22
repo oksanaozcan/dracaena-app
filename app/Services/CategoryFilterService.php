@@ -18,11 +18,6 @@ class CategoryFilterService {
         return $categoryFilters;
     }
 
-    public function findById($id)
-    {
-        return CategoryFilter::findOrFail($id);
-    }
-
     public function storeCategoryFilter($title, $category_id)
     {
         try {
