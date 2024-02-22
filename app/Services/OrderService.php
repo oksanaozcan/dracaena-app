@@ -27,6 +27,10 @@ class OrderService {
         try {
             DB::beginTransaction();
 
+            DB::table('order_product')
+            ->where('order_id', $order->id)
+            ->update(['deleted_at' => now()]);
+
             $order->delete();
 
             DB::commit();
@@ -43,6 +47,13 @@ class OrderService {
             DB::beginTransaction();
 
             $order->restore();
+
+            DB::table('order_product')
+            ->where('order_id', $order->id)
+            ->update([
+                'updated_at' => now(),
+                'deleted_at' => null
+            ]);
 
             DB::commit();
 

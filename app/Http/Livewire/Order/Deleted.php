@@ -32,6 +32,11 @@ class Deleted extends Component
         $this->resetPage();
     }
 
+    public function updated()
+    {
+        $this->resetPage();
+    }
+
     public function forceDeleteOrder($id, OrderService $orderService)
     {
         $order = Order::onlyTrashed()->find($id);

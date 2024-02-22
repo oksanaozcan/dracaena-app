@@ -43,20 +43,6 @@
                         </span>
                     </th>
                     <th scope="col">
-                        Payment method
-                        <span wire:click="sortBy('payment_method')" class="pl-4">
-                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
-                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
-                        </span>
-                    </th>
-                    <th scope="col">
-                        Discount
-                        <span wire:click="sortBy('discount_amount')" class="pl-4">
-                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
-                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
-                        </span>
-                    </th>
-                    <th scope="col">
                         Created at
                         <span wire:click="sortBy('created_at')" class="pl-4">
                             <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
@@ -94,19 +80,13 @@
                     {{$item->total_amount}}
                 </td>
                 <td>
-                    {{$item->payment_method}}
-                </td>
-                <td>
-                    {{$item->discount_amount}}
-                </td>
-                <td>
                     {{$item->created_at->format('j F, Y')}}
                 </td>
                 <td >
                     <a href="{{route('orders.show', $item->id)}}" class="link-blue">Show</a>
                 </td>
                 <td>
-                    <a wire:click='destroyOrder({{$item->id}})' class="link-red">Destroy</a>
+                    <a wire:key='{{$item->id}}' wire:click='destroyOrder({{$item->id}})' class="link-red">Destroy</a>
                 </td>
                 </tr>
                 @empty

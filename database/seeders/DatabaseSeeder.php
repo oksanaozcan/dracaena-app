@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
             DB::table('order_product')->insert([
                 'order_id' => $order->id,
                 'product_id' => $product->id,
+                'created_at' => now(),
             ]);
         });
     }

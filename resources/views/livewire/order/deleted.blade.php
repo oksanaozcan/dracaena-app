@@ -43,20 +43,6 @@
                         </span>
                     </th>
                     <th scope="col">
-                        Payment method
-                        <span wire:click="sortBy('payment_method')" class="pl-4">
-                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
-                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
-                        </span>
-                    </th>
-                    <th scope="col">
-                        Discount
-                        <span wire:click="sortBy('discount_amount')" class="pl-4">
-                            <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
-                            <i class="arrow-down {{$sortField === 'id' && $sortDirection === 'desc' ? 'active' : ''}}"></i>
-                        </span>
-                    </th>
-                    <th scope="col">
                         Deleted at
                         <span wire:click="sortBy('deleted_at')" class="pl-4">
                             <i class="arrow-up {{$sortField === 'id' && $sortDirection === 'asc' ? 'active' : ''}}"></i>
@@ -73,9 +59,7 @@
             </thead>
             <tbody>
                 @forelse ($orders as $item)
-                <tr
-                wire:loading.class.delay="opacity-50"
-                >
+                <tr>
                 <td scope="row">
                     {{$item->id}}
                 </td>
@@ -92,19 +76,15 @@
                     {{$item->total_amount}}
                 </td>
                 <td>
-                    {{$item->payment_method}}
-                </td>
-                <td>
-                    {{$item->discount_amount}}
-                </td>
-                <td>
-                    {{$item->deleted_at->format('j F, Y')}}
+                    @if($item->deleted_at)
+                        {{$item->deleted_at->format('j F, Y')}}
+                    @endif
                 </td>
                 <td >
-                    <a wire:click='restoreOrder({{$item->id}})' class="link-blue">Restore</a>
+                    <a wire:key='{{$item->id}}' wire:click='restoreOrder({{$item->id}})' class="link-blue">Restore</a>
                 </td>
                 <td>
-                    <a wire:click='forceDeleteOrder({{$item->id}})' class="link-red">Force Delete</a>
+                    <a wire:key='{{$item->id}}' wire:click='forceDeleteOrder({{$item->id}})' class="link-red">Force Delete</a>
                 </td>
                 </tr>
                 @empty

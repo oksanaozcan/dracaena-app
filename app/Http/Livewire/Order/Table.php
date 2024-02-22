@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use App\Services\OrderService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Log;
 
 class Table extends Component
 {
@@ -34,9 +35,15 @@ class Table extends Component
         $this->resetPage();
     }
 
+    public function updated()
+    {
+        $this->resetPage();
+    }
+
     public function destroyOrder($id, OrderService $orderService)
     {
-        $order = Order::find($id);
+        // Log::info($id);
+        $order = Order::findOrFail($id);
         $this->authorize('delete', $order);
         $orderService->destroyOrder($order);
         $this->emit('deletedOrders');
