@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Notifications\StoreTagJobFailedNotification;
 use App\Models\User;
+use Illuminate\Notifications\DatabaseNotification;
 
 class StoreTagJob implements ShouldQueue
 {
@@ -37,5 +38,8 @@ class StoreTagJob implements ShouldQueue
     {
         $admin = User::find(1);
         $admin->notify(new StoreTagJobFailedNotification($this->user, $this->title));
+
+        $notificationId = DatabaseNotification::latest()->first()->id;
+        Log::info($notificationId);
     }
 }

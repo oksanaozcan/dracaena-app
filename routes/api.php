@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BillboardApiController;
 use App\Http\Controllers\API\ProductApiController;
 use App\Http\Controllers\API\NavigationApiController;
 use App\Http\Controllers\API\CartApiController;
+use App\Http\Controllers\API\FavouriteApiController;
 use App\Http\Controllers\API\ClientApiController;
 use App\Http\Controllers\API\OrderApiController;
 
@@ -29,3 +30,6 @@ Route::get('/checkout/cancel', [OrderApiController::class, 'cancel'])->name('che
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('favourites', [FavouriteApiController::class, 'store']);
+Route::delete('favourites', [FavouriteApiController::class, 'delete']);
