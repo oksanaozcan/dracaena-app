@@ -32,4 +32,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Order::class);
     }
+
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class, 'product_id', 'id');
+    }
 }

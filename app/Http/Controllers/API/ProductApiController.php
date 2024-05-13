@@ -45,4 +45,19 @@ class ProductApiController extends Controller
             return ProductResource::collection($products);
         }
     }
+
+    public function favourites($userId): JsonResource
+    {
+        $client = Client::where('clerk_id', $userId)->first();
+
+        if (!$client) {
+            abort(404);
+        } else {
+            $products = Product::whereHas('favourites', function ($query) use ($userId) {
+                $query->where('client_id', $userId);
+            })->get();
+
+            return ProductResource::collection($products);
+        }
+    }
 }
