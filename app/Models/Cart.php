@@ -14,4 +14,14 @@ class Cart extends Model
 
     protected $table = 'carts';
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'client_id', 'client_id');
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class)->withTimestamps();
+    }
+
 }

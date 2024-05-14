@@ -30,4 +30,9 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class)->using(OrderProduct::class)->withTimestamps();
     }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class, 'client_id', 'client_id');
+    }
 }

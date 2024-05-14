@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -16,6 +18,11 @@ class OrderController extends Controller
     public function index()
     {
         $this->authorize('index', Order::class);
+
+       
+
+
+
         return view('order.index');
     }
 

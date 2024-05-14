@@ -8,7 +8,9 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Client;
+use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use Stripe;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -57,8 +59,6 @@ class OrderApiController extends Controller
         $order->products()->attach($pr);
       }
 
-      DB::table('carts')->where('client_id', $request->input("clientId"))->delete();
-
       return response()->json([
         'url' => $session->url,
       ]);
@@ -86,6 +86,13 @@ class OrderApiController extends Controller
             if ($order->payment_status == 0) {
                 $order->payment_status = 1;
                 $order->save();
+
+                $orderProducts = OrderProduct::where('order_id', $order->id)->get();
+                foreach ($orderProducts as $orderProduct) {
+                    \App\Models\Cart::where('product_id', $orderProduct->product_id)
+                        ->where('client_id', $order->client_id)
+                        ->delete();
+                }
             }
 
             return redirect()->away('http://localhost:3000/dashboard');
@@ -95,8 +102,13 @@ class OrderApiController extends Controller
         }
     }
 
-    public function cancel()
+    public function cancel(Request $request)
     {
+        $order = Order::where('session_id', $sessionId)->first();
+
+        $order->products()->detach();
+        $order->delete();
+
         return redirect()->away('http://localhost:3000//dashboard');
     }
 }
