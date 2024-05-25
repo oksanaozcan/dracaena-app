@@ -39,6 +39,8 @@ class DatabaseSeeder extends Seeder
             BillboardTagSeeder::class,
         ]);
 
+        $this->call(PaymentPlatformSeeder::class);
+
       Product::factory(20)
         ->create()
         ->each(function ($product) {

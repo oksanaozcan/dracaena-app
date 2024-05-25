@@ -14,13 +14,26 @@ use App\Models\OrderProduct;
 use App\Models\Product;
 use Stripe;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Resolvers\PaymentPlatformResolver;
+use Debugbar;
 
 class OrderApiController extends Controller
 {
+    protected $paymentPlatformResolver;
+
+    public function __construct(PaymentPlatformResolver $paymentPlatformResolver)
+    {
+        $this->paymentPlatformResolver = $paymentPlatformResolver;
+    }
+
     public function checkout (Request $request)
     {
       $client = Client::where(["clerk_id" => $request->input("clientId")]);
       $products = Product::whereIn('id', $request->input("productIds"))->get();
+
+      $paymentPlatform = $this->paymentPlatformResolver
+      ->resolveService($request->payment_platform);
+      session()->put('paymentPlatformId', $request->payment_platform);
 
       \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
