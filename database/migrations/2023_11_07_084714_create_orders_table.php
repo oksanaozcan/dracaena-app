@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('client_id');
             $table->string('session_id');
             $table->string('customer_name')->nullable();
+            $table->string('customer_email')->nullable();
             $table->boolean('payment_status');
             $table->decimal('total_amount', $precision = 8, $scale = 2);
             $table->enum('payment_method', ['credit card', 'PayPal', 'cash on delivery']);

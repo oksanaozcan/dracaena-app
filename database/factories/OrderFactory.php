@@ -28,6 +28,7 @@ class OrderFactory extends Factory
             },
             'session_id' => $this->faker->uuid,
             'customer_name' => $this->faker->name,
+            'customer_email' => $this->faker->email,
             'payment_status' => $this->faker->boolean,
             'total_amount' => $this->faker->randomFloat(2, 0, 1000),
             'payment_method' => $this->faker->randomElement(['credit card', 'PayPal', 'cash on delivery']),

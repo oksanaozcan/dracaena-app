@@ -18,6 +18,7 @@
                 <p class="text-base text-gray-700">Client id: {{$order->client_id}}</p>
                 <p class="text-base text-gray-700">Session id: {{$order->session_id}}</p>
                 <p class="text-base text-gray-700">Customer Name: {{$order->customer_name}}</p>
+                <p class="text-base text-gray-700">Customer Email: {{$order->customer_email}}</p>
                 <p class="text-base text-gray-700">Payment Status: {{$order->payment_status}}</p>
                 <p class="text-base text-gray-700">Total Amount: {{$order->total_amount}}</p>
                 <p class="text-base text-gray-700">Payment Method: {{$order->payment_method}}</p>

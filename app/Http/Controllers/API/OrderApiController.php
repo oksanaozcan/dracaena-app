@@ -16,72 +16,79 @@ use Stripe;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Resolvers\PaymentPlatformResolver;
 use Debugbar;
+use App\Services\StripeService;
 
 class OrderApiController extends Controller
 {
     protected $paymentPlatformResolver;
+    protected $paymentService;
 
     public function __construct(PaymentPlatformResolver $paymentPlatformResolver)
     {
         $this->paymentPlatformResolver = $paymentPlatformResolver;
     }
 
-    public function checkout (Request $request)
+    public function checkout(Request $request)
     {
-      $client = Client::where(["clerk_id" => $request->input("clientId")]);
-      $products = Product::whereIn('id', $request->input("productIds"))->get();
+        $client = Client::where(["clerk_id" => $request->input("clientId")])->first();
+        $products = Product::whereIn('id', $request->input("productIds"))->get();
 
-      $paymentPlatform = $this->paymentPlatformResolver
-      ->resolveService($request->payment_platform);
-      session()->put('paymentPlatformId', $request->payment_platform);
-
-      \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-
-      $lineItems = [];
-      $total_price = 0;
-      foreach ($products as $pr) {
-        $total_price += $pr->price;
-        $lineItems[] = [
-            'price_data' => [
-                'currency' => 'usd',
-                'product_data' => [
-                  'name' => $pr->title,
+        $lineItems = [];
+        $total_price = 0;
+        foreach ($products as $pr) {
+            $total_price += $pr->price;
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => $pr->title,
+                    ],
+                    'unit_amount' => $pr->price * 100,
                 ],
-                'unit_amount' => $pr->price * 100,
-              ],
-              'quantity' => 1,
+                'quantity' => 1,
             ];
-      }
+        }
 
-      $session = \Stripe\Checkout\Session::create([
-        'line_items' => $lineItems,
-        'mode' => 'payment',
-        'success_url' => route('checkout.success', [], true) . "?session_id={CHECKOUT_SESSION_ID}",
-        'cancel_url' => route('checkout.cansel', [], true),
-      ]);
+        $this->paymentService = $this->paymentPlatformResolver->resolveService($request->payment_platform);
 
-      $order = new Order();
-      $order->client_id = $request->input("clientId");
-      $order->session_id = $session->id;
-      $order->payment_status = 0;
-      $order->total_amount = $total_price;
-      $order->payment_method = 'credit card';
-      $order->save();
+        session()->put('paymentPlatformId', $request->payment_platform);
 
-      foreach ($request->input('productIds') as $pr) {
-        $order->products()->attach($pr);
-      }
+        if ($this->paymentService) {
+            $session = $this->paymentService->createCheckoutSession(
+                $lineItems,
+                route('checkout.success', [], true) . "?session_id={CHECKOUT_SESSION_ID}",
+                route('checkout.cancel', [], true)
+            );
 
-      return response()->json([
-        'url' => $session->url,
-      ]);
+            // Save session id to the order
+            $order = new Order();
+            $order->client_id = $request->input("clientId");
+            $order->session_id = $session->id;
+            $order->payment_status = 0;
+            $order->total_amount = $total_price;
+            $order->payment_method = 'credit card';
+            $order->save();
 
+            // Attach products to order
+            foreach ($request->input('productIds') as $pr) {
+                $order->products()->attach($pr);
+            }
+
+            return response()->json([
+                'url' => $session->url,
+            ]);
+        }
+
+        return response()->json(['error' => 'Failed to create checkout session'], 500);
     }
+
 
     public function success(Request $request)
     {
+
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $sessionId = $request->get('session_id');
+
         try {
 
             $session = $stripe->checkout->sessions->retrieve($sessionId);
@@ -97,6 +104,13 @@ class OrderApiController extends Controller
             }
 
             if ($order->payment_status == 0) {
+
+                $sessionArray = $session->toArray();
+                $customerName = $sessionArray['customer_details']['name'];
+                $customerEmail = $sessionArray['customer_details']['email'];
+
+                $order->customer_name = $customerName;
+                $order->customer_email = $customerEmail;
                 $order->payment_status = 1;
                 $order->save();
 
@@ -113,6 +127,7 @@ class OrderApiController extends Controller
         } catch (\Exception $e) {
             throw new NotFoundHttpException();
         }
+
     }
 
     public function cancel(Request $request)
