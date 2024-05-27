@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CartApiController;
 use App\Http\Controllers\API\FavouriteApiController;
 use App\Http\Controllers\API\ClientApiController;
 use App\Http\Controllers\API\OrderApiController;
+use App\Http\Controllers\API\DashboardApiController;
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 
@@ -34,3 +35,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('favourites', [FavouriteApiController::class, 'store']);
 Route::delete('favourites', [FavouriteApiController::class, 'delete']);
+
+Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
