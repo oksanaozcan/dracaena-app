@@ -10,6 +10,7 @@ use App\Http\Controllers\API\FavouriteApiController;
 use App\Http\Controllers\API\ClientApiController;
 use App\Http\Controllers\API\OrderApiController;
 use App\Http\Controllers\API\DashboardApiController;
+use App\Http\Controllers\API\AuthApiController;
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 
@@ -37,3 +38,6 @@ Route::post('favourites', [FavouriteApiController::class, 'store']);
 Route::delete('favourites', [FavouriteApiController::class, 'delete']);
 
 Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
+
+Route::post('/login', [AuthApiController::class, 'login']);
+Route::post('/register', [AuthApiController::class, 'register']);

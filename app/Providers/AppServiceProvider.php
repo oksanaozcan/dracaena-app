@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Laravel\Cashier\Cashier;
 use App\Models\Client;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +45,8 @@ class AppServiceProvider extends ServiceProvider
 
         Cashier::useCustomerModel(Client::class);
 
-
+        // Passport::hashClientSecrets();
+        Passport::tokensExpireIn(now()->addDays(15));
+        Passport::ignoreRoutes();
     }
 }
