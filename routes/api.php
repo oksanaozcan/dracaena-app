@@ -41,3 +41,4 @@ Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->n
 
 Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
+// TODO: Route::post('/logout', [AuthApiController::class, 'logout']); with middleware "auth:api" && also method profile if it is needed
