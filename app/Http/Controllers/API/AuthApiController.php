@@ -65,4 +65,9 @@ class AuthApiController extends Controller
         }
         return response()->json($data, $code);
     }
+
+    public function getCustomer(Request $request): JsonResponse
+    {
+        return response()->json($request->user());
+    }
 }

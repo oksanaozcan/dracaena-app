@@ -45,8 +45,6 @@ class AppServiceProvider extends ServiceProvider
 
         Cashier::useCustomerModel(Client::class);
 
-        // Passport::hashClientSecrets();
         Passport::tokensExpireIn(now()->addDays(15));
-        Passport::ignoreRoutes();
     }
 }
