@@ -9,15 +9,17 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthApiController extends Controller
 {
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|max:30',
             'email' => 'required|email|unique:customers',
-            'password' => 'required', // Added confirmed validation
+            'password' => 'required|min:8',
+            'confirm_password' => 'required|same:password|min:8'
         ]);
 
         if ($validator->fails()) {
@@ -30,11 +32,10 @@ class AuthApiController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $accessToken = $customer->createToken('AuthToken')->accessToken;
-        return response()->json(['customer' => $customer, 'access_token' => $accessToken], 201);
+        return response()->json(['customer' => $customer], 201);
     }
 
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
         $validator = Validator::make($credentials, [
@@ -57,7 +58,7 @@ class AuthApiController extends Controller
                 $code = 200;
                 $data = [
                     'customer' => $customer,
-                    'token' => $token,
+                    'access_token' => $token,
                 ];
             }
         } catch (Exception $e) {
@@ -69,5 +70,15 @@ class AuthApiController extends Controller
     public function getCustomer(Request $request): JsonResponse
     {
         return response()->json($request->user());
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            "status" => 200,
+            "message" => "Customer logged out"
+        ]);
     }
 }
