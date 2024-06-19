@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Laravel\Passport\TokenRepository;
 
 class AuthApiController extends Controller
 {
@@ -74,7 +75,10 @@ class AuthApiController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->token()->revoke();
+        $tokenRepository = app(TokenRepository::class);
+        $tokenId = $request->user()->token()->id;
+
+        $tokenRepository->revokeAccessToken($tokenId);
 
         return response()->json([
             "status" => 200,

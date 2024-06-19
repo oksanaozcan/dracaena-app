@@ -41,5 +41,12 @@ Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->n
 
 Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
-Route::get('/customers', [AuthApiController::class, 'getCustomer'])->middleware('auth:api');
-Route::get('/logout', [AuthApiController::class, 'logout'])->middleware('auth:api');
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('/customers', [AuthApiController::class, 'getCustomer']);
+    Route::post('/logout', [AuthApiController::class, 'logout']);
+    Route::get('/auth-check', [AuthApiController::class, 'authCheck']);
+});
+
+
+
