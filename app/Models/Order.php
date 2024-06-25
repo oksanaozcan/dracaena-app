@@ -35,4 +35,14 @@ class Order extends Model
     {
         return $this->hasOne(Cart::class, 'client_id', 'client_id');
     }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo(Address::class, 'shipping_address_id', 'id');
+    }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(Address::class, 'billing_address_id', 'id');
+    }
 }

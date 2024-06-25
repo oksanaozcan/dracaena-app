@@ -11,6 +11,7 @@ use App\Http\Controllers\API\ClientApiController;
 use App\Http\Controllers\API\OrderApiController;
 use App\Http\Controllers\API\DashboardApiController;
 use App\Http\Controllers\API\AuthApiController;
+use App\Http\Controllers\API\CustomerApiController;
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 
@@ -43,9 +44,12 @@ Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/customers', [AuthApiController::class, 'getCustomer']);
     Route::post('/logout', [AuthApiController::class, 'logout']);
-    Route::get('/auth-check', [AuthApiController::class, 'authCheck']);
+    Route::post('/auth-check', [AuthApiController::class, 'authCheck']);
+
+    Route::get('/customers', [CustomerApiController::class, 'getCustomer']);
+    Route::put('/update-personal-details', [CustomerApiController::class, 'updatePersonalDetails']);
+    Route::put('/update-shipping-address', [CustomerApiController::class, 'updateShippingAddress']);
 });
 
 

@@ -20,6 +20,8 @@ class Customer extends Authenticatable
         'name',
         'email',
         'password',
+        'birthday',
+        'newsletter_confirmed',
     ];
 
     protected $hidden = [
@@ -30,31 +32,17 @@ class Customer extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getRememberToken()
+     public function addresses()
     {
-      return null; // not supported
+        return $this->hasMany(Address::class);
     }
 
-    public function setRememberToken($value)
+    public function shippingAddress()
     {
-      // not supported
+        return $this->hasOne(Address::class)
+            ->where('type', 'shipping')
+            ->where('specified_in_order', false);
     }
 
-    public function getRememberTokenName()
-    {
-      return null; // not supported
-    }
-
-    /**
-     * Overrides the method to ignore the remember token.
-    */
-    public function setAttribute($key, $value)
-    {
-    $isRememberTokenAttribute = $key == $this->getRememberTokenName();
-    if (!$isRememberTokenAttribute)
-    {
-        parent::setAttribute($key, $value);
-    }
-    }
 
 }

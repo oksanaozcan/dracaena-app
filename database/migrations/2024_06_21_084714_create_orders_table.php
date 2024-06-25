@@ -20,13 +20,15 @@ return new class extends Migration
             $table->boolean('payment_status');
             $table->decimal('total_amount', $precision = 8, $scale = 2);
             $table->enum('payment_method', ['credit card', 'PayPal', 'cash on delivery']);
-            $table->json('shipping_address')->nullable();
-            $table->json('billing_address')->nullable();
+            $table->unsignedBigInteger('shipping_address_id')->nullable(); //TODO: delete nullable
+            $table->unsignedBigInteger('billing_address_id')->nullable();
             $table->decimal('discount_amount', $precision = 8, $scale = 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('client_id')->references('clerk_id')->on('clients');
+            $table->foreign('shipping_address_id')->references('id')->on('addresses');
+            $table->foreign('billing_address_id')->references('id')->on('addresses');
         });
     }
 
