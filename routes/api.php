@@ -50,6 +50,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/customers', [CustomerApiController::class, 'getCustomer']);
     Route::put('/update-personal-details', [CustomerApiController::class, 'updatePersonalDetails']);
     Route::put('/update-shipping-address', [CustomerApiController::class, 'updateShippingAddress']);
+    Route::put('/update-billing-address', [CustomerApiController::class, 'updateBillingAddress']);
 });
 
 

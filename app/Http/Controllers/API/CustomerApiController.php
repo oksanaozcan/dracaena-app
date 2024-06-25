@@ -142,4 +142,80 @@ class CustomerApiController extends Controller
         }
     }
 
+    public function updateBillingAddress(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if ($customer) {
+                try {
+                    DB::beginTransaction();
+
+                    $validator = Validator::make($request->all(), [
+                        'address_line' => 'required|max:200',
+                        'city' => 'nullable|string|max:100',
+                        'state' => 'nullable|string|max:100',
+                        'postal_code' => 'required|string|max:20',
+                        'country' => 'required|string|max:100',
+                        'specified_in_order' => 'required|boolean',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response()->json(['error' => $validator->errors()], 422);
+                    }
+
+                    $specifiedInOrder = $request->specified_in_order;
+
+                    if ($specifiedInOrder == false) {
+                        $billingAddress = $customer->billingAddress()->first();
+
+                        if ($billingAddress) {
+                            $billingAddress->update([
+                                'address_line' => $request->address_line,
+                                'city' => $request->city,
+                                'state' => $request->state,
+                                'postal_code' => $request->postal_code,
+                                'country' => $request->country,
+                            ]);
+                        } else {
+                            $customer->addresses()->create([
+                                'address_line' => $request->address_line,
+                                'city' => $request->city,
+                                'state' => $request->state,
+                                'postal_code' => $request->postal_code,
+                                'country' => $request->country,
+                                'type' => 'billing',
+                                'specified_in_order' => false,
+                            ]);
+                        }
+                    } else {
+                        //TODO: when i will implement orders for customer model
+                        $customer->addresses()->create([
+                            'address_line' => $request->address_line,
+                            'city' => $request->city,
+                            'state' => $request->state,
+                            'postal_code' => $request->postal_code,
+                            'country' => $request->country,
+                            'type' => 'billing',
+                            'specified_in_order' => true,
+                        ]);
+                    }
+
+                    DB::commit();
+
+                    return response()->json(['message' => 'Billing address updated successfully'], 200);
+
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    return response()->json(['error' => $exception->getMessage()], 500);
+                }
+            } else {
+                return response()->json(['message' => 'Customer not found'], 404);
+            }
+        } else {
+            return response()->json(['authenticated' => false], 401);
+        }
+    }
+
 }

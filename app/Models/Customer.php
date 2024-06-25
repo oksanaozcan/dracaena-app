@@ -44,5 +44,10 @@ class Customer extends Authenticatable
             ->where('specified_in_order', false);
     }
 
-
+    public function billingAddress()
+    {
+        return $this->hasOne(Address::class)
+            ->where('type', 'billing')
+            ->where('specified_in_order', false);
+    }
 }

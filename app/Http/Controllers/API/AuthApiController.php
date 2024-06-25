@@ -83,11 +83,13 @@ class AuthApiController extends Controller
 
                 if ($user) {
                     $shippingAddress = $user->shippingAddress()->first();
+                    $billingAddress = $user->billingAddress()->first();
 
                     return response()->json([
                         'authenticated' => true,
                         'user' => $user,
                         'shipping_address' => $shippingAddress ? $shippingAddress : null,
+                        'billing_address' => $billingAddress ? $billingAddress : null,
                 ], 200);
                 } else {
                     return response()->json(['authenticated' => false], 401);
