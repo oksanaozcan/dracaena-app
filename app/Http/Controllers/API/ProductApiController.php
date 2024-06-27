@@ -7,6 +7,7 @@ use App\Http\Filters\ProductFilter;
 use App\Http\Requests\API\Product\IndexRequest;
 use App\Models\Product;
 use App\Models\Client;
+use App\Models\Customer;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Services\ProductService;
@@ -46,18 +47,15 @@ class ProductApiController extends Controller
         }
     }
 
-    public function favourites($userId): JsonResource
+    public function favourites($customerId): JsonResource
     {
-        $client = Client::where('clerk_id', $userId)->first();
+        $customer = Customer::find($customerId);
 
-        if (!$client) {
+        if (!$customer) {
             abort(404);
         } else {
-            $products = Product::whereHas('favourites', function ($query) use ($userId) {
-                $query->where('client_id', $userId);
-            })->get();
-
-            return ProductResource::collection($products);
+            $favoriteProducts = $customer->favoriteProducts;
+            return ProductResource::collection($favoriteProducts);
         }
     }
 }

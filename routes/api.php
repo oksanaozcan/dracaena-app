@@ -20,7 +20,7 @@ Route::get('billboards', [BillboardApiController::class, 'index']);
 Route::get('products', [ProductApiController::class, 'index']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
 Route::get('carts/{userId}', [ProductApiController::class, 'cart']);
-Route::get('favourites/{userId}', [ProductApiController::class, 'favourites']);
+Route::get('favourites/{customerId}', [ProductApiController::class, 'favourites']);////////////////
 
 Route::post('clients', [ClientApiController::class, 'processRequest']);
 
@@ -35,8 +35,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('favourites', [FavouriteApiController::class, 'store']);
-Route::delete('favourites', [FavouriteApiController::class, 'delete']);
+Route::post('favourites', [FavouriteApiController::class, 'store']); //////////////////
+Route::delete('favourites', [FavouriteApiController::class, 'delete']);///////////////////
 
 Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
 

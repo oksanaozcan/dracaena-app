@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Filterable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -33,8 +34,12 @@ class Product extends Model
         return $this->belongsToMany(Order::class);
     }
 
-    public function favourites()
+    /**
+     * Get the customers who have marked this product as a favorite.
+     */
+    public function favoritedBy(): BelongsToMany
     {
-        return $this->hasMany(Favourite::class, 'product_id', 'id');
+        return $this->belongsToMany(Customer::class, 'favourites')
+                    ->withTimestamps();
     }
 }

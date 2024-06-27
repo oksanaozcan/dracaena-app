@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Customer extends Authenticatable
 {
@@ -49,5 +50,14 @@ class Customer extends Authenticatable
         return $this->hasOne(Address::class)
             ->where('type', 'billing')
             ->where('specified_in_order', false);
+    }
+
+     /**
+     * Get the products that are marked as favorites by the customer.
+     */
+    public function favoriteProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'favourites')
+                    ->withTimestamps();
     }
 }
