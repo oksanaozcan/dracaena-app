@@ -10,7 +10,10 @@ use App\Models\Client;
 use App\Models\Customer;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\JsonResponse;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ProductApiController extends Controller
 {
@@ -47,15 +50,19 @@ class ProductApiController extends Controller
         }
     }
 
-    public function favourites($customerId): JsonResource
+    public function favourites(Request $request): JsonResource //or JsonResponse
     {
-        $customer = Customer::find($customerId);
-
-        if (!$customer) {
-            abort(404);
+        $token = $request->bearerToken();
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if (!$customer) {
+                abort(404);
+            } else {
+                $favoriteProducts = $customer->favoriteProducts;
+                return ProductResource::collection($favoriteProducts);
+            }
         } else {
-            $favoriteProducts = $customer->favoriteProducts;
-            return ProductResource::collection($favoriteProducts);
+            return response()->json(['authenticated' => false], 401);
         }
     }
 }

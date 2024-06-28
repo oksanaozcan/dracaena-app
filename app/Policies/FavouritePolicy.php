@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Favourite;
-use App\Models\Client;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,8 +18,9 @@ class FavouritePolicy
         return $user->hasRole(RoleType::ADMIN) ? true : false;
     }
 
-    public function view(Client $client, Cart $cart): bool
-    {
-       return $client->clerk_id === $cart->client_id;
-    }
+    //TODO: change Cart model to Favourite
+    // public function view(Customer $customer, Cart $cart): bool
+    // {
+    //    return $client->clerk_id === $cart->client_id;
+    // }
 }

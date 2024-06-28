@@ -20,7 +20,6 @@ Route::get('billboards', [BillboardApiController::class, 'index']);
 Route::get('products', [ProductApiController::class, 'index']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
 Route::get('carts/{userId}', [ProductApiController::class, 'cart']);
-Route::get('favourites/{customerId}', [ProductApiController::class, 'favourites']);////////////////
 
 Route::post('clients', [ClientApiController::class, 'processRequest']);
 
@@ -35,9 +34,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('favourites', [FavouriteApiController::class, 'store']); //////////////////
-Route::delete('favourites', [FavouriteApiController::class, 'delete']);///////////////////
-
 Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
 
 Route::post('/login', [AuthApiController::class, 'login']);
@@ -51,6 +47,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::put('/update-personal-details', [CustomerApiController::class, 'updatePersonalDetails']);
     Route::put('/update-shipping-address', [CustomerApiController::class, 'updateShippingAddress']);
     Route::put('/update-billing-address', [CustomerApiController::class, 'updateBillingAddress']);
+
+    Route::get('favourites', [ProductApiController::class, 'favourites']);
+    Route::post('favourites', [FavouriteApiController::class, 'store']);
+    Route::delete('favourites', [FavouriteApiController::class, 'delete']);
 });
 
 

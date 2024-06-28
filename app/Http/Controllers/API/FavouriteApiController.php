@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\API\Favourite\StoreRequest;
 use App\Http\Requests\API\Favourite\DeleteRequest;
 use App\Services\FavouriteService;
 use Exception;
@@ -12,30 +11,53 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class FavouriteApiController extends Controller
 {
-    public function store(StoreRequest $request, FavouriteService $favouriteService): JsonResponse
+    public function store(Request $request,
+        // StoreRequest $request,
+        FavouriteService $favouriteService
+        ): JsonResponse
     {
-        try {
-            $favouriteService->store($request);
+        $token = $request->bearerToken();
+        if($token) {
+            $customer = Auth::guard('api')->user();
+            if ($customer) {
+                $customerId = $customer->id;
 
-            return response()->json(['message' => 'Favourite item added successfully'], 201);
-
-        } catch (Exception $exception) {
-            return response()->json(['error' => 'Favourite item addition failed', 'message' => $exception->getMessage()], 500);
+                try {
+                    $favouriteService->store($request, $customerId);
+                    return response()->json(['message' => 'Favourite item added successfully'], 201);
+                } catch (Exception $exception) {
+                    return response()->json(['error' => 'Favourite item addition failed', 'message' => $exception->getMessage()], 500);
+                }
+            } else {
+                return response()->json(['message' => 'Customer not found'], 404);
+            }
+        } else {
+            return response()->json(['authenticated' => false], 401);
         }
     }
 
-    public function delete(DeleteRequest $request, FavouriteService $favouriteService): JsonResponse
+    public function delete(Request $request, FavouriteService $favouriteService): JsonResponse
     {
-        try {
-            $favouriteService->delete($request);
-
-            return response()->json(['message' => 'Favourite item deleted successfully'], 201);
-
-        } catch (Exception $exception) {
-            return response()->json(['error' => 'Favourite item deletion failed', 'message' => $exception->getMessage()], 500);
+        $token = $request->bearerToken();
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if ($customer) {
+                try {
+                    $favouriteService->delete($request, $customer->id);
+                    return response()->json(['message' => 'Favourite item deleted successfully'], 200);
+                } catch (Exception $exception) {
+                    return response()->json(['error' => 'Favourite item deletion failed', 'message' => $exception->getMessage()], 500);
+                }
+            } else {
+                return response()->json(['message' => 'Customer not found'], 404);
+            }
+        } else {
+            return response()->json(['authenticated' => false], 401);
         }
     }
 }
