@@ -19,12 +19,8 @@ Route::get('billboards', [BillboardApiController::class, 'index']);
 
 Route::get('products', [ProductApiController::class, 'index']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
-Route::get('carts/{userId}', [ProductApiController::class, 'cart']);
 
 Route::post('clients', [ClientApiController::class, 'processRequest']);
-
-Route::post('carts', [CartApiController::class, 'store']);
-Route::delete('carts', [CartApiController::class, 'delete']);
 
 Route::post('/checkout', [OrderApiController::class, 'checkout']);
 Route::get('/checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');
@@ -51,6 +47,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('favourites', [ProductApiController::class, 'favourites']);
     Route::post('favourites', [FavouriteApiController::class, 'store']);
     Route::delete('favourites', [FavouriteApiController::class, 'delete']);
+
+    Route::get('carts', [ProductApiController::class, 'cart']);
+    Route::post('carts', [CartApiController::class, 'store']);
+    Route::delete('carts', [CartApiController::class, 'delete']);
 });
 
 

@@ -42,4 +42,13 @@ class Product extends Model
         return $this->belongsToMany(Customer::class, 'favourites')
                     ->withTimestamps();
     }
+
+    /**
+     * Get the customers who have added this product in own cart.
+     */
+    public function addedToCartBy(): BelongsToMany
+    {
+        return $this->belongsToMany(Customer::class, 'carts')
+                    ->withTimestamps();
+    }
 }

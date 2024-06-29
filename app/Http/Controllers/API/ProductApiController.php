@@ -35,22 +35,23 @@ class ProductApiController extends Controller
         return new ProductResource($product);
     }
 
-    public function cart($userId): JsonResource
+    public function cart(Request $request): JsonResource
     {
-        $client = Client::where('clerk_id', $userId)->first();
-
-        if (!$client) {
-            abort(404);
+        $token = $request->bearerToken();
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if (!$customer) {
+                abort(404);
+            } else {
+                $products = $customer->cartProducts;
+                return ProductResource::collection($products);
+            }
         } else {
-            $products = Product::whereHas('carts', function ($query) use ($userId) {
-                $query->where('client_id', $userId);
-            })->get();
-
-            return ProductResource::collection($products);
+            return response()->json(['authenticated' => false], 401);
         }
     }
 
-    public function favourites(Request $request): JsonResource //or JsonResponse
+    public function favourites(Request $request): JsonResource|JsonResponse
     {
         $token = $request->bearerToken();
         if ($token) {

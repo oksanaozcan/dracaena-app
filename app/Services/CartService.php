@@ -3,60 +3,84 @@
 namespace App\Services;
 
 use App\Models\Cart;
-use App\Models\Client;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\API\Cart\StoreRequest;
-use App\Http\Requests\API\Cart\DeleteRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CartService {
 
-    public function store(StoreRequest $request)
+    public function store(Request $request, $customerId): void
     {
         try {
-
             DB::beginTransaction();
 
-            $validated = $request->validated();
+            $validator = Validator::make($request->all(), [
+                'product_id' => 'required|exists:products,id',
+            ]);
+
+            if ($validator->fails()) {
+                throw new \InvalidArgumentException('Validation failed: ' . $validator->errors()->first());
+            }
+
+            $validated = $validator->validated();
 
             Cart::create([
-                'client_id' => $validated['client_id'],
+                'customer_id' => $customerId,
                 'product_id' => $validated['product_id'],
             ]);
 
             DB::commit();
-
-        } catch (Exception $exception) {
+        } catch (\Throwable $exception) {
             DB::rollBack();
-            abort(500, $exception);
+
+            Log::error('Failed to store cart item', [
+                'error' => $exception->getMessage(),
+                'stack' => $exception->getTraceAsString(),
+            ]);
+
+            abort(500, 'Failed to store cart item.');
         }
     }
 
-    public function delete(DeleteRequest $request)
+    public function delete(Request $request, $customerId): void
     {
         try {
             DB::beginTransaction();
 
-            $validated = $request->validated();
+            $validator = Validator::make($request->all(), [
+                'product_id' => 'required|exists:products,id',
+            ]);
 
-            $cart = Cart::where([
-                "client_id" => $validated['userId'],
-                "product_id" => $validated['productId']
-            ])->first();
-
-            if (!$cart) {
-                return abort(404, 'Cart item not found');
+            if ($validator->fails()) {
+                throw new \InvalidArgumentException('Validation failed: ' . $validator->errors()->first());
             }
 
-            $cart->delete();
+            $validated = $validator->validated();
+
+            $cartItem = Cart::where([
+                'customer_id' => $customerId,
+                'product_id' => $validated['product_id']
+            ])->first();
+
+            if (!$cartItem) {
+                throw new \InvalidArgumentException('Cart item not found');
+            }
+
+            $cartItem->delete();
 
             DB::commit();
-
-        } catch (Exception $exception) {
+        } catch (\Throwable $exception) {
             DB::rollBack();
-            abort(500, $exception);
+
+            Log::error('Failed to delete cart item', [
+                'error' => $exception->getMessage(),
+                'stack' => $exception->getTraceAsString(),
+            ]);
+
+            abort(500, 'Failed to delete cart item.');
         }
     }
 }

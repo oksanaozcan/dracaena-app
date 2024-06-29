@@ -3,15 +3,12 @@
 namespace App\Services;
 
 use App\Models\Favourite;
-use App\Models\Client;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Http\Requests\API\Favourite\DeleteRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 
 class FavouriteService {
 

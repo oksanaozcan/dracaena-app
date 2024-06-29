@@ -16,10 +16,7 @@ use Illuminate\Http\Request;
 
 class FavouriteApiController extends Controller
 {
-    public function store(Request $request,
-        // StoreRequest $request,
-        FavouriteService $favouriteService
-        ): JsonResponse
+    public function store(Request $request, FavouriteService $favouriteService): JsonResponse
     {
         $token = $request->bearerToken();
         if($token) {

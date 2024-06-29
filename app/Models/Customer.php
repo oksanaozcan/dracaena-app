@@ -60,4 +60,13 @@ class Customer extends Authenticatable
         return $this->belongsToMany(Product::class, 'favourites')
                     ->withTimestamps();
     }
+
+      /**
+     * Get the products that are marked as in cart by the customer.
+     */
+    public function cartProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'carts')
+                    ->withTimestamps();
+    }
 }
