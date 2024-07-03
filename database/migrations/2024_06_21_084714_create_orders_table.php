@@ -13,20 +13,19 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('client_id');
+            $table->foreignId('customer_id')->constrained();
             $table->string('session_id');
             $table->string('customer_name')->nullable();
             $table->string('customer_email')->nullable();
             $table->boolean('payment_status');
             $table->decimal('total_amount', $precision = 8, $scale = 2);
-            $table->enum('payment_method', ['credit card', 'PayPal', 'cash on delivery']);
+            $table->enum('payment_method', ['credit card', 'PayPal', 'cach on delivery']);
             $table->unsignedBigInteger('shipping_address_id')->nullable(); //TODO: delete nullable
             $table->unsignedBigInteger('billing_address_id')->nullable();
             $table->decimal('discount_amount', $precision = 8, $scale = 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('client_id')->references('clerk_id')->on('clients');
             $table->foreign('shipping_address_id')->references('id')->on('addresses');
             $table->foreign('billing_address_id')->references('id')->on('addresses');
         });

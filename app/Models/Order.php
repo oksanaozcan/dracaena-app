@@ -21,19 +21,15 @@ class Order extends Model
         return static::where('deleted_at', '<=', now()->subMonths(3));
     }
 
-    public function client()
+     //TODO: change method client with Customer model
+    public function customer()
     {
-        return $this->belongsTo(Client::class, 'client_id', 'clerk_id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
     public function products()
     {
         return $this->belongsToMany(Product::class)->using(OrderProduct::class)->withTimestamps();
-    }
-
-    public function cart()
-    {
-        return $this->hasOne(Cart::class, 'client_id', 'client_id');
     }
 
     public function shippingAddress()

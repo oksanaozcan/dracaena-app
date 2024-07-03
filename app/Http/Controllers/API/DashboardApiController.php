@@ -7,19 +7,33 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\JsonResponse;
 use App\Http\Resources\OrderResource;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardApiController extends Controller
 {
-    public function myOrders ($userId): JsonResource
+    public function myOrders (Request $request): JsonResponse
     {
-        $client = Client::where('clerk_id', $userId)->first();
+        $token = $request->bearerToken();
 
-        if (!$client) {
-            abort(404);
+        if ($token) {
+            try {
+                $customer = Auth::guard('api')->user();
+
+                if ($customer) {
+                    $orders = $customer->orders;
+                    return response()->json([
+                        'orders' => $orders ? OrderResource::collection($orders) : null,
+                ], 200);
+                } else {
+                    return response()->json(['authenticated' => false], 401);
+                }
+            } catch (\Exception $e) {
+                return response()->json(['authenticated' => false, 'error' => $e->getMessage()], 401);
+            }
         } else {
-            $orders = Order::where('client_id', $userId)->get();
-            return OrderResource::collection($orders);
+            return response()->json(['authenticated' => false], 401);
         }
     }
 }

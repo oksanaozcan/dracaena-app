@@ -8,12 +8,14 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Cashier\Billable;
 
 class Customer extends Authenticatable
 {
     use HasFactory;
     use HasApiTokens;
     use Notifiable;
+    use Billable;
 
     protected $table = 'customers';
 
@@ -52,7 +54,7 @@ class Customer extends Authenticatable
             ->where('specified_in_order', false);
     }
 
-     /**
+    /**
      * Get the products that are marked as favorites by the customer.
      */
     public function favoriteProducts(): BelongsToMany
@@ -61,12 +63,20 @@ class Customer extends Authenticatable
                     ->withTimestamps();
     }
 
-      /**
+    /**
      * Get the products that are marked as in cart by the customer.
      */
     public function cartProducts(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'carts')
                     ->withTimestamps();
+    }
+
+    /**
+     * Get the orders for the customer.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

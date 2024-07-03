@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
 
         ini_set('memory_limit', '512M');
 
-        Cashier::useCustomerModel(Client::class);
+        Cashier::useCustomerModel(Customer::class);
 
         Passport::tokensExpireIn(now()->addDays(15));
     }

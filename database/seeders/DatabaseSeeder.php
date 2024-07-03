@@ -11,7 +11,6 @@ use App\Models\Order;
 use App\Models\ProductTag;
 use App\Models\Billboard;
 use App\Models\BillboardTag;
-use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use App\Utils\DBSeederHelper;
 
@@ -33,7 +32,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Billboard::factory(5)->create();
-        $this->call(ClientSeeder::class);
 
         $this->call([
             BillboardTagSeeder::class,
@@ -54,19 +52,20 @@ class DatabaseSeeder extends Seeder
             }
         });
 
-    Product::factory(8)
-        ->create()
-        ->each(function ($product) {
-            $order = Order::factory()->create([
-                'total_amount' => $product->price,
-                'discount_amount' => null,
-            ]);
+        //TODO: check test rewrite with new model Customer
+    // Product::factory(8)
+    //     ->create()
+    //     ->each(function ($product) {
+    //         $order = Order::factory()->create([
+    //             'total_amount' => $product->price,
+    //             'discount_amount' => null,
+    //         ]);
 
-            DB::table('order_product')->insert([
-                'order_id' => $order->id,
-                'product_id' => $product->id,
-                'created_at' => now(),
-            ]);
-        });
+    //         DB::table('order_product')->insert([
+    //             'order_id' => $order->id,
+    //             'product_id' => $product->id,
+    //             'created_at' => now(),
+    //         ]);
+    //     });
     }
 }

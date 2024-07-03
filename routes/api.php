@@ -7,7 +7,6 @@ use App\Http\Controllers\API\ProductApiController;
 use App\Http\Controllers\API\NavigationApiController;
 use App\Http\Controllers\API\CartApiController;
 use App\Http\Controllers\API\FavouriteApiController;
-use App\Http\Controllers\API\ClientApiController;
 use App\Http\Controllers\API\OrderApiController;
 use App\Http\Controllers\API\DashboardApiController;
 use App\Http\Controllers\API\AuthApiController;
@@ -20,17 +19,9 @@ Route::get('billboards', [BillboardApiController::class, 'index']);
 Route::get('products', [ProductApiController::class, 'index']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
 
-Route::post('clients', [ClientApiController::class, 'processRequest']);
-
-Route::post('/checkout', [OrderApiController::class, 'checkout']);
-Route::get('/checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');
-Route::get('/checkout/cancel', [OrderApiController::class, 'cancel'])->name('checkout.cancel');
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::get('my-orders/{userId}', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
 
 Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
@@ -51,7 +42,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('carts', [ProductApiController::class, 'cart']);
     Route::post('carts', [CartApiController::class, 'store']);
     Route::delete('carts', [CartApiController::class, 'delete']);
+
+    Route::post('/checkout', [OrderApiController::class, 'checkout']);
+
+    Route::get('/my-orders', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
 });
+
+Route::get('/checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [OrderApiController::class, 'cancel'])->name('checkout.cancel');
 
 
 

@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Resolvers\PaymentPlatformResolver;
 use Debugbar;
 use App\Services\StripeService;
+use Illuminate\Support\Facades\Auth;
 
 class OrderApiController extends Controller
 {
@@ -30,53 +31,63 @@ class OrderApiController extends Controller
 
     public function checkout(Request $request)
     {
-        $client = Client::where(["clerk_id" => $request->input("clientId")])->first();
-        $products = Product::whereIn('id', $request->input("productIds"))->get();
+        $token = $request->bearerToken();
 
-        $lineItems = [];
-        $total_price = 0;
-        foreach ($products as $pr) {
-            $total_price += $pr->price;
-            $lineItems[] = [
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => $pr->title,
-                    ],
-                    'unit_amount' => $pr->price * 100,
-                ],
-                'quantity' => 1,
-            ];
-        }
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if ($customer) {
+                $products = Product::whereIn('id', $request->input("productIds"))->get();
 
-        $this->paymentService = $this->paymentPlatformResolver->resolveService($request->payment_platform);
+                $lineItems = [];
+                $total_price = 0;
+                foreach ($products as $pr) {
+                    $total_price += $pr->price;
+                    $lineItems[] = [
+                        'price_data' => [
+                            'currency' => 'usd',
+                            'product_data' => [
+                                'name' => $pr->title,
+                            ],
+                            'unit_amount' => $pr->price * 100,
+                        ],
+                        'quantity' => 1,
+                    ];
+                }
 
-        session()->put('paymentPlatformId', $request->payment_platform);
+                $this->paymentService = $this->paymentPlatformResolver->resolveService($request->payment_platform);
 
-        if ($this->paymentService) {
-            $session = $this->paymentService->createCheckoutSession(
-                $lineItems,
-                route('checkout.success', [], true) . "?session_id={CHECKOUT_SESSION_ID}",
-                route('checkout.cancel', [], true)
-            );
+                session()->put('paymentPlatformId', $request->payment_platform);
 
-            // Save session id to the order
-            $order = new Order();
-            $order->client_id = $request->input("clientId");
-            $order->session_id = $session->id;
-            $order->payment_status = 0;
-            $order->total_amount = $total_price;
-            $order->payment_method = 'credit card';
-            $order->save();
+                if ($this->paymentService) {
+                    $session = $this->paymentService->createCheckoutSession(
+                        $lineItems,
+                        route('checkout.success', [], true) . "?session_id={CHECKOUT_SESSION_ID}",
+                        route('checkout.cancel', [], true)
+                    );
 
-            // Attach products to order
-            foreach ($request->input('productIds') as $pr) {
-                $order->products()->attach($pr);
+                    // Save session id to the order
+                    $order = new Order();
+                    $order->customer_id = $customer->id;
+                    $order->session_id = $session->id;
+                    $order->payment_status = 0;
+                    $order->total_amount = $total_price;
+                    $order->payment_method = 'credit card';
+                    $order->save();
+
+                    // Attach products to order
+                    foreach ($request->input('productIds') as $pr) {
+                        $order->products()->attach($pr);
+                    }
+
+                    return response()->json([
+                        'url' => $session->url,
+                    ]);
+                }
+            } else {
+                return response()->json(['message' => 'Customer not found'], 404);
             }
-
-            return response()->json([
-                'url' => $session->url,
-            ]);
+        } else {
+            return response()->json(['authenticated' => false], 401);
         }
 
         return response()->json(['error' => 'Failed to create checkout session'], 500);
@@ -117,7 +128,7 @@ class OrderApiController extends Controller
                 $orderProducts = OrderProduct::where('order_id', $order->id)->get();
                 foreach ($orderProducts as $orderProduct) {
                     \App\Models\Cart::where('product_id', $orderProduct->product_id)
-                        ->where('client_id', $order->client_id)
+                        ->where('customer_id', $order->customer_id)
                         ->delete();
                 }
             }
