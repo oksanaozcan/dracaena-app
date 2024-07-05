@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Product;
 
 class CartService {
 
@@ -27,6 +28,11 @@ class CartService {
 
             $validated = $validator->validated();
 
+            $product = Product::find($validated['product_id']);
+            if ($product && $product->amount == 0) {
+                throw new \InvalidArgumentException('out_of_stock'); // Specific error code/message
+            }
+
             Cart::create([
                 'customer_id' => $customerId,
                 'product_id' => $validated['product_id'],
@@ -40,6 +46,10 @@ class CartService {
                 'error' => $exception->getMessage(),
                 'stack' => $exception->getTraceAsString(),
             ]);
+
+            if ($exception instanceof \InvalidArgumentException) {
+                throw $exception; // Re-throw to handle specifically in controller
+            }
 
             abort(500, 'Failed to store cart item.');
         }

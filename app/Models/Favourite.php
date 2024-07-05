@@ -14,4 +14,20 @@ class Favourite extends Model
 
     protected $table = 'favourites';
 
+     /**
+     * Get the customer that owns the favourite.
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Get the product that is favourited.
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }

@@ -26,7 +26,9 @@ class CartApiController extends Controller
                 try {
                     $cartService->store($request, $customerId);
                     return response()->json(['message' => 'Cart item added successfully'], 201);
-                } catch (Exception $exception) {
+                } catch (\InvalidArgumentException $exception) {
+                    return response()->json(['error' => 'Cart item addition failed', 'message' => $exception->getMessage()], 400);
+                } catch (\Exception $exception) {
                     return response()->json(['error' => 'Cart item addition failed', 'message' => $exception->getMessage()], 500);
                 }
             } else {

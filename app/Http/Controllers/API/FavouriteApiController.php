@@ -27,6 +27,8 @@ class FavouriteApiController extends Controller
                 try {
                     $favouriteService->store($request, $customerId);
                     return response()->json(['message' => 'Favourite item added successfully'], 201);
+                } catch (\InvalidArgumentException $exception) {
+                    return response()->json(['error' => $exception->getMessage()], 400);
                 } catch (Exception $exception) {
                     return response()->json(['error' => 'Favourite item addition failed', 'message' => $exception->getMessage()], 500);
                 }
@@ -37,6 +39,7 @@ class FavouriteApiController extends Controller
             return response()->json(['authenticated' => false], 401);
         }
     }
+
 
     public function delete(Request $request, FavouriteService $favouriteService): JsonResponse
     {

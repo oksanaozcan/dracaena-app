@@ -8,6 +8,12 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Models\Product;
 use App\Observers\ProductObserver;
+use App\Events\ProductOutOfStock;
+use App\Listeners\HandleProductOutOfStock;
+use App\Models\Cart;
+use App\Observers\CartObserver;
+use App\Models\Favourite;
+use App\Observers\FavouriteObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -20,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ProductOutOfStock::class => [
+            HandleProductOutOfStock::class,
+        ],
     ];
 
     /**
@@ -28,6 +37,8 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Product::observe(ProductObserver::class);
+        Cart::observe(CartObserver::class);
+        Favourite::observe(FavouriteObserver::class);
     }
 
     /**

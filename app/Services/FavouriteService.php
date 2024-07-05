@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Favourite;
+use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -27,12 +28,20 @@ class FavouriteService {
 
             $validated = $validator->validated();
 
+            $product = Product::find($validated['product_id']);
+            if ($product && $product->amount == 0) {
+                throw new \InvalidArgumentException('out_of_stock');
+            }
+
             Favourite::create([
                 'customer_id' => $customerId,
                 'product_id' => $validated['product_id'],
             ]);
 
             DB::commit();
+        } catch (\InvalidArgumentException $exception) {
+            DB::rollBack();
+            throw $exception;
         } catch (\Throwable $exception) {
             DB::rollBack();
 

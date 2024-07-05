@@ -24,4 +24,11 @@ class Cart extends Model
         return $this->belongsToMany(Product::class)->withTimestamps();
     }
 
+     /**
+     * Get the customer that owns the favourite.
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Client;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderProduct;
@@ -18,6 +17,7 @@ use App\Resolvers\PaymentPlatformResolver;
 use Debugbar;
 use App\Services\StripeService;
 use Illuminate\Support\Facades\Auth;
+use App\Events\ProductOutOfStock;
 
 class OrderApiController extends Controller
 {
@@ -127,6 +127,17 @@ class OrderApiController extends Controller
 
                 $orderProducts = OrderProduct::where('order_id', $order->id)->get();
                 foreach ($orderProducts as $orderProduct) {
+                    $prd= Product::find($orderProduct->product_id);
+                    if ($prd->amount > 0) {
+                        $prd->amount = $prd->amount - 1;
+                        $prd->save();
+                        // if ($prd->amount == 0) {
+                        //     event(new ProductOutOfStock($prd));
+                        // }
+                    } else {
+                        //TODO: logic if product amount == 0;
+                    }
+
                     \App\Models\Cart::where('product_id', $orderProduct->product_id)
                         ->where('customer_id', $order->customer_id)
                         ->delete();

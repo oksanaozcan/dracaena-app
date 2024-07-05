@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Cache;
+use App\Events\ProductOutOfStock;
 
 class ProductObserver
 {
@@ -16,6 +17,10 @@ class ProductObserver
 
     public function updated(Product $product): void
     {
+        if ($product->amount == 0) {
+            event(new ProductOutOfStock($product));
+        }
+
         Cache::tags('products')->flush();
     }
 

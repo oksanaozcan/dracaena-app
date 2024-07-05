@@ -35,6 +35,14 @@ class Product extends Model
     }
 
     /**
+     * Get the favourites for the product.
+     */
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class);
+    }
+
+    /**
      * Get the customers who have marked this product as a favorite.
      */
     public function favoritedBy(): BelongsToMany

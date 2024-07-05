@@ -21,7 +21,6 @@ class Order extends Model
         return static::where('deleted_at', '<=', now()->subMonths(3));
     }
 
-     //TODO: change method client with Customer model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
