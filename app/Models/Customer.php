@@ -79,4 +79,10 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function restokeProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'restoke_subscriptions')
+                    ->withTimestamps();
+    }
 }

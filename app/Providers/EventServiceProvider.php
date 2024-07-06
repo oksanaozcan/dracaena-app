@@ -14,6 +14,8 @@ use App\Models\Cart;
 use App\Observers\CartObserver;
 use App\Models\Favourite;
 use App\Observers\FavouriteObserver;
+use App\Events\ProductInStock;
+use App\Listeners\HandleProductInStock;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProductOutOfStock::class => [
             HandleProductOutOfStock::class,
+        ],
+        ProductInStock::class => [
+            HandleProductInStock::class,
         ],
     ];
 

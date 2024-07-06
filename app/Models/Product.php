@@ -59,4 +59,15 @@ class Product extends Model
         return $this->belongsToMany(Customer::class, 'carts')
                     ->withTimestamps();
     }
+
+    public function restokeSubscriptions()
+    {
+        return $this->hasMany(RestokeSubscription::class);
+    }
+
+    public function restokeSubscribedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(Customer::class, 'restoke_subscriptions')
+                    ->withTimestamps();
+    }
 }

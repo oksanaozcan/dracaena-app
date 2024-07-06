@@ -66,4 +66,20 @@ class ProductApiController extends Controller
             return response()->json(['authenticated' => false], 401);
         }
     }
+
+    public function restokeSubscriptions(Request $request): JsonResource|JsonResponse
+    {
+        $token = $request->bearerToken();
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if (!$customer) {
+                abort(404);
+            } else {
+                $restokeProducts = $customer->restokeProducts;
+                return ProductResource::collection($restokeProducts);
+            }
+        } else {
+            return response()->json(['authenticated' => false], 401);
+        }
+    }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\API\OrderApiController;
 use App\Http\Controllers\API\DashboardApiController;
 use App\Http\Controllers\API\AuthApiController;
 use App\Http\Controllers\API\CustomerApiController;
+use App\Http\Controllers\API\RestokeSubscriptionApiController;
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 
@@ -46,6 +47,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/checkout', [OrderApiController::class, 'checkout']);
 
     Route::get('/my-orders', [DashboardApiController::class, 'myOrders'])->name('dashboard.myorders');
+
+    Route::get('restoke-subscriptions', [ProductApiController::class, 'restokeSubscriptions']);
+    Route::post('restoke-subscriptions', [RestokeSubscriptionApiController::class, 'store']);
+    Route::delete('restoke-subscriptions', [RestokeSubscriptionApiController::class, 'delete']);
 });
 
 Route::get('/checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');
