@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\TokenRepository;
+use App\Rules\TrueBooleanRule;
 
 class AuthApiController extends Controller
 {
@@ -24,7 +25,15 @@ class AuthApiController extends Controller
             'confirm_password' => 'required|same:password|min:8',
             'birthday' => 'nullable',
             'newsletter_confirmed' => 'nullable',
+            'cookie_consent' => ['required', 'boolean', new TrueBooleanRule],
         ]);
+
+        // TODO: rewrite Validator for production: 'password' => ['required', 'confirmed', Password::min(8)->letters()
+        //     ->mixedCase()
+        //     ->numbers()
+        //     ->symbols()
+        //     ->uncompromised()
+        // ],
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
@@ -37,6 +46,11 @@ class AuthApiController extends Controller
             'birthday' => $request->birthday,
             'newsletter_confirmed' => $request->newsletter_confirmed,
         ]);
+
+        $customer->cookieConsent()->updateOrCreate(
+            ['customer_id' => $customer->id],
+            ['consent_given' => $request->cookie_consent],
+        );
 
         return response()->json(['customer' => $customer], 201);
     }

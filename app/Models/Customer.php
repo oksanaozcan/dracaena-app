@@ -8,6 +8,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Cashier\Billable;
 
 class Customer extends Authenticatable
@@ -84,5 +85,13 @@ class Customer extends Authenticatable
     {
         return $this->belongsToMany(Product::class, 'restoke_subscriptions')
                     ->withTimestamps();
+    }
+
+    /**
+     * Get the cookie consent for the customer.
+     */
+    public function cookieConsent(): HasOne
+    {
+        return $this->hasOne(CookieConsent::class);
     }
 }
