@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\TokenRepository;
 use App\Rules\TrueBooleanRule;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthApiController extends Controller
 {
@@ -127,5 +128,50 @@ class AuthApiController extends Controller
             "status" => 200,
             "message" => "Customer logged out"
         ]);
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')
+        ->stateless()
+        ->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+            $customer = Customer::whereEmail($googleUser->getEmail())->first();
+            if (!$customer) {
+                $newCustomer = Customer::create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                    'password' => bcrypt('123456789'),
+                    'google_id' => $googleUser->getId(),
+                ]);
+
+                $newCustomer->cookieConsent()->updateOrCreate(
+                    ['customer_id' => $newCustomer->id],
+                    ['consent_given' => true],
+                );
+
+                $token = $newCustomer->createToken('authToken')->accessToken;
+                $data = [
+                    'customer' => $newCustomer,
+                    'access_token' => $token,
+                ];
+
+                $encodedCustomer = urlencode(json_encode($newCustomer));
+                $encodedToken = urlencode($token);
+
+                $redirectUrl = "http://localhost:3000/auth/google/callback?customer={$encodedCustomer}&access_token={$encodedToken}";
+                return redirect()->away($redirectUrl);
+            } else {
+                // TODO: Handle existing customer case
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unable to authenticate user'], 500);
+        }
     }
 }

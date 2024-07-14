@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
 
+Route::get('/auth/google', [AuthApiController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [AuthApiController::class, 'handleGoogleCallback']);
+
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout', [AuthApiController::class, 'logout']);
     Route::post('/auth-check', [AuthApiController::class, 'authCheck']);

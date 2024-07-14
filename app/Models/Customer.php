@@ -26,6 +26,7 @@ class Customer extends Authenticatable
         'password',
         'birthday',
         'newsletter_confirmed',
+        'google_id',
     ];
 
     protected $hidden = [
