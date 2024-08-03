@@ -146,20 +146,17 @@ class AuthApiController extends Controller
                 $newCustomer = Customer::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
-                    'password' => bcrypt('123456789'),
                     'google_id' => $googleUser->getId(),
                 ]);
 
+                //TODO: to think about different variants, best practice
                 $newCustomer->cookieConsent()->updateOrCreate(
                     ['customer_id' => $newCustomer->id],
                     ['consent_given' => true],
                 );
+                //
 
                 $token = $newCustomer->createToken('authToken')->accessToken;
-                $data = [
-                    'customer' => $newCustomer,
-                    'access_token' => $token,
-                ];
 
                 $encodedCustomer = urlencode(json_encode($newCustomer));
                 $encodedToken = urlencode($token);
@@ -167,7 +164,15 @@ class AuthApiController extends Controller
                 $redirectUrl = "http://localhost:3000/auth/google/callback?customer={$encodedCustomer}&access_token={$encodedToken}";
                 return redirect()->away($redirectUrl);
             } else {
-                // TODO: Handle existing customer case
+                $customer->update([
+                    'name' => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                ]);
+                $token = $customer->createToken('authToken')->accessToken;
+                $encodedCustomer = urlencode(json_encode($customer));
+                $encodedToken = urlencode($token);
+                $redirectUrl = "http://localhost:3000/auth/google/callback?customer={$encodedCustomer}&access_token={$encodedToken}";
+                return redirect()->away($redirectUrl);
             }
 
         } catch (\Exception $e) {

@@ -42,7 +42,6 @@ class Table extends Component
 
     public function destroyOrder($id, OrderService $orderService)
     {
-        // Log::info($id);
         $order = Order::findOrFail($id);
         $this->authorize('delete', $order);
         $orderService->destroyOrder($order);

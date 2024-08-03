@@ -120,13 +120,13 @@ class ProductService {
     }
 
     public function getCachedProducts(array $validated, ProductFilter $filter): \Illuminate\Pagination\LengthAwarePaginator
-    {
-        $cacheKey = $this->generateCacheKey($validated);
+    {   $cacheKey = $this->generateCacheKey($validated);
 
         return Cache::tags('products')->remember($cacheKey, now()->addHours(2), function () use ($validated, $filter) {
             return Product::filter($filter)->paginate(8, ['*'], 'page', $validated['page']);
         });
     }
+
 
     protected function generateCacheKey(array $validated): string
     {
@@ -136,7 +136,9 @@ class ProductService {
         $search = $validated['search'] ?? '';
         $sort = $validated['sort'] ?? '';
 
-        return "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}";
+        $page = "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}";
+
+        return $page;
     }
 
     public function destroyProductByTitle($title)

@@ -40,6 +40,5 @@ class StoreTagJob implements ShouldQueue
         $admin->notify(new StoreTagJobFailedNotification($this->user, $this->title));
 
         $notificationId = DatabaseNotification::latest()->first()->id;
-        Log::info($notificationId);
     }
 }

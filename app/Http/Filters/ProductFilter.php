@@ -5,6 +5,7 @@ namespace App\Http\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use  App\Http\Filters\ProductFilterTestingTrait;
+use Illuminate\Support\Facades\Log;
 
 class ProductFilter extends AbstractFilter
 {
@@ -65,6 +66,7 @@ class ProductFilter extends AbstractFilter
             $builder->orderBy('created_at', 'desc');
             break;
         default:
+            $builder->orderBy('created_at', 'desc');
             break;
     }
   }

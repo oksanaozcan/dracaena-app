@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductApiController extends Controller
 {
@@ -22,6 +23,11 @@ class ProductApiController extends Controller
     public function index (IndexRequest $request): JsonResource
     {
         $validated = $request->validated();
+
+        if (!isset($validated['sort'])) {
+            $validated['sort'] = 'date-desc-rank';
+        }
+
         $filter = app()->make(ProductFilter::class, ['queryParams' => array_filter($validated)]);
 
         $products = $this->productService->getCachedProducts($validated, $filter);
