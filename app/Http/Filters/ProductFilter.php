@@ -15,6 +15,7 @@ class ProductFilter extends AbstractFilter
   public const CATEGORY_ID = 'category_id';
   public const TAG_ID = 'tag_id';
   public const SORT = 'sort';
+  public const CATEGORY_FILTER_ID = 'category_filter_id';
 
   protected function getCallbacks(): array
   {
@@ -23,6 +24,7 @@ class ProductFilter extends AbstractFilter
       self::CATEGORY_ID => [$this, 'categoryId'],
       self::TAG_ID => [$this, 'tagId'],
       self::SORT => [$this, 'sort'],
+      self::CATEGORY_FILTER_ID => [$this, 'categoryFilterId']
     ];
   }
 
@@ -45,6 +47,19 @@ class ProductFilter extends AbstractFilter
     $builder->join('product_tags', 'products.id', '=', 'product_tags.product_id')
     ->where('product_tags.tag_id', $value)
     ->select('products.*');
+  }
+
+  public function categoryFilterId(Builder $builder, $value)
+  {
+      // Get all tag IDs associated with the given category_filter_id
+      $tagIds = DB::table('tags')
+                  ->where('category_filter_id', $value)
+                  ->pluck('id');
+
+      // Join with product_tags and filter products based on the tag IDs
+      $builder->join('product_tags', 'products.id', '=', 'product_tags.product_id')
+              ->whereIn('product_tags.tag_id', $tagIds)
+              ->select('products.*');
   }
 
   public function sort(Builder $builder, $value)

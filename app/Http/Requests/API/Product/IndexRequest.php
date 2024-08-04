@@ -27,6 +27,7 @@ class IndexRequest extends FormRequest
             'tag_id' => 'nullable|string',
             'search' => 'nullable|string',
             'sort' => 'nullable|string',
+            'category_filter_id' => 'nullable|string',
         ];
     }
 }

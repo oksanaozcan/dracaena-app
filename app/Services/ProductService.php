@@ -135,8 +135,9 @@ class ProductService {
         $tagId = $validated['tag_id'] ?? '';
         $search = $validated['search'] ?? '';
         $sort = $validated['sort'] ?? '';
+        $categoryFilterId = $validated['category_filter_id'] ?? '';
 
-        $page = "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}";
+        $page = "page.{$page}.category_id.{$categoryId}.tag_id.{$tagId}.search.{$search}.sort.{$sort}.category_filter_id.{$categoryFilterId}";
 
         return $page;
     }
