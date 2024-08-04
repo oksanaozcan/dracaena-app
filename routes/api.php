@@ -19,6 +19,7 @@ Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFilter
 Route::get('billboards', [BillboardApiController::class, 'index']);
 
 Route::get('products', [ProductApiController::class, 'index']);
+Route::get('care-slides', [ProductApiController::class, 'getProductsForCareCategorySlider']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
