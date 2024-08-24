@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\Image;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class ProductService {
         return $products;
     }
 
-    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id, $tags=[])
+    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id, $tags=[], $images=[])
     {
         try {
             DB::beginTransaction();
@@ -44,6 +45,16 @@ class ProductService {
                 $p->tags()->attach($tags);
             }
 
+            if (isset($images)) {
+                foreach ($images as $img) {
+                    $pathImg = Storage::disk('public')->put('product_images', $img);
+                    Image::create([
+                        'url' => url('/storage/' . $pathImg),
+                        'product_id' => $p->id,
+                    ]);
+                }
+            }
+
             DB::commit();
 
         } catch (Exception $exception) {
@@ -52,7 +63,7 @@ class ProductService {
         }
     }
 
-    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id, $tags=[])
+    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id, $tags=[], $images=[])
     {
         try {
             DB::beginTransaction();
@@ -91,6 +102,20 @@ class ProductService {
                 $product->tags()->sync($tags);
             }
 
+            if (isset($images) && $product->images->isEmpty()) {
+                foreach ($images as $img) {
+                    $pathImg = Storage::disk('public')->put('product_images', $img);
+                    Image::create([
+                        'url' => url('/storage/' . $pathImg),
+                        'product_id' => $product->id,
+                    ]);
+                }
+            }
+
+            if (isset($images) && $product->images->isNotEmpty()) {
+
+            }
+
             DB::commit();
 
         } catch (Exception $exception) {
@@ -99,6 +124,7 @@ class ProductService {
         }
     }
 
+    //TODO: remove images after removing its product
     public function destroyProduct(Product $product)
     {
         try {

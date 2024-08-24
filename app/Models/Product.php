@@ -76,4 +76,9 @@ class Product extends Model
         return $this->belongsToMany(Customer::class, 'restoke_subscriptions')
                     ->withTimestamps();
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

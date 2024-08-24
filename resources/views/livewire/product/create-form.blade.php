@@ -3,6 +3,8 @@
 ?>
 <form wire:submit.prevent="submitForm" class="px-6 pb-2 mb-4">
 
+    {{-- TODO: fix bug: can't see all page with big scale, can't scroll lower --}}
+
 <div class="h-10">
     @if (session()->has('success_message'))
     <div
@@ -38,6 +40,24 @@
     <input type="file" wire:model="preview" value="{{$this->preview}}">
     @error('preview') <span class="error">{{ $message }}</span> @enderror
 </div>
+
+<div>
+    @if ($this->product)
+        @foreach ($this->product->images as $img)
+        {{-- TODO: make func remove temporary img --}}
+        {{-- TODO: make func upload images for product --}}
+            <img class="mb-4 w-36" src="{{url($img->url)}}" alt="produt image">
+        @endforeach
+    @else
+        @foreach ($this->images as $img)
+            <img class="mb-4 w-36" src="{{$img->url}}" alt="">
+        @endforeach
+    @endif
+    {{-- TODO: restrict length of array to 5 --}}
+    <input type="file" multiple wire:model="images"/>
+    @error('images') <span class="error">{{ $message }}</span> @enderror
+</div>
+
 <div class="mt-4 mb-6">
     <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
     <input

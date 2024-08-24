@@ -27,6 +27,17 @@ class CreateForm extends Component
     public $category_id;
     public $tags = [];
 
+    #[Validate([
+        'images' => 'nullable',
+        'images.*' => [
+            'nullable',
+            'image',
+            'max:2048',
+        ],
+    ])]
+    // TODO: add validation that accept png & jpeg files for images
+    public $images = [];
+
     protected $rules = [
         'title' => 'required|string|unique:products|min:3',
         'description'=> 'required|string|min:3|max:100',
@@ -36,6 +47,12 @@ class CreateForm extends Component
         'amount' => 'required|numeric',
         'category_id' => 'required',
         'tags' => 'nullable',
+        'images' => 'nullable',
+        'images.*' => [
+            'nullable',
+            'image',
+            'max:2048',
+        ],
     ];
 
     public function mount($id = null)
@@ -50,6 +67,7 @@ class CreateForm extends Component
             $this->amount = $p->amount;
             $this->category_id = $p->category_id;
             $this->tags = $p->tags;
+            $this->images = $p->images;
         } else {
             $this->product = null;
         }
@@ -71,7 +89,7 @@ class CreateForm extends Component
                 }
             }
             $this->validate();
-            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags);
+            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images);
 
             $this->emit('productAdded');
             $this->reset();
@@ -87,6 +105,7 @@ class CreateForm extends Component
                 'amount' => 'nullable|numeric',
                 'category_id' => 'required',
                 'tags' => 'nullable',
+                'images' => 'nullable',
             ]);
             $newTags = [];
             foreach ($this->tags as $item) {
@@ -94,7 +113,7 @@ class CreateForm extends Component
                     array_push($newTags, $item["id"]);
                 }
             }
-            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags);
+            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images);
             return redirect()->route('products.index');
         }
     }
