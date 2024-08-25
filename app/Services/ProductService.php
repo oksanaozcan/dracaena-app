@@ -113,7 +113,7 @@ class ProductService {
             }
 
             if (isset($images) && $product->images->isNotEmpty()) {
-
+                //write functional that sync images with new images
             }
 
             DB::commit();

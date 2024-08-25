@@ -1,11 +1,9 @@
 <?php
 /** @see App\Http\Livewire\Product\CreateForm */
 ?>
-<form wire:submit.prevent="submitForm" class="px-6 pb-2 mb-4">
+<form wire:submit.prevent="submitForm" class="pb-2 mb-4 overflow-y-auto x-6 ">
 
-    {{-- TODO: fix bug: can't see all page with big scale, can't scroll lower --}}
-
-<div class="h-10">
+ <div class="h-10">
     @if (session()->has('success_message'))
     <div
         x-data="{show: true}"
@@ -42,21 +40,35 @@
 </div>
 
 <div>
-    @if ($this->product)
-        @foreach ($this->product->images as $img)
-        {{-- TODO: make func remove temporary img --}}
-        {{-- TODO: make func upload images for product --}}
-            <img class="mb-4 w-36" src="{{url($img->url)}}" alt="produt image">
-        @endforeach
-    @else
-        @foreach ($this->images as $img)
-            <img class="mb-4 w-36" src="{{$img->url}}" alt="">
-        @endforeach
-    @endif
-    {{-- TODO: restrict length of array to 5 --}}
+    <div class="flex flex-wrap gap-1">
+        {{-- Updating product images start --}}
+        @if ($this->product)
+            @if ($this->product->images->isEmpty())
+                @foreach ($this->images as $index => $img)
+                    <div class="relative mb-4 w-36">
+                        <img src="{{ $img->temporaryUrl() }}" alt="product image">
+                        <button wire:click="removeTempImage({{ $index }})" class="absolute top-0 right-0 p-1 text-red-600">Remove</button>
+                    </div>
+                @endforeach
+            @else
+                @foreach ($this->images as $img)
+                    <img class="mb-4 w-36" src="{{url($img->url)}}" alt="produt image">
+                @endforeach
+            @endif
+        {{-- Updating product images end --}}
+        @else
+            @foreach ($this->images as $index => $img)
+                <div class="relative mb-4 w-36">
+                    <img src="{{ $img->temporaryUrl() }}" alt="product image">
+                    <button wire:click="removeTempImage({{ $index }})" class="absolute top-0 right-0 p-1 text-red-600">Remove</button>
+                </div>
+            @endforeach
+        @endif
+    </div>
     <input type="file" multiple wire:model="images"/>
-    @error('images') <span class="error">{{ $message }}</span> @enderror
+    @error('images') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
 </div>
+
 
 <div class="mt-4 mb-6">
     <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
@@ -344,5 +356,5 @@
     }
 </script>
 
-<x-form.submit-btn/>
+<x-form.submit-btn />
 </form>

@@ -26,16 +26,6 @@ class CreateForm extends Component
     public $amount;
     public $category_id;
     public $tags = [];
-
-    #[Validate([
-        'images' => 'nullable',
-        'images.*' => [
-            'nullable',
-            'image',
-            'max:2048',
-        ],
-    ])]
-    // TODO: add validation that accept png & jpeg files for images
     public $images = [];
 
     protected $rules = [
@@ -47,7 +37,7 @@ class CreateForm extends Component
         'amount' => 'required|numeric',
         'category_id' => 'required',
         'tags' => 'nullable',
-        'images' => 'nullable',
+        'images' => 'nullable|array',
         'images.*' => [
             'nullable',
             'image',
@@ -105,7 +95,7 @@ class CreateForm extends Component
                 'amount' => 'nullable|numeric',
                 'category_id' => 'required',
                 'tags' => 'nullable',
-                'images' => 'nullable',
+                'images' => 'nullable|array',
             ]);
             $newTags = [];
             foreach ($this->tags as $item) {
@@ -115,6 +105,14 @@ class CreateForm extends Component
             }
             $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images);
             return redirect()->route('products.index');
+        }
+    }
+
+    public function removeTempImage($index)
+    {
+        if (isset($this->images[$index])) {
+            unset($this->images[$index]);
+            $this->images = array_values($this->images); // Re-index the array
         }
     }
 

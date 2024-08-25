@@ -5,7 +5,7 @@
     </h2>
   </x-slot>
 
-  <div class="flex flex-row h-screen">
+  <div class="flex flex-row ">
     <div class="p-6 text-white basis-1/6 bg-cyan-900">
       @include('includes.sidebar')
     </div>

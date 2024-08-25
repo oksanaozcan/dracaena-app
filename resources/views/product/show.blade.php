@@ -5,7 +5,7 @@
     </h2>
   </x-slot>
 
-  <div class="flex flex-row h-screen">
+  <div class="flex flex-row ">
     <div class="p-6 text-white basis-1/6 bg-cyan-900">
       @include('includes.sidebar')
     </div>
@@ -30,6 +30,11 @@
                 <p class="text-base text-gray-700">Created at: {{$product->created_at}}</p>
                 <p class="text-base text-gray-700">Updated at: {{$product->updated_at}}</p>
                 <p class="text-base text-gray-700">Deleted at: {{$product->deleted_at}}</p>
+                <ul>
+                    @foreach ($product->images as $img)
+                    <li><img src="{{$img->url}}"/></li>
+                    @endforeach
+                </ul>
             </div>
             <div class="flex justify-between px-6 pt-4 pb-2">
                 <a class="btn-common btn-primary" href="{{route('products.edit', $product->id)}}">Edit</a>

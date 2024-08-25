@@ -1,4 +1,4 @@
-<aside>
+<aside class="overflow-y-auto">
   <nav>
     <ul x-data="sidebarData">
         <template x-for="item in menu">
