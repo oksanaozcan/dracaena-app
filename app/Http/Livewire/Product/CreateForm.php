@@ -57,7 +57,6 @@ class CreateForm extends Component
             $this->amount = $p->amount;
             $this->category_id = $p->category_id;
             $this->tags = $p->tags;
-            $this->images = $p->images;
         } else {
             $this->product = null;
         }

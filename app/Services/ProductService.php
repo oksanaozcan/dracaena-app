@@ -113,11 +113,29 @@ class ProductService {
             }
 
             if (isset($images) && $product->images->isNotEmpty()) {
-                //write functional that sync images with new images
+                $oldImageIds = $product->images->pluck('id')->toArray();
+
+                foreach ($oldImageIds as $id) {
+                    $img = Image::find($id);
+                    if ($img) {
+                        $deletingImg = substr($img->url, strlen(url('/storage/')) + 1);
+                        Storage::disk('public')->delete($deletingImg);
+
+                        $img->delete();
+                    }
+                }
+
+                foreach ($images as $img) {
+                    $pathImg = Storage::disk('public')->put('product_images', $img);
+                    Image::create([
+                        'url' => url('/storage/' . $pathImg),
+                        'product_id' => $product->id,
+                    ]);
+                }
             }
 
             DB::commit();
-
+            
         } catch (Exception $exception) {
             DB::rollBack();
             abort(500, $exception);

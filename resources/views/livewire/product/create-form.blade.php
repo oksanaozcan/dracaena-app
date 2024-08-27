@@ -51,8 +51,16 @@
                     </div>
                 @endforeach
             @else
-                @foreach ($this->images as $img)
-                    <img class="mb-4 w-36" src="{{url($img->url)}}" alt="produt image">
+
+                @foreach ($this->product->images as $img)
+                    <img class="grayscale" src="{{$img->url}}" alt="product img">
+                @endforeach
+            
+                @foreach ($this->images as $index => $img)
+                    <div class="relative mb-4 w-36">
+                        <img src="{{ $img->temporaryUrl() }}" alt="product image">
+                        <button wire:click="removeTempImage({{ $index }})" class="absolute top-0 right-0 p-1 text-red-600">Remove</button>
+                    </div>
                 @endforeach
             @endif
         {{-- Updating product images end --}}
