@@ -11,6 +11,7 @@ use App\Models\Client;
 use App\Models\Customer;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductWithCategoryAndFilterResource;
+use App\Http\Resources\ProductWithImagesResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\JsonResponse;
 use App\Services\ProductService;
@@ -69,7 +70,7 @@ class ProductApiController extends Controller
     public function show($id): JsonResource
     {
         $product = Product::findOrFail($id);
-        return new ProductResource($product);
+        return new ProductWithImagesResource($product);
     }
 
     public function cart(Request $request): JsonResource
