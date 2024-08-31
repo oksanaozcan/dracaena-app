@@ -13,6 +13,7 @@ use App\Http\Controllers\API\AuthApiController;
 use App\Http\Controllers\API\CustomerApiController;
 use App\Http\Controllers\API\RestokeSubscriptionApiController;
 use App\Http\Controllers\API\RecentlyViewedApiController;
+use App\Http\Controllers\API\ReviewApiController;
 
 Route::get('navigation', [NavigationApiController::class, 'getCategoryWithFiltersAndTags']);
 
@@ -59,6 +60,13 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('/recently-viewed-items', [RecentlyViewedApiController::class, 'store']);
     Route::get('/recently-viewed-items', [RecentlyViewedApiController::class, 'index']);
+
+    Route::get('perchased-products', [ProductApiController::class, 'perchased']);
+
+    Route::post('review', [ReviewApiController::class, 'store']);
+    Route::put('review', [ReviewApiController::class, 'update']);
+    Route::delete('review', [ReviewApiController::class, 'delete']);
+
 });
 
 Route::get('/checkout/success', [OrderApiController::class, 'success'])->name('checkout.success');

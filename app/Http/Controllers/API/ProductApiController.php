@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductWithCategoryAndFilterResource;
 use App\Http\Resources\ProductWithImagesResource;
+use App\Http\Resources\ProductWithReviewResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\JsonResponse;
 use App\Services\ProductService;
@@ -115,6 +116,22 @@ class ProductApiController extends Controller
             } else {
                 $restokeProducts = $customer->restokeProducts;
                 return ProductResource::collection($restokeProducts);
+            }
+        } else {
+            return response()->json(['authenticated' => false], 401);
+        }
+    }
+
+    public function perchased(Request $request)
+    {
+        $token = $request->bearerToken();
+        if ($token) {
+            $customer = Auth::guard('api')->user();
+            if (!$customer) {
+                abort(404);
+            } else {
+                $perchasedProducts = $customer->perchasedProducts();
+                return ProductWithReviewResource::collection($perchasedProducts);
             }
         } else {
             return response()->json(['authenticated' => false], 401);

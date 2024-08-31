@@ -95,4 +95,21 @@ class Customer extends Authenticatable
     {
         return $this->hasOne(CookieConsent::class);
     }
+
+    public function perchasedProducts()
+    {
+        return $this->hasMany(Order::class)
+                    ->where('payment_status', true)
+                    ->with(['products.reviews' => function ($query) {
+                        $query->where('customer_id', $this->id);
+                    }])
+                    ->get()
+                    ->pluck('products')
+                    ->flatten();
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
