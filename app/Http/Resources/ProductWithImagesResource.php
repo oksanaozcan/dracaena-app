@@ -26,6 +26,7 @@ class ProductWithImagesResource extends JsonResource
             'content' => $this->content,
             'preview'=> $this->preview,
             'price' => $this->price,
+            'slug' => $this->slug,
             'category' => new CategoryResource($this->category),
             'images' => ImageResource::collection($this->images),
             'reviews' => ReviewResource::collection($this->reviews()->latest()->take(15)->get()),

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -14,6 +15,21 @@ class Product extends Model
     use Filterable;
 
     protected $guarded = [];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($product) {
+            $product->slug = Str::slug($product->title);
+        });
+
+        static::updating(function ($product) {
+            if ($product->isDirty('title')) {
+                $product->slug = Str::slug($product->title);
+            }
+        });
+    }
 
     public function category()
     {

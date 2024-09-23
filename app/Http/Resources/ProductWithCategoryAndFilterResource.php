@@ -24,6 +24,7 @@ class ProductWithCategoryAndFilterResource extends JsonResource
             'content' => $this->content,
             'preview' => $this->preview,
             'price' => $this->price,
+            'slug' => $this->slug,
             'category' => new CategoryResource($this->category),
             'category_filter_id' => $this->category_filter_id,
             'category_filter_title' => $this->category_filter_title,

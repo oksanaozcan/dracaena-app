@@ -25,6 +25,7 @@ class ProductResource extends JsonResource
             'preview'=> $this->preview,
             'price' => $this->price,
             'category' => new CategoryResource($this->category),
+            'slug' => $this->slug,
         ];
     }
 }

@@ -27,6 +27,7 @@ class ProductWithReviewResource extends JsonResource
             'content' => $this->content,
             'preview' => $this->preview,
             'price' => $this->price,
+            'slug' => $this->slug,
             'category' => new CategoryResource($this->category),
             'review' => $customerReview ? new ReviewResource($customerReview) : null,
         ];
