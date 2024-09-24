@@ -25,7 +25,7 @@ class ProductService {
         return $products;
     }
 
-    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id, $tags=[], $images=[])
+    public function storeProduct($title, $preview, $description, $content=null, $price, $amount, $category_id, $tags=[], $images=[], $size, $product_group_by_size_id)
     {
         try {
             DB::beginTransaction();
@@ -39,6 +39,8 @@ class ProductService {
                 'price' => $price,
                 'amount' => $amount,
                 'category_id' => $category_id,
+                'size' => $size,
+                'product_group_by_size_id' => $product_group_by_size_id,
             ]);
 
             if (isset($tags)) {
@@ -63,7 +65,7 @@ class ProductService {
         }
     }
 
-    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id, $tags=[], $images=[])
+    public function updateProduct($title, Product $product, $preview=null, $description, $content=null, $price, $amount, $category_id, $tags=[], $images=[], $size, $product_group_by_size_id)
     {
         try {
             DB::beginTransaction();
@@ -80,6 +82,8 @@ class ProductService {
                     'price' => $price,
                     'amount' => $amount,
                     'category_id' => $category_id,
+                    'size' => $size,
+                    'product_group_by_size_id' => $product_group_by_size_id,
                 ]);
 
                 Storage::disk('public')->delete($oldPreview);
@@ -92,6 +96,8 @@ class ProductService {
                     'price' => $price,
                     'amount' => $amount,
                     'category_id' => $category_id,
+                    'size' => $size,
+                    'product_group_by_size_id' => $product_group_by_size_id,
                 ]);
             }
 
@@ -135,7 +141,7 @@ class ProductService {
             }
 
             DB::commit();
-            
+
         } catch (Exception $exception) {
             DB::rollBack();
             abort(500, $exception);

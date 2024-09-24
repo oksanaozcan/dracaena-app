@@ -55,7 +55,7 @@
                 @foreach ($this->product->images as $img)
                     <img class="grayscale" src="{{$img->url}}" alt="product img">
                 @endforeach
-            
+
                 @foreach ($this->images as $index => $img)
                     <div class="relative mb-4 w-36">
                         <img src="{{ $img->temporaryUrl() }}" alt="product image">
@@ -175,6 +175,43 @@
     </select>
     <div class="h-2">
         @error('category_id') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
+    </div>
+</div>
+
+<div class="mt-4 mb-6">
+    <label for="size" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Size (not required)</label>
+    <select
+        wire:model='size'
+        name="size"
+        value="{{$this->size}}"
+        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    >
+    <option value="">Select size (not required)</option>
+        <option value="s">S</option>
+        <option value="m">M</option>
+        <option value="xl">XL</option>
+    </select>
+    <div class="h-2">
+        @error('size') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
+    </div>
+</div>
+
+<div class="mt-4 mb-6">
+    <label for="product_group_by_size" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Group By Size (not required)</label>
+    <select
+        wire:model='product_group_by_size_id'
+        name="product_group_by_size_id"
+        value="{{$this->product_group_by_size_id}}"
+        class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        required
+    >
+    <option value="">Select product group (not required)</option>
+    @foreach($productGroupBySizes as $productGroupBySize)
+        <option value="{{$productGroupBySize->id}}">{{$productGroupBySize->title}}</option>
+    @endforeach
+    </select>
+    <div class="h-2">
+        @error('product_group_by_size_id') <span class="h-full text-sm text-red-600 dark:text-red-500">{{ $message }}</span> @enderror
     </div>
 </div>
 

@@ -4,10 +4,12 @@ namespace App\Http\Livewire\Product;
 
 use Livewire\Component;
 use App\Models\Product;
+use App\Models\ProductGroupBySize;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Services\ProductService;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductGroupBySizeResource;
 use App\Http\Resources\TagResource;
 use Livewire\WithFileUploads;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -27,6 +29,8 @@ class CreateForm extends Component
     public $category_id;
     public $tags = [];
     public $images = [];
+    public $size;
+    public $product_group_by_size_id;
 
     protected $rules = [
         'title' => 'required|string|unique:products|min:3',
@@ -43,6 +47,8 @@ class CreateForm extends Component
             'image',
             'max:2048',
         ],
+        'size' => 'nullable',
+        'product_group_by_size_id' => 'nullable',
     ];
 
     public function mount($id = null)
@@ -57,6 +63,8 @@ class CreateForm extends Component
             $this->amount = $p->amount;
             $this->category_id = $p->category_id;
             $this->tags = $p->tags;
+            $this->size = $p->size;
+            $this->product_group_by_size_id = $p->product_group_by_size_id;
         } else {
             $this->product = null;
         }
@@ -78,7 +86,7 @@ class CreateForm extends Component
                 }
             }
             $this->validate();
-            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images);
+            $productService->storeProduct($this->title, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images, $this->size, $this->product_group_by_size_id);
 
             $this->emit('productAdded');
             $this->reset();
@@ -95,6 +103,8 @@ class CreateForm extends Component
                 'category_id' => 'required',
                 'tags' => 'nullable',
                 'images' => 'nullable|array',
+                'size' => 'nullable',
+                'product_group_by_size_id' => 'nullable',
             ]);
             $newTags = [];
             foreach ($this->tags as $item) {
@@ -102,7 +112,7 @@ class CreateForm extends Component
                     array_push($newTags, $item["id"]);
                 }
             }
-            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images);
+            $productService->updateProduct($this->title, $this->product, $this->preview, $this->description, $this->content, $this->price, $this->amount, $this->category_id, $newTags, $this->images, $this->size, $this->product_group_by_size_id);
             return redirect()->route('products.index');
         }
     }
@@ -119,6 +129,7 @@ class CreateForm extends Component
     {
         return view('livewire.product.create-form', [
             'categories' => CategoryResource::collection(Category::all()),
+            'productGroupBySizes' => ProductGroupBySizeResource::collection(ProductGroupBySize::all()),
             'tags_fore_select' => TagResource::collection(Tag::with(['categoryFilter'])->get()),
         ]);
     }
