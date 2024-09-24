@@ -45,6 +45,15 @@ document.addEventListener('alpine:init', () => {
             },
             {
                 id: uuidv4(),
+                faIcon: 'fa-solid fa-layer-group',
+                title: 'Product Groups',
+                links: [
+                    {title: 'list', url: '/product-group-by-sizes'},
+                    {title: 'create', url: '/product-group-by-sizes/create'},
+                ],
+            },
+            {
+                id: uuidv4(),
                 faIcon: 'fa-solid fa-plant-wilt',
                 title: 'Products',
                 links: [

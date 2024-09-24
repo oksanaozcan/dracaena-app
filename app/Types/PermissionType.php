@@ -31,4 +31,8 @@ class PermissionType
   public const CAN_DESTROY_ORDER = 'destroy-order';
   public const CAN_RESTORE_ORDER = 'restore-order';
   public const CAN_FORCE_DELETE_ORDER = 'force-delete-order';
+
+  public const CAN_CREATE_PRODUCT_GROUP = 'create-product-group';
+  public const CAN_UPDATE_PRODUCT_GROUP = 'update-product-group';
+  public const CAN_DELETE_PRODUCT_GROUP = 'delete-product-group';
 }

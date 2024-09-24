@@ -49,6 +49,10 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => PermissionType::CAN_RESTORE_ORDER]);
         Permission::firstOrCreate(['name' => PermissionType::CAN_FORCE_DELETE_ORDER]);
 
+        Permission::firstOrCreate(['name' => PermissionType::CAN_CREATE_PRODUCT_GROUP]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_UPDATE_PRODUCT_GROUP]);
+        Permission::firstOrCreate(['name' => PermissionType::CAN_DELETE_PRODUCT_GROUP]);
+
         // Roles
         $adminRole = Role::firstOrCreate(['name' => RoleType::ADMIN]);
         $managerRole = Role::firstOrCreate(['name' => RoleType::MANAGER]);
@@ -76,12 +80,17 @@ class RoleSeeder extends Seeder
             PermissionType::CAN_CREATE_BILLBOARD,
             PermissionType::CAN_UPDATE_BILLBOARD,
             PermissionType::CAN_DELETE_BILLBOARD,
+
+            PermissionType::CAN_CREATE_PRODUCT_GROUP,
+            PermissionType::CAN_UPDATE_PRODUCT_GROUP,
+            PermissionType::CAN_DELETE_PRODUCT_GROUP,
         ]);
 
         $assistantRole->givePermissionTo([
             PermissionType::CAN_CREATE_TAG,
             PermissionType::CAN_CREATE_PRODUCT,
             PermissionType::CAN_CREATE_BILLBOARD,
+            PermissionType::CAN_CREATE_PRODUCT_GROUP,
         ]);
     }
 }

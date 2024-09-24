@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryFilterController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BillboardController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductGroupBySizeController;
 
 Route::redirect('/', '/login');
 
@@ -33,6 +34,7 @@ Route::middleware(['verified'])->group(function() {
         'category-filters' => CategoryFilterController::class,
         'tags' => TagController::class,
         'billboards' => BillboardController::class,
+        'product-group-by-sizes' => ProductGroupBySizeController::class,
     ]);
 
     Route::resource('orders', OrderController::class)->except([
