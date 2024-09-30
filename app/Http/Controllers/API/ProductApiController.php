@@ -68,9 +68,13 @@ class ProductApiController extends Controller
         return ProductWithCategoryAndFilterResource::collection($products);
     }
 
-    public function show($id): JsonResource
+    public function show($id): JsonResource|JsonResponse
     {
         $product = Product::findOrFail($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
         return new ProductWithImagesResource($product);
     }
 
@@ -136,5 +140,45 @@ class ProductApiController extends Controller
         } else {
             return response()->json(['authenticated' => false], 401);
         }
+    }
+
+    public function getRelatedProducts (Request $request): JsonResource|JsonResponse
+    {
+        $category = $request->input('category');
+        $size = $request->input('size');
+
+        if ($category === 'houseplants') {
+            $relatedCat = Category::where('title', 'pots')->first();
+
+            if ($relatedCat) {
+                $relatedProducts = Product::where('category_id', $relatedCat->id)
+                    ->where('size', $size)
+                    ->limit(10)
+                    ->get();
+
+                return ProductResource::collection($relatedProducts);
+            }
+
+        } elseif ($category === 'pots') {
+            $relatedCat = Category::where('title', 'houseplants')->first();
+
+            if ($relatedCat) {
+                $relatedProducts = Product::where('category_id', $relatedCat->id)
+                    ->where('size', $size)
+                    ->limit(10)
+                    ->get();
+
+                return ProductResource::collection($relatedProducts);
+            }
+
+        } else {
+            return response()->json([
+                'message' => 'No related products available for this category.'
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Related products not found.'
+        ], 404);
     }
 }

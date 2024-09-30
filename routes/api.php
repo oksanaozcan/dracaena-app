@@ -22,6 +22,7 @@ Route::get('billboards', [BillboardApiController::class, 'index']);
 Route::get('products', [ProductApiController::class, 'index']);
 Route::get('care-slides', [ProductApiController::class, 'getProductsForCareCategorySlider']);
 Route::get('products/{id}', [ProductApiController::class, 'show']);
+Route::get('related-products', [ProductApiController::class, 'getRelatedProducts']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

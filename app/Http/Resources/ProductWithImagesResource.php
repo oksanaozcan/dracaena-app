@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\ReviewResource;
-use App\Models\Category;
 
 class ProductWithImagesResource extends JsonResource
 {
@@ -32,6 +31,19 @@ class ProductWithImagesResource extends JsonResource
             'reviews' => ReviewResource::collection($this->reviews()->latest()->take(15)->get()),
             'average_rating' => $this->reviews()->avg('rating'),
             'total_reviews' => $this->reviews()->count(),
+            'size' => $this->size,
+            'product_group_by_size' => $this->productGroupBySize ? $this->productGroupBySize->products
+                ->filter(function ($product) {
+                    return $product->id !== $this->id;
+                })
+                ->map(function ($product) {
+                    return [
+                        'id' => $product->id,
+                        'size' => $product->size,
+                    ];
+                })
+                ->values()
+                ->toArray() : [],
         ];
     }
 }
