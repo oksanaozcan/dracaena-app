@@ -153,6 +153,7 @@ class ProductApiController extends Controller
             if ($relatedCat) {
                 $relatedProducts = Product::where('category_id', $relatedCat->id)
                     ->where('size', $size)
+                    ->where('amount', '>', 0)
                     ->limit(10)
                     ->get();
 
